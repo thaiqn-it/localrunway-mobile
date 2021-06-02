@@ -1,7 +1,14 @@
 import { StatusBar } from "expo-status-bar";
+<<<<<<< Updated upstream
 import React, { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+=======
+import React, { useState, useCallback, useEffect } from "react";
+import { StyleSheet, Text, View } from "react-native";
+>>>>>>> Stashed changes
 import getEnvVars from "./config";
+import * as SplashScreen from "expo-splash-screen";
+
 import { defaultInstance } from "./api";
 
 const { API_URI } = getEnvVars();
@@ -11,7 +18,36 @@ export default function App() {
     "Make sure your API server started..."
   );
 
+<<<<<<< Updated upstream
   const [arr, setArr] = useState([]);
+=======
+  const [appIsReady, setAppIsReady] = useState(false);
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await SplashScreen.preventAutoHideAsync();
+        await new Promise((resolve) => setTimeout(resolve, 2700));
+      } catch (e) {
+        console.warn(e);
+      } finally {
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
+>>>>>>> Stashed changes
 
   defaultInstance
     .get("/")
@@ -46,7 +82,7 @@ export default function App() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.container}  onLayout={onLayoutRootView}>
       <Text>Connecting to backend server at {API_URI}</Text>
       <Text>{count}</Text>
       <Text>{arr.join(", ")}</Text>
