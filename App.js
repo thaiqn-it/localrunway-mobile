@@ -1,15 +1,11 @@
 import { StatusBar } from "expo-status-bar";
-<<<<<<< Updated upstream
-import React, { useEffect, useState } from "react";
-import { Button, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-=======
 import React, { useState, useCallback, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
->>>>>>> Stashed changes
 import getEnvVars from "./config";
 import * as SplashScreen from "expo-splash-screen";
 
 import { defaultInstance } from "./api";
+import Login from './pages/Login';
 
 const { API_URI } = getEnvVars();
 
@@ -18,16 +14,14 @@ export default function App() {
     "Make sure your API server started..."
   );
 
-<<<<<<< Updated upstream
   const [arr, setArr] = useState([]);
-=======
   const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
     async function prepare() {
       try {
         await SplashScreen.preventAutoHideAsync();
-        await new Promise((resolve) => setTimeout(resolve, 2700));
+        await new Promise((resolve) => setTimeout(resolve, 100));
       } catch (e) {
         console.warn(e);
       } finally {
@@ -47,7 +41,6 @@ export default function App() {
   if (!appIsReady) {
     return null;
   }
->>>>>>> Stashed changes
 
   defaultInstance
     .get("/")
@@ -58,54 +51,12 @@ export default function App() {
       setServerMsg("Fail to connect to server.");
     });
 
-  const [count, setCount] = useState(0);
-  const [bgButton, setbgButton] = useState("");
-
-  useEffect(() => {
-    if (count % 2 == 0) {
-      setbgButton("tomato");
-    } else {
-      setbgButton("green");
-    }
-  }, [count]);
-
-  useEffect(() => {
-    if (arr.indexOf(count) >= 0) {
-      setArr(arr.filter((x) => x !== count));
-    } else {
-      setArr([...arr, count]);
-    }
-  }, [count]);
-
-  useEffect(() => {
-    setbgButton("yellow");
-  }, []);
-
   return (
-    <View style={styles.container}  onLayout={onLayoutRootView}>
-      <Text>Connecting to backend server at {API_URI}</Text>
-      <Text>{count}</Text>
-      <Text>{arr.join(", ")}</Text>
-      <TouchableOpacity
-        onPress={() => {
-          setCount(count + 1);
-        }}
-      >
-        <View style={{ ...styles.button, backgroundColor: bgButton }}>
-          <Text>Count</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-          setCount(count - 1);
-        }}
-      >
-        <View style={{ ...styles.button, backgroundColor: bgButton }}>
-          <Text>Dec Count</Text>
-        </View>
-      </TouchableOpacity>
-      <Text>Result: {serverMsg}</Text>
-      <StatusBar style="auto" />
+    <View onLayout={onLayoutRootView}>
+      {/* <Text>Connecting to backend server at {API_URI}</Text>
+      <Text>Result: {serverMsg}</Text> */}
+      <Login />
+      {/* <StatusBar style="auto" /> */}
     </View>
   );
 }
