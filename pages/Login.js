@@ -7,6 +7,7 @@ import {
   Keyboard,
   KeyboardAvoidingView,
   Pressable,
+  Alert,
 } from "react-native";
 import { Image, Input, Button, SocialIcon } from "react-native-elements";
 import {
@@ -14,9 +15,66 @@ import {
   PRIMARY_COLOR_BLACK,
   FULL_HEIGHT,
 } from "../constants/styles";
+import getEnvVars from "../config";
+import axios from "axios";
+import { customerInstance } from "../api/customer";
 
+const { API_URI } = getEnvVars();
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [phonenumber, setPhonenumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmed, setConfirmed] = useState("false");
+
+  const [check, setCheck] = useState("");
+  
+
+  const inputPhonenumberHandler = (inputedPhonenumber) => {
+    setPhonenumber(inputedPhonenumber);
+  };
+  const inputPasswordHandler = (inputedPassword) => {
+    setPassword(inputedPassword);
+  };
+
+  const resetInputHandler = () => {
+    setPhonenumber('');
+    setPassword('');
+    setConfirmed(false);
+  };
+
+  const validateHandler = () => {
+    if (
+      isNaN(phonenumber) ||
+      phonenumber.length < 10 ||
+      phonenumber.length > 13
+    ) {
+      Alert.alert(
+        "Invalid length!",
+        "Phonenumber must be grater than 10 and lower than 13",
+        [{ text: "Okay", style: "cancel", onPress: resetInputHandler }]
+      );
+      return;
+    } else if (isNaN(password) || password.length < 6) {
+      Alert.alert("Invalid length!", "Password must be grater than 6 chars", [
+        { text: "Okay", style: "cancel", onPress: resetInputHandler },
+      ]);
+      return;
+    }
+  };
+
+  const loginHandler = () => {
+    // validateHandler();
+    axios.post("http://localhost:3000/api/customers/login", {
+      phoneNumber: phonenumber,
+      password: password
+    })
+                      .then((res) => {
+                        console.log(res.data)
+                      }).catch(err => {
+                        console.log(err)
+                      })
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.iconHeaderContainer}>
@@ -47,7 +105,8 @@ const Login = () => {
               underlineColor={PRIMARY_COLOR_BLACK}
               leftIconContainerStyle={{ marginHorizontal: 10 }}
               inputContainerStyle={styles.input}
-              // onChangeText={}
+              onChangeText={inputPhonenumberHandler}
+              defaultValue={phonenumber}
             />
 
             <Input
@@ -70,6 +129,8 @@ const Login = () => {
                 },
               }}
               rightIconContainerStyle={{ marginLeft: 10 }}
+              onChangeText={inputPasswordHandler}
+              defaultValue={password}
             />
             <View style={styles.forgotPwContainer}>
               <Pressable
@@ -84,7 +145,11 @@ const Login = () => {
 
           <View style={styles.loginContainer}>
             <View style={styles.buttonContainer}>
-              <Button title="Login" buttonStyle={styles.button} />
+              <Button
+                title="Login"
+                buttonStyle={styles.button}
+                onPress={loginHandler}
+              />
             </View>
 
             <View style={styles.signIn}>
@@ -92,8 +157,14 @@ const Login = () => {
             </View>
 
             <View style={styles.socialIconContainer}>
-              <SocialIcon type={"facebook"} onPress={() => console.log('Press From facebook')} />
-              <SocialIcon type={"google"} onPress={() => console.log('Press From google')} />
+              <SocialIcon
+                type={"facebook"}
+                onPress={() => console.log("Press From facebook")}
+              />
+              <SocialIcon
+                type={"google"}
+                onPress={() => console.log("Press From google")}
+              />
             </View>
           </View>
         </KeyboardAvoidingView>
@@ -105,7 +176,7 @@ const Login = () => {
 const styles = StyleSheet.create({
   container: {
     height: "100%",
-    backgroundColor: PRIMARY_COLOR_BLACK
+    backgroundColor: PRIMARY_COLOR_BLACK,
   },
   iconHeaderContainer: {
     marginTop: 30,
@@ -114,10 +185,12 @@ const styles = StyleSheet.create({
   },
   bodyContainer: {
     width: "100%",
-    marginTop: 10,
+    marginTop: -20,
+    paddingTop: 10,
     height: FULL_HEIGHT,
     backgroundColor: PRIMARY_COLOR_WHITE,
     borderTopRightRadius: 30,
+    borderTopLeftRadius: 30,
   },
   bodyHeaderContainer: {
     marginTop: 10,
@@ -126,7 +199,9 @@ const styles = StyleSheet.create({
     fontSize: 40,
     fontWeight: "bold",
     color: PRIMARY_COLOR_BLACK,
-    marginLeft: 2,
+    marginLeft: 10,
+    marginBottom: 5,
+    paddingTop: -20,
   },
   input: {
     backgroundColor: PRIMARY_COLOR_WHITE,
@@ -161,6 +236,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     paddingTop: 2,
+    marginTop: 10,
   },
 });
 
