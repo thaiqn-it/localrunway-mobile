@@ -27,7 +27,6 @@ const Splash = () => {
         ref={video}
         style={styles.video}
         source={require("../assets/splash-video.mp4")}
-        useNativeControls
         resizeMode="contain"
         shouldPlay
         onPlaybackStatusUpdate={() => video.current.playAsync()}
