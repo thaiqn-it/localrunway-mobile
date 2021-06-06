@@ -5,12 +5,11 @@ import getEnvVars from "./config";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { defaultInstance } from "./api";
+import { defaultInstance } from "./apis";
 import Login from "./pages/Login";
 import Splash from "./pages/Splash";
 
 const { API_URI } = getEnvVars();
-
 console.disableYellowBox = true;
 
 const Stack = createStackNavigator();

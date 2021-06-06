@@ -16,16 +16,16 @@ import {
   FULL_HEIGHT,
 } from "../constants/styles";
 import getEnvVars from "../config";
-import axios from "axios";
-import { customerInstance } from "../api/customer";
+import { customerApi } from "../apis/customer";
+import * as SecureStore from "expo-secure-store";
+import { TOKEN_ID } from "../constants/token";
 
 const { API_URI } = getEnvVars();
-const Login = () => {
+const Login = ({navigation}) => {
   const [showPassword, setShowPassword] = useState(false);
   const [phonenumber, setPhonenumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmed, setConfirmed] = useState("false");
-
   const [check, setCheck] = useState("");
   
 
@@ -62,17 +62,21 @@ const Login = () => {
     }
   };
 
+  async function goHome(value) {
+    await SecureStore.setItemAsync(TOKEN_ID,value);
+    // Navigation to screen
+    //navigation.navigate()
+  }
+
   const loginHandler = () => {
+
     // validateHandler();
-    axios.post("http://localhost:3000/api/customers/login", {
-      phoneNumber: phonenumber,
-      password: password
-    })
+    customerApi.login(phonenumber,password)
                       .then((res) => {
-                        console.log(res.data)
+                        goHome(res.data.token)
                       }).catch(err => {
                         console.log(err)
-                      })
+                      })  
   };
 
   return (
