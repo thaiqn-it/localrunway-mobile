@@ -1,26 +1,23 @@
-import axios from "axios";
-import getEnvVars from "../config";
-
-const { API_URI } = getEnvVars();
+import { defaultInstance } from ".";
 
 const getAll = () => {
-    return axios.get(API_URI + 'products/');
+    return defaultInstance.get('products/');
 }
 
 const getOneById = (id) => {
-    return axios.get(API_URI + 'products/' + id);
+    return defaultInstance.get('products/' + id);
 }
 
 const createOne = () => {
-    return axios.post(API_URI + 'products/');
+    return defaultInstance.post('products/');
 }
 
 const updateOne = (id) => {
-    return axios.put(API_URI + 'products/' + id);
+    return defaultInstance.put('products/' + id);
 }
 
 const deleteOne = (id) => {
-    return axios.delete(API_URI + 'products/' + id);
+    return defaultInstance.delete('products/' + id);
 }
 
 export const productApi = {

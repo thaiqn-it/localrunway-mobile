@@ -1,26 +1,23 @@
-import axios from "axios";
-import getEnvVars from "../config";
-
-const { API_URI } = getEnvVars();
+import { defaultInstance } from ".";
 
 const getAll = () => {
-    return axios.get(API_URI + 'localbrands/');
+    return defaultInstance.get('localbrands/');
 }
 
 const getOneById = (id) => {
-    return axios.get(API_URI + 'localbrands/' + id);
+    return defaultInstance.get('localbrands/' + id);
 }
 
 const createOne = () => {
-    return axios.post(API_URI + 'localbrands/');
+    return defaultInstance.post('localbrands/');
 }
 
 const updateOne = (id) => {
-    return axios.put(API_URI + 'localbrands/' + id);
+    return defaultInstance.put('localbrands/' + id);
 }
 
 const deleteOne = (id) => {
-    return axios.delete(API_URI + 'localbrands/' + id);
+    return defaultInstance.delete('localbrands/' + id);
 }
 
 export const localBrandApi = {

@@ -1,26 +1,23 @@
-import axios from "axios";
-import getEnvVars from "../config";
-
-const { API_URI } = getEnvVars();
+import { defaultInstance } from ".";
 
 const getAll = () => {
-    return axios.get(API_URI + 'hashtags/');
+    return defaultInstance.get(`hashtags/`);
 }
 
 const getOneById = (id) => {
-    return axios.get(API_URI + 'hashtags/' + id);
+    return defaultInstance.get(`hashtags/` + id);
 }
 
 const createOne = () => {
-    return axios.post(API_URI + 'hashtags/');
+    return defaultInstance.post(`hashtags/`);
 }
 
 const updateOne = (id) => {
-    return axios.put(API_URI + 'hashtags/' + id);
+    return defaultInstance.put(`hashtags/` + id);
 }
 
 const deleteOne = (id) => {
-    return axios.delete(API_URI + 'hashtags/' + id);
+    return defaultInstance.delete(`hashtags/` + id);
 }
 
 export const hashtagApi = {

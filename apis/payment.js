@@ -1,10 +1,7 @@
-import axios from "axios";
-import getEnvVars from "../config";
-
-const { API_URI } = getEnvVars();
+import { defaultInstance } from ".";
 
 const getAll = () => {
-    return axios.get(API_URI + 'payments/');
+    return defaultInstance.get('payments/');
 }
 
 export const paymentApi = {

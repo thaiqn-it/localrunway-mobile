@@ -1,26 +1,23 @@
-import axios from "axios";
-import getEnvVars from "../config";
-
-const { API_URI } = getEnvVars();
+import { defaultInstance } from ".";
 
 const getAll = () => {
-    return axios.get(API_URI + 'categories/');
+    return defaultInstance.get('categories/');
 }
 
 const getOneById = (id) => {
-    return axios.get(API_URI + 'categories/' + id);
+    return defaultInstance.get('categories/' + id);
 }
 
 const createOne = () => {
-    return axios.post(API_URI + 'categories/');
+    return defaultInstance.post('categories/');
 }
 
 const updateOne = (id) => {
-    return axios.put(API_URI + 'categories/' + id);
+    return defaultInstance.put('categories/' + id);
 }
 
 const deleteOne = (id) => {
-    return axios.delete(API_URI + 'categories/' + id);
+    return defaultInstance.delete('categories/' + id);
 }
 
 export const categoryApi = {
