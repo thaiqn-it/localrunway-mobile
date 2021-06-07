@@ -1,15 +1,11 @@
-import axios from "axios";
-import getEnvVars from "../config";
-
-const { API_URI } = getEnvVars();
-
+import { defaultInstance } from ".";
 
 const getCustomer = () => {
-    return axios.get(API_URI + '/customers/me'); 
+    return defaultInstance.get(`/customers/me`); 
 }
 
 const login = (phoneNumber,password) => {
-    return axios.post(API_URI + '/customers/login',{
+    return defaultInstance.post(`/customers/login`,{
         phoneNumber : phoneNumber,
         password : password
     });
