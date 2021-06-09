@@ -1,5 +1,5 @@
 import axios from "axios";
-import getEnvVars from "../config";
+import getEnvVars from "../constants";
 
 const { API_URI } = getEnvVars();
 

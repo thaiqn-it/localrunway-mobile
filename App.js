@@ -1,7 +1,7 @@
 import {StatusBar} from "expo-status-bar";
 import React, {useEffect, useState} from "react";
 import {Button, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import getEnvVars from "./config";
+import getEnvVars from "./constants";
 import {defaultInstance} from "./api";
 
 const {API_URI} = getEnvVars();
@@ -10,8 +10,6 @@ export default function App() {
     const [serverMsg, setServerMsg] = useState(
         "Make sure your API server started..."
     );
-
-    const [arr, setArr] = useState([]);
 
     defaultInstance
         .get("/")
