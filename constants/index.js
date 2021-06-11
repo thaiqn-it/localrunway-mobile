@@ -1,24 +1,8 @@
-import Constants from "expo-constants";
+export const JWT_TOKEN_KEY = "JWT_TOKEN";
+import * as SecureStore from "expo-secure-store";
 
-let localhost;
-if (Constants.manifest.debuggerHost) {
-  localhost = Constants.manifest.debuggerHost.split(":").shift();
-}
+export let JWT_TOKEN = "";
 
-const ENV = {
-  dev: {
-    API_URI: `http://${localhost}:3000/api`,
-  },
-  prod: {
-    API_URI: "https://<PUBLIC-API-URI>",
-  },
+export const resetJWTToken = async () => {
+  return (JWT_TOKEN = await SecureStore.getItemAsync(JWT_TOKEN_KEY));
 };
-
-const getEnvVars = () => {
-  if (__DEV__) {
-    return ENV.dev;
-  }
-  return ENV.prod;
-};
-
-export default getEnvVars;
