@@ -57,14 +57,14 @@ export default function Login(props) {
           />
         </View>
         <Text
-          h2
+          h3
           style={{
             fontWeight: "bold",
             marginTop: 20,
             fontFamily: PRIMARY_FONT,
           }}
         >
-          Discover Your Styles.
+          Discover the new you
         </Text>
       </View>
       <KeyboardAvoidingView
