@@ -2,6 +2,7 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "../Login";
 import HomeTabNavigator from "../navigations/HomeTabNavigator";
+import RegisterStackNavigator from "../stacks/RegisterStack";
 
 const Stack = createStackNavigator();
 
@@ -18,6 +19,13 @@ export default function AppStack() {
       <Stack.Screen
         name={"HomeTab"}
         component={HomeTabNavigator}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={"RegisterStack"}
+        component={RegisterStackNavigator}
         options={{
           headerShown: false,
         }}
