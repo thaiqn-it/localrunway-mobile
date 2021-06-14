@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Keyboard } from "react-native";
+import { Alert } from "react-native";
 import {
   View,
   StyleSheet,
@@ -15,6 +16,50 @@ const Register = (props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
+  const [email, setEmail] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [password, setPassword] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [address, setAddress] = useState("");
+
+  const onChangeEmailHandler = (email) => {
+    setEmail(email);
+  };
+  const onChangePhoneNumberHandler = (phoneNumber) => {
+    setPhoneNumber(phoneNumber);
+  };
+  const onChangePasswordHandler = (password) => {
+    setPassword(password);
+  };
+  const onChangeFirstNameHandler = (firstName) => {
+    setFirstName(firstName);
+  };
+  const onChangeLastNameHandler = (lastName) => {
+    setLastName(lastName);
+  };
+  const onChangeAddressHandler = (address) => {
+    setAddress(address);
+  };
+
+  const onSubmitHanlder = (event) => {
+    // if (email.length === 0 || phoneNumber === 0 || password === 0) {
+    //   Alert.alert("Please input full required fields");
+    // }
+
+    //navigation
+    props.navigation.navigate("RegisterBody", {
+      user: {
+        email: email,
+        phoneNumber: phoneNumber,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+        address: address,
+      },
+    });
+  };
+
   //setTitle
   const navigation = props.navigation;
   React.useLayoutEffect(() => {
@@ -24,9 +69,9 @@ const Register = (props) => {
   }, [navigation]);
 
   return (
-    <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={5}>
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss()}>
-        <ScrollView style={styles.container}>
+    <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={4}>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <ScrollView>
           <View style={styles.continueContainer}>
             <Button
               icon={
@@ -45,7 +90,7 @@ const Register = (props) => {
                 borderColor: "#000000",
               }}
               containerStyle={{
-                marginVertical: 15,
+                marginVertical: 10,
                 flexDirection: "row",
                 justifyContent: "center",
                 textAlign: "center",
@@ -68,10 +113,19 @@ const Register = (props) => {
 
           <View style={styles.inputContainer}>
             <Input
+              inputContainerStyle={styles.input}
+              placeholder={"Email Address*"}
+              value={email}
+              onChangeText={onChangeEmailHandler}
+            />
+
+            <Input
               multiline={false}
               inputContainerStyle={styles.input}
               placeholder="Phone number*"
               maxLength={12}
+              value={phoneNumber}
+              onChangeText={onChangePhoneNumberHandler}
             />
             <Input
               inputContainerStyle={styles.input}
@@ -84,18 +138,28 @@ const Register = (props) => {
                   setShowPassword(!showPassword);
                 },
               }}
-            />
-            <Input
-              inputContainerStyle={styles.input}
-              placeholder="Email Address"
+              value={password}
+              onChangeText={onChangePasswordHandler}
             />
 
             <Input
               inputContainerStyle={styles.input}
               placeholder="First Name"
+              value={firstName}
+              onChangeText={onChangeFirstNameHandler}
             />
-            <Input inputContainerStyle={styles.input} placeholder="Last Name" />
-            <Input inputContainerStyle={styles.input} placeholder="Adress" />
+            <Input
+              inputContainerStyle={styles.input}
+              placeholder="Last Name"
+              value={lastName}
+              onChangeText={onChangeLastNameHandler}
+            />
+            <Input
+              inputContainerStyle={styles.input}
+              placeholder="Adress"
+              value={address}
+              onChangeText={onChangeAddressHandler}
+            />
           </View>
 
           <View style={styles.action}>
@@ -113,16 +177,16 @@ const Register = (props) => {
 
             <Button
               disabled={isCheckboxChecked ? false : true}
-              onPress={() => props.navigation.navigate("RegisterBody")}
-              title="Sign Up"
+              onPress={onSubmitHanlder}
+              title="Next"
               buttonStyle={{
                 borderWidth: 1,
                 borderColor: "#000000",
-                width: 300,
+                width: 200,
                 backgroundColor: "#000000",
               }}
               containerStyle={{
-                marginVertical: 15,
+                marginVertical: 10,
                 flexDirection: "row",
                 justifyContent: "center",
                 textAlign: "center",
@@ -150,11 +214,11 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   inputContainer: {
-    marginTop: 10,
-    height: "60%",
+    marginTop: 4,
+    height: "65%",
   },
   action: {
-    height: "15%",
+    height: "20%",
   },
 });
 
