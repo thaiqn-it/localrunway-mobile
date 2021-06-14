@@ -8,6 +8,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { defaultInstance } from "./apis";
 import Login from "./pages/Login";
 import Splash from "./pages/Splash";
+import ProductDetail from "./pages/ProductDetail";
 
 console.disableYellowBox = true;
 
@@ -30,9 +31,10 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Splash" headerMode="none">
+      <Stack.Navigator initialRouteName="ProductDetail" headerMode="none">
         <Stack.Screen name={"Splash"} component={Splash} />
         <Stack.Screen name={"Login"} component={Login} />
+        <Stack.Screen name={"ProductDetail"} component={ProductDetail} />
       </Stack.Navigator>
     </NavigationContainer>
   );

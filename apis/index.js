@@ -7,8 +7,9 @@ const { TOKEN_ID } = configs.getTokenID();
 
 const defaultInstance = axios.create({
   baseURL: API_URI,
+  // Authorization bearer schema
   headers: {
-    'Authorization': `Bearer` + TOKEN_ID
+    'Authorization': `Bearer ` + TOKEN_ID
   }
 });
 

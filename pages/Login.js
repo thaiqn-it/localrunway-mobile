@@ -73,7 +73,6 @@ const Login = ({navigation}) => {
     customerApi.login(phonenumber,password)
                       .then((res) => {
                         goHome(res.data.token)
-                        console.log(res.data.token)
                       }).catch(err => {
                         console.log(err)
                       })  
