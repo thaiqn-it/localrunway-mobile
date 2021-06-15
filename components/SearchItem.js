@@ -52,7 +52,7 @@ export default function SearchItem({ item }) {
               backgroundColor: item.color.toLowerCase(),
               width: 20,
               height: 20,
-              borderRadius: "50%",
+              borderRadius: 50,
             }}
           />
         </View>

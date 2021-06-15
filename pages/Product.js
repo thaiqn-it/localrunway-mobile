@@ -19,8 +19,8 @@ import {
     MenuTrigger,
     MenuProvider,
   } from 'react-native-popup-menu';
-import MyCarousel from '../component/MyCarousel';
-import BlockCard from '../component/BlockCard';
+import MyCarousel from '../components/MyCarousel';
+import BlockCard from '../components/BlockCard';
 
 const data = {};
 
@@ -38,7 +38,7 @@ function SeparateLine () {
 function BlockDetail () {
     const [more,setMore] = useState(4);
 
-    toggleNumOfLine = () => {
+    const toggleNumOfLine = () => {
         if (more == 4) {
             setMore(0);
         } else setMore(4);
@@ -154,7 +154,7 @@ function BlockLocalBrand() {
     )
 }
 
-export default function ProductDetail() {
+export default function Product() {
     const scroll = useRef()
     const [test,setTest] = useState("First")
 
