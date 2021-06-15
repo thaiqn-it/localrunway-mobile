@@ -8,3 +8,6 @@ export const PRIMARY_COLOR_BLACK = "#000000"
 
 export const SLIDER_WIDTH = Dimensions.get('window').width + 80
 export const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.7)
+
+export const PRIMARY_COLOR = "black";
+export const PRIMARY_FONT = "OpenSans_400Regular";
