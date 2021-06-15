@@ -8,12 +8,6 @@ const BodySlider = (props) => {
       <View>
         <View>
           <Text>{props.title}</Text>
-          {/* <Input
-                keyboardType="numeric"
-                inputContainerStyle={styles.input}
-                onChangeText={onChangeHeightHandler}
-                value={heightValue}
-              /> */}
         </View>
 
         <Slider
@@ -31,11 +25,14 @@ const BodySlider = (props) => {
           thumbProps={{
             children: (
               <Icon
-                name="square"
+                name="circle"
                 type="font-awesome"
-                size={16}
+                size={14}
                 reverse
-                containerStyle={{ bottom: 16, right: 16 }}
+                containerStyle={{
+                  bottom: 14,
+                  right: 14,
+                }}
                 color="#000000"
               />
             ),
@@ -46,24 +43,5 @@ const BodySlider = (props) => {
     </Card>
   );
 };
-
-// sliderContainer: {
-//     justifyContent: "center",
-//     alignItems: "stretch",
-//   },
-//   sliderInputContainer: {
-//     flexDirection: "row",
-//     alignContent: "center",
-//     alignItems: "center",
-//     width: "100%",
-//     height: "38%",
-//   },
-//   input: {
-//     borderWidth: 1,
-//     borderRadius: 5,
-//     width: "14%",
-//     height: "70%",
-//     marginTop: 24,
-//   },
 
 export default BodySlider;
