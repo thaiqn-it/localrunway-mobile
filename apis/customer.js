@@ -1,4 +1,4 @@
-import { defaultInstance } from ".";
+import { defaultInstance } from "../api/index"
 
 const getCustomer = () => {
     return defaultInstance.get(`/customers/me`); 
