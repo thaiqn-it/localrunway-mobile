@@ -6,6 +6,7 @@ import { vndFormat } from "../utils";
 export default function SearchItem({ item }) {
   return (
     <ListItem
+      button
       bottomDivider
       containerStyle={{
         minHeight: 100,
@@ -13,7 +14,9 @@ export default function SearchItem({ item }) {
     >
       <Avatar
         source={{
-          uri: "https://neva.vn/upload/img/ao-so-mi-trang-quan-au-den-soc.jpg",
+          uri:
+            item.thumbnailUrl ??
+            "https://neva.vn/upload/img/ao-so-mi-trang-quan-au-den-soc.jpg",
         }}
         containerStyle={{
           width: 100,

@@ -19,6 +19,7 @@ import {
 import { productApi } from "../api/product";
 import { vndFormat } from "../utils";
 import SearchItem from "../components/SearchItem";
+import SearchFilter from "../components/SearchFilter";
 
 export default function Search() {
   const [searchValue, setSearchValue] = useState("");
@@ -27,6 +28,12 @@ export default function Search() {
   const [search, setSearch] = useState(false);
   const [loading, setLoading] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(false);
+  const [filterVisible, setFilterVisible] = useState(true);
+  const [filter, setFilter] = useState({
+    sort: null,
+    brandIds: [],
+    categoryId: null,
+  });
 
   useEffect(() => {
     setSearch(true);
@@ -39,6 +46,7 @@ export default function Search() {
         .search({
           queryValue: searchValue,
           page,
+          ...filter,
         })
         .then((res) => {
           const data = res.data;
@@ -64,7 +72,6 @@ export default function Search() {
   };
   const finishSearch = async () => {
     setProducts([]);
-    setLoading(true);
     setPage(1);
     setSearch(true);
   };
@@ -73,6 +80,13 @@ export default function Search() {
 
   return (
     <View>
+      <SearchFilter
+        visible={filterVisible}
+        setVisible={setFilterVisible}
+        filter={filter}
+        setFilter={setFilter}
+        doneFilter={finishSearch}
+      />
       <Header
         containerStyle={{
           backgroundColor: "#fff",
@@ -101,13 +115,21 @@ export default function Search() {
         centerContainerStyle={{
           flex: 7,
         }}
-        rightComponent={<Icon name={"sliders-h"} type={"font-awesome-5"} />}
+        rightComponent={
+          <Icon
+            name={"sliders-h"}
+            type={"font-awesome-5"}
+            onPress={() => {
+              setFilterVisible(!filterVisible);
+            }}
+          />
+        }
         rightContainerStyle={{
           flex: 1,
           justifyContent: "center",
         }}
       />
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <FlatList
           data={products}
           contentContainerStyle={{
@@ -124,7 +146,7 @@ export default function Search() {
             paddingVertical: 10,
           }}
         />
-      </SafeAreaView>
+      </View>
     </View>
   );
 }
