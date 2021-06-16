@@ -3,11 +3,12 @@ import { Avatar, ListItem, Text } from "react-native-elements";
 import { View } from "react-native";
 import { vndFormat } from "../utils";
 import { useNavigation } from "@react-navigation/native";
+import ColorBox from "./ColorBox";
 export default function SearchItem({ item }) {
   const navigation = useNavigation();
   return (
     <ListItem
-      onPress={() => navigation.navigate("Product",item._id)}
+      onPress={() => navigation.navigate("Product", item._id)}
       bottomDivider
       containerStyle={{
         minHeight: 100,
@@ -49,16 +50,8 @@ export default function SearchItem({ item }) {
               {item.size}
             </Text>
           </Text>
-          <View
-            style={{
-              backgroundColor: item.color.toLowerCase(),
-              width: 20,
-              height: 20,
-              borderRadius: 50,
-            }}
-          />
+          <ColorBox color={item.color} />
         </View>
-
         <ListItem.Title
           style={{
             fontWeight: "bold",
