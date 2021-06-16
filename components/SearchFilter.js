@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   BottomSheet,
   Card,
@@ -7,7 +7,8 @@ import {
   ListItem,
   Text,
 } from "react-native-elements";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
+import { localBrandApi } from "../api/localbrand";
 
 const SortBy = ({ filter, setFilter }) => {
   const toggleValue = (value) => () => {
@@ -43,6 +44,55 @@ const SortBy = ({ filter, setFilter }) => {
             title={title}
           />
         ))}
+      </View>
+    </Card>
+  );
+};
+
+const Brands = ({ filter, setFilter }) => {
+  const [localBrands, setLocalBrands] = useState([]);
+  useEffect(() => {
+    localBrandApi.getAll().then((res) => {
+      setLocalBrands(res.data.localBrands);
+    });
+  }, []);
+
+  const checkValue = (value) => {
+    return filter.brandIds.includes(value);
+  };
+  const toggleValue = (value) => () => {
+    if (filter.brandIds.includes(value)) {
+      setFilter({
+        ...filter,
+        brandIds: filter.brandIds.filter((id) => id !== value),
+      });
+    } else {
+      setFilter({
+        ...filter,
+        brandIds: [...filter.brandIds, value],
+      });
+    }
+  };
+  return (
+    <Card containerStyle={styles.cardContainer}>
+      <Card.Title style={{ textAlign: "left" }}>Brands</Card.Title>
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+        }}
+      >
+        {localBrands
+          .sort((b1, b2) => b1.name.localeCompare(b2.name))
+          .map(({ name, _id }) => (
+            <CheckBox
+              key={`${_id}`}
+              containerStyle={styles.cbContainer}
+              checked={checkValue(_id)}
+              onPress={toggleValue(_id)}
+              title={name}
+            />
+          ))}
       </View>
     </Card>
   );
@@ -91,7 +141,10 @@ export default function SearchFilter({
             </Text>
           }
         />
-        <SortBy filter={filter} setFilter={setFilter} />
+        <ScrollView>
+          <SortBy filter={filter} setFilter={setFilter} />
+          <Brands filter={filter} setFilter={setFilter} />
+        </ScrollView>
       </View>
     </BottomSheet>
   );

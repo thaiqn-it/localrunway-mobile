@@ -59,7 +59,11 @@ export default function SearchItem({ item }) {
             }}
           />
         </View>
-
+        <Text
+          style={{
+            marginTop: 4,
+          }}
+        >{`Brand: ${item.brandName}`}</Text>
         <ListItem.Title
           style={{
             fontWeight: "bold",
