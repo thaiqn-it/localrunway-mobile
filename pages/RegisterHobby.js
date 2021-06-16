@@ -15,7 +15,6 @@ const RegisterHobby = (props) => {
   const [hobby, setHobby] = useState("");
   const [localBrands, setLocalBrands] = useState();
   const [selectedLocalBrands, setSelectedLocalBrands] = useState([]);
-  const [isSelected, setIsSelected] = useState(false);
 
   const jobInputHandler = (job) => {
     setJob(job);
@@ -43,17 +42,18 @@ const RegisterHobby = (props) => {
     fetchLocalBrands();
   }, []);
 
-  const getSelectedLocalBrand = (_id) => {
-    console.log(_id + " id prameter");
-
-    const isIn = selectedLocalBrands.find((id) => id === _id);
-
-    if (!isIn || selectedLocalBrands.length === 0) {
-      setSelectedLocalBrands([...selectedLocalBrands, _id]);
-      setIsSelected(true);
+  const selectedBrandToggleHandler = (_id) => {
+    const isIn = selectedLocalBrands.findIndex((id) => id === _id);
+    if (isIn < 0) {
+      setSelectedLocalBrands((selectedLocalBrands) => [
+        ...selectedLocalBrands,
+        _id,
+      ]);
+    } else {
+      let updatedLocalBrands = [...selectedLocalBrands];
+      updatedLocalBrands.splice(isIn, 1);
+      setSelectedLocalBrands(updatedLocalBrands);
     }
-
-    console.log(selectedLocalBrands);
   };
 
   const submitHandler = () => {
@@ -64,24 +64,35 @@ const RegisterHobby = (props) => {
       hobby: hobby,
       localBrands: selectedLocalBrands,
     };
-
+    console.log(selectedLocalBrands);
     //api goes here
+  };
+
+  const checkItemExist = (idToFind) => {
+    const isIn = selectedLocalBrands.findIndex((id) => id === idToFind) != -1;
+    // console.log(idToFind + " From itemexist", selectedLocalBrands, isIn);
+    return isIn;
   };
 
   const renderItem = (ItemData) => {
     const url = ItemData.item.logoUrl;
-    const isIn = selectedLocalBrands.find((id) => id === ItemData.item._id);
     return (
       <TouchableOpacity
-        onPress={() => getSelectedLocalBrand(ItemData.item._id)}
-        disabled={isSelected && isIn ? true : false}
+        onPress={() => selectedBrandToggleHandler(ItemData.item._id)}
       >
         <View
-          style={{
-            ...styles.localBrandInforContainer,
-            backgroundColor: isSelected && isIn ? "#918e8e" : "",
-          }}
+          style={[
+            {
+              ...styles.localBrandInforContainer,
+            },
+            {
+              backgroundColor: checkItemExist(ItemData.item._id)
+                ? "#918e8e"
+                : "#fff",
+            },
+          ]}
         >
+          {console.log(checkItemExist(ItemData.item._id))}
           <Image
             style={styles.tinyLogo}
             source={{
