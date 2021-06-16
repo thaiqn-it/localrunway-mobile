@@ -28,7 +28,7 @@ export default function Search() {
   const [search, setSearch] = useState(false);
   const [loading, setLoading] = useState(false);
   const [hasNextPage, setHasNextPage] = useState(false);
-  const [filterVisible, setFilterVisible] = useState(true);
+  const [filterVisible, setFilterVisible] = useState(false);
   const [filter, setFilter] = useState({
     sort: null,
     brandIds: [],
