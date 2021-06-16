@@ -1,6 +1,4 @@
 import Constants from "expo-constants";
-import * as SecureStore from "expo-secure-store";
-import { TOKEN_ID } from "../constants/token";
 
 let localhost;
 if (Constants.manifest.debuggerHost) {
@@ -23,11 +21,4 @@ const getEnvVars = () => {
   return ENV.prod;
 };
 
-const getTokenID = () => {
-  return SecureStore.getItemAsync(TOKEN_ID);
-}
-
-export const configs = {
-  getEnvVars,
-  getTokenID
-} ;
+export default getEnvVars;
