@@ -2,10 +2,12 @@ import React from "react";
 import { Avatar, ListItem, Text } from "react-native-elements";
 import { View } from "react-native";
 import { vndFormat } from "../utils";
-
+import { useNavigation } from "@react-navigation/native";
 export default function SearchItem({ item }) {
+  const navigation = useNavigation();
   return (
     <ListItem
+      onPress={() => navigation.navigate("Product",item._id)}
       bottomDivider
       containerStyle={{
         minHeight: 100,

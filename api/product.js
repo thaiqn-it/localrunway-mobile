@@ -8,4 +8,11 @@ const search = ({ ...data }) => {
   });
 };
 
-export const productApi = { search };
+const getOneById = (id) => {
+  return defaultInstance.get('products/' + id);
+}
+
+export const productApi = { 
+      search,
+      getOneById,
+     };

@@ -7,7 +7,6 @@ import {
   StyleSheet,
   Dimensions,
   ActivityIndicator,
-  TouchableOpacity,
 } from "react-native";
 import {
   Avatar,
@@ -20,7 +19,6 @@ import {
 import { productApi } from "../api/product";
 import { vndFormat } from "../utils";
 import SearchItem from "../components/SearchItem";
-import { TouchableWithoutFeedback } from "react-native";
 
 export default function Search() {
   const [searchValue, setSearchValue] = useState("");
@@ -71,11 +69,7 @@ export default function Search() {
     setSearch(true);
   };
 
-  const renderItem = ({ item }) => 
-              <TouchableWithoutFeedback onPress={console.log(item._id)}>
-                  <SearchItem item={item} />
-                  </TouchableWithoutFeedback>    ;
-
+  const renderItem = ({ item }) => <SearchItem item={item} />;
   return (
     <View>
       <Header

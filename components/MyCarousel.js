@@ -3,6 +3,7 @@ import Carousel, {ParallaxImage} from 'react-native-snap-carousel';
 import { Rating, Icon,Header } from 'react-native-elements';
 import {FontAwesome5, AntDesign, Feather} from "@expo/vector-icons";
 import { FlatList } from 'react-native';
+import { vndFormat } from "../utils";
 
 import {
   View,
@@ -75,9 +76,8 @@ const {width: screenWidth} = Dimensions.get('window');
 const MyCarousel = ({data,changeTest}) => {
   const [entries, setEntries] = useState([]);
   const carouselRef = useRef(null);
-  const [rating,setRating] = useState(0);
+  const [rating,setRating] = useState(4);
   const [modalVisible, setModalVisible] = useState(false);
-
   const goForward = () => {
     carouselRef.current.snapToNext();
   };
@@ -88,6 +88,12 @@ const MyCarousel = ({data,changeTest}) => {
     flag ? setSize(value) : setColor(value);
  }
   
+  useEffect(() => {
+    if (data.color != null){
+      setColor(data.color.toLowerCase())
+    }
+    
+  }, [data]);
   
   useEffect(() => {
     setEntries(ENTRIES1);
@@ -119,11 +125,25 @@ const MyCarousel = ({data,changeTest}) => {
         hasParallaxImages={true}
       />
       <Text style={styles.title}>
-        Áo khoác jean nữ TH Store phối nón Daniel, áo khoác bò cá tính phong cách ulzzang chống 
+        {data.name}
       </Text>
-      <Text style={styles.price}>
-        270000đ
-      </Text>
+      <View style={{flexDirection:'row',alignItems:'center'}}>
+        <Text style={styles.price}>
+          {vndFormat(data.price)}
+        </Text>
+        <Text style={{marginLeft:25,fontSize:18}}>
+          Size : {data.size}
+        </Text>
+        <View
+            style={{
+              backgroundColor: color,
+              width: 25,
+              height: 25,
+              borderRadius: 20,
+              marginLeft:10,
+            }}
+          />
+      </View>
       <View>
         {/* //Modal size,color picker */}
         <View style={styles.centeredView}>
@@ -180,7 +200,9 @@ const MyCarousel = ({data,changeTest}) => {
             </View>
           </Modal>
         </View>    
-        <TouchableWithoutFeedback onPress={() => setModalVisible(!modalVisible)}>
+
+        {/* Size,color picker */}
+        {/* <TouchableWithoutFeedback onPress={() => setModalVisible(!modalVisible)}>
           <View style={styles.stylePicker}>  
               <View>
                 <Image source={{uri : 'https://cf.shopee.vn/file/c5fd54abd1c1b12040e0f1f22ff3b1e8'}} style={{width:50,height:50}}/>
@@ -193,21 +215,20 @@ const MyCarousel = ({data,changeTest}) => {
                 <AntDesign name="right" size={20} color="black"/>
               </View>       
           </View>
-        </TouchableWithoutFeedback>   
+        </TouchableWithoutFeedback>    */}
       </View>
       <View style={styles.rating}>
         <Rating
           count={5}
-          defaultRating={0}
+          defaultRating={4}
+          startingValue={4}
           imageSize={20}
           fractions={1}
           onFinishRating={rating => setRating(rating)}
         />
         <Text style={styles.ratingTitle}>{rating}</Text>
         <View style={{flexDirection:'row', marginLeft: 30, flex:1,justifyContent:'space-around'}}>
-          <Text style={styles.soldText}>Sold: 20200</Text>
-          <FontAwesome5 name="heart" size={24} color="red" />
-          <FontAwesome5 name="facebook-messenger" size={24} color="blue" />
+          <Text style={styles.soldText}>Quantity : {data.quantity}</Text>
         </View>  
       </View>  
     </View>
@@ -242,7 +263,7 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
   },
   title: {
-    fontSize:18,
+    fontSize:25,
     padding : 10,
   },
   price: {

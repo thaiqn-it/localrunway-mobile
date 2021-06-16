@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 
 export default function AppStack() {
   return (
-    <Stack.Navigator initialRouteName={"Search"}>
+    <Stack.Navigator initialRouteName={"HomeTab"}>
       <Stack.Screen
         name={"Login"}
         component={Login}

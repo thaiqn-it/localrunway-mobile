@@ -1,9 +1,8 @@
-import React, {useState, useRef} from 'react'
+import React, {useState, useRef,useEffect} from 'react'
 import { StyleSheet,
         Text, 
         View, 
         Image,
-        TouchableOpacity,
         ScrollView, 
         Pressable, 
         FlatList,
@@ -11,6 +10,7 @@ import { StyleSheet,
      } 
     from 'react-native'
 import { Header } from 'react-native-elements'
+import { useRoute } from '@react-navigation/native';
 import {FontAwesome5, SimpleLineIcons, Feather, AntDesign} from "@expo/vector-icons";
 import {
     Menu,
@@ -21,8 +21,10 @@ import {
   } from 'react-native-popup-menu';
 import MyCarousel from '../components/MyCarousel';
 import BlockCard from '../components/BlockCard';
-
-const data = {};
+import { productApi } from '../api/product';
+import { localBrandApi } from '../api/localbrand';
+import { categoryApi } from '../api/category';
+import { useNavigation } from "@react-navigation/native";
 
 function SeparateLine () {
     return(
@@ -35,8 +37,33 @@ function SeparateLine () {
     )
 }
 
-function BlockDetail () {
-    const [more,setMore] = useState(4);
+function BlockDetail ({data}) {
+    const [more,setMore] = useState(4);    
+    const [localBrand,setLocalBrand] = useState([]);
+    const [category,setCategory] = useState([]);
+
+    useEffect(() => {
+        if (data.brandId != null){
+            localBrandApi.getOneById(data.brandId)
+                .then((res) => {
+                    setLocalBrand(res.data.localBrand)
+                }).catch(err => {
+                    console.log(err)
+                }) 
+        }
+    },[data])
+
+    useEffect(() => {
+        if (data.brandId != null){
+            categoryApi.getOneById(data.categoryId)
+                .then((res) => {
+                    setCategory(res.data.category)
+                }).catch(err => {
+                    console.log(err)
+                }) 
+        }
+    },[data])
+
 
     const toggleNumOfLine = () => {
         if (more == 4) {
@@ -47,13 +74,7 @@ function BlockDetail () {
     return(
         <ScrollView style={styles.blockDetailContainer}>
             <View style={styles.titleDetail}>
-                <Text style={{fontWeight: 'bold', fontSize: 15}}>Product Detail</Text>
-                <View style={{marginLeft:20, flexDirection: 'row'}}>
-                    <FontAwesome5 name="clock" size={20} color="black" />
-                    <Text>
-                        14 months
-                    </Text>
-                </View>         
+                <Text style={{fontWeight: 'bold', fontSize: 15}}>Product Detail</Text>      
             </View>
             <SeparateLine/>
             <View style={styles.titleDetail}>
@@ -63,15 +84,15 @@ function BlockDetail () {
                     <Text style={styles.textDetail}>Quantity</Text>
                 </View>
                 <View style={{flex:7}}>
-                    <Text style={styles.textInfoDetail}>Robo3T</Text>    
-                    <Text style={styles.textInfoDetail}>Robo3T</Text>    
-                    <Text style={styles.textInfoDetail}>Robo3T</Text>    
+                    <Text style={styles.textInfoDetail}>{localBrand.name}</Text>    
+                    <Text style={styles.textInfoDetail}>{category.name}</Text>    
+                    <Text style={styles.textInfoDetail}>{data.quantity}</Text>    
                 </View>
             </View>     
             <SeparateLine />      
             <View>
                 <Text style={styles.description} numberOfLines={more}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                {data.description}
                 </Text>
             </View>
             <SeparateLine />
@@ -127,43 +148,54 @@ function BlockMoreProduct () {
     </View>
     )}
 
-function BlockLocalBrand() {
+function BlockLocalBrand({data}) {
+    const [localBrand,setLocalBrand] = useState([]);
+    useEffect(() => {
+        if (data.brandId != null){
+            localBrandApi.getOneById(data.brandId)
+                .then((res) => {
+                    setLocalBrand(res.data.localBrand)
+                }).catch(err => {
+                    console.log(err)
+                }) 
+        }
+    },[data])
     return(
        <View style={styles.containerLocalBrand}>
            <View style={{flexDirection:'row', padding:10}}>
-                <Image source={{uri : 'https://thumbs.dreamstime.com/z/shop-building-colorful-isolated-white-33822015.jpg'}} style={styles.shopImage}/>
+                <Image source={{uri : 'https://cdn2.iconfinder.com/data/icons/online-shopping-flat-round/550/store-512.png'}} style={styles.shopImage}/>
                 <View style={{marginLeft: 20}}>
-                    <Text style={{fontSize:20}}>Shop cà chua</Text>
-                    <Text>Hồ Chí Minh</Text>
-                </View>  
-                <View style={{height:50, left: 75}}>
-                    <Button title={'Go Shop'}/>
+                    <Text style={{fontSize:20}}>{localBrand.name}</Text>
+                    <Text>{localBrand.address}</Text>
                 </View>               
-           </View>
-           <View style={{flexDirection:'row', justifyContent:'space-around', padding:5}}>
-               <Text style={{fontSize:18,fontWeight:'bold'}}>Product</Text>
-               <Text style={{fontSize:18,fontWeight:'bold'}}>Sales</Text>
-               <Text style={{fontSize:18,fontWeight:'bold'}}>Rating</Text>
-           </View>
-           <View style={{flexDirection:'row', justifyContent:'space-around', padding:5, marginBottom:10}}>
-               <Text style={{color: 'red'}}>123</Text>
-               <Text style={{color: 'red'}}>20000</Text>
-               <Text style={{color: 'red'}}>50</Text>
            </View>
        </View> 
     )
 }
 
 export default function Product() {
+    const route = useRoute();
     const scroll = useRef()
     const [test,setTest] = useState("First")
+    const [product,setProduct] = useState([]);
+    const navigation = useNavigation();
 
-    return (
+    useEffect(() => {
+        productApi.getOneById(route.params)
+                    .then((res) => {
+                         setProduct(res.data.product);
+                      }).catch(err => {
+                        console.log(err)
+                      })            
+    }, [])
+
+    return (      
         <MenuProvider>      
             <Header 
                 placement="left"
                 leftComponent={
                     <FontAwesome5
+                                onPress={ () => { navigation.goBack() } }
                                 name={"arrow-left"}
                                 size={25}
                                 style={{width: 30}}
@@ -171,13 +203,10 @@ export default function Product() {
                             />
                 }
                 centerComponent={{ 
-                    text: 'MY TITLE', style: { color: '#fff' } 
+                    text: product.name, style: {fontSize: 20, color: '#fff' } 
                 }}
                 rightComponent={
-                    <View style={{flexDirection:'row'}}>
-                        <View style={{marginRight: 15}}>
-                            <FontAwesome5 name="share-alt" size={25} color="white" />
-                        </View>
+                    <View style={{flexDirection:'row'}}>                   
                         <View style={{marginRight: 15}}>
                             <FontAwesome5 name="shopping-cart" size={25} color="white" /> 
                         </View>                             
@@ -214,9 +243,9 @@ export default function Product() {
                 }
             />
             <ScrollView ref={scroll}>
-                <MyCarousel data={data} changeTest={test => {setTest(test);console.log(test);}}/>
-                <BlockLocalBrand />
-                <BlockDetail />
+                <MyCarousel data={product} changeTest={test => {setTest(test);console.log(test);}}/>
+                <BlockLocalBrand data={product} />
+                <BlockDetail data={product} />
                 {/* <BlockMoreProduct /> */}
                              
             </ScrollView>
@@ -227,10 +256,9 @@ export default function Product() {
                         animated: true,
                 })}} />
              </View>  
-            <View style={{backgroundColor:'white', borderWidth: 1,flexDirection:'row', padding: 10, justifyContent:'space-evenly'}}>
-                <Button title={'chat'}/>
-                <View style={{width: 300}}>
-                    <Button style={styles.purchaseButton} color={'red'} title={'Purchase now'}/>   
+            <View style={{backgroundColor:'white', borderWidth: 1,padding:10}}>
+                <View style={{width: 300,alignSelf:'center'}}>
+                    <Button style={styles.purchaseButton} color={'red'} title={'Add To Cart'}/>   
                 </View>
             </View>
        
