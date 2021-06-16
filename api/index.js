@@ -13,3 +13,4 @@ defaultInstance.defaults.headers.common[
 ] = `Bearer ${resetJWTToken()}`;
 
 export { defaultInstance };
+

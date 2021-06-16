@@ -34,6 +34,11 @@ export default function Login(props) {
       setLoginLoading(false);
     }
   };
+
+  const registerHanlder = () => {
+    props.navigation.navigate('RegisterStack');
+  }
+
   return (
     <View style={styles.container}>
       <View
@@ -118,6 +123,7 @@ export default function Login(props) {
         </Text>
         <Button
           title={"Register An Account"}
+          onPress={registerHanlder}
           buttonStyle={{
             padding: 15,
             borderWidth: 1,
