@@ -129,6 +129,16 @@ export default function Search() {
           justifyContent: "center",
         }}
       />
+      {!loading && products.length === 0 && (
+        <Text
+          style={{
+            textAlign: "center",
+            marginTop: 10,
+          }}
+        >
+          No matches found
+        </Text>
+      )}
       <View style={styles.container}>
         <FlatList
           data={products}

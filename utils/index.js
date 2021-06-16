@@ -1,5 +1,3 @@
-import 'intl';
-import 'intl/locale-data/jsonp/vi-VN'; 
 const vnCurrencyFormatter = new Intl.NumberFormat("vi-VN", {
   style: "currency",
   currency: "VND",
