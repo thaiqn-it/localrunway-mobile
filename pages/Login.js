@@ -18,7 +18,7 @@ export default function Login(props) {
   useEffect(() => {
     resetJWTToken().then((token) => {
       if (token) {
-        return; // test
+        // return; // test
         navigation.navigate("HomeTab");
       }
     });

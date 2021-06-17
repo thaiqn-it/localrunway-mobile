@@ -9,6 +9,7 @@ import {
 } from "react-native-elements";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { localBrandApi } from "../api/localbrand";
+import MultiSlider from "@ptomasroos/react-native-multi-slider";
 
 const SortBy = ({ filter, setFilter }) => {
   const toggleValue = (value) => () => {
@@ -44,6 +45,42 @@ const SortBy = ({ filter, setFilter }) => {
             title={title}
           />
         ))}
+      </View>
+    </Card>
+  );
+};
+
+const Prices = ({ filter, setFilter }) => {
+  const MIN_PRICE = 100000;
+  const MAX_PRICE = 2000000;
+  const PRICE_STEP = 100000;
+  return (
+    <Card containerStyle={styles.cardContainer}>
+      <Card.Title style={{ textAlign: "left" }}>Prices</Card.Title>
+      <View
+        style={{
+          marginTop: 20,
+          alignItems: "center",
+        }}
+      >
+        <MultiSlider
+          enableLabel={true}
+          step={PRICE_STEP}
+          showSteps={true}
+          onValuesChangeFinish={(values) => {
+            setFilter({
+              ...filter,
+              prices: values,
+            });
+          }}
+          values={[
+            filter.prices[0] ?? MIN_PRICE,
+            filter.prices[1] ?? MAX_PRICE,
+          ]}
+          isMarkersSeparated={true}
+          min={MIN_PRICE}
+          max={MAX_PRICE}
+        />
       </View>
     </Card>
   );
@@ -143,6 +180,7 @@ export default function SearchFilter({
         />
         <ScrollView>
           <SortBy filter={filter} setFilter={setFilter} />
+          <Prices filter={filter} setFilter={setFilter} />
           <Brands filter={filter} setFilter={setFilter} />
         </ScrollView>
       </View>

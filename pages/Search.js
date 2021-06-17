@@ -33,6 +33,7 @@ export default function Search() {
     sort: null,
     brandIds: [],
     categoryId: null,
+    prices: [],
   });
 
   useEffect(() => {
