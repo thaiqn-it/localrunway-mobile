@@ -67,19 +67,52 @@ const RegisterHobby = (props) => {
       status: "ACTIVE",
     };
     //api goes here
-    console.log(user);
-    const response = await customerApi.register(user);
-    console.log(response.data);
-    // try {
-    //   const response = await customerApi.register(user);
-    //   console.log(response.data);
-    //   if (response.data.customer._id) {
-    //     Alert.alert("Success", "Registered successfully!");
-    //     props.navigation.navigate("Login");
-    //   }
-    // } catch (err) {
-    //   Alert.alert(err, "Your input is not correct!");
-    // }
+    let errorMsg = "";
+
+    try {
+      const response = await customerApi.register(user);
+    } catch (err) {
+      if (err.response.data.errorParams.phoneNumber) {
+        errorMsg = errorMsg.concat(
+          `\n` + err.response.data.errorParams.phoneNumber
+        );
+      }
+
+      if (err.response.data.errorParams.email) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.email);
+      }
+
+      if (err.response.data.errorParams.password) {
+        errorMsg = errorMsg.concat(
+          `\n` + err.response.data.errorParams.password
+        );
+      }
+
+      if (err.response.data.errorParams.name) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.name);
+      }
+
+      if (err.response.data.errorParams.gender) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.gender);
+      }
+
+      if (err.response.data.errorParams.height) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.height);
+      }
+
+      if (err.response.data.errorParams.weight) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.weight);
+      }
+    }
+
+    if (errorMsg) {
+      Alert.alert("Error", errorMsg);
+    } else {
+      Alert.alert("Register Successfully", "You will be navigated to Login!");
+      setTimeout(() => {
+        props.navigation.navigate("Login");
+      }, 2000);
+    }
   };
 
   const checkItemExist = (idToFind) => {
