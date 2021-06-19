@@ -19,8 +19,7 @@ const Register = (props) => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [address, setAddress] = useState("");
 
   const onChangeEmailHandler = (email) => {
@@ -32,32 +31,33 @@ const Register = (props) => {
   const onChangePasswordHandler = (password) => {
     setPassword(password);
   };
-  const onChangeFirstNameHandler = (firstName) => {
-    setFirstName(firstName);
-  };
-  const onChangeLastNameHandler = (lastName) => {
-    setLastName(lastName);
+  const onChangeFullNameHandler = (fullName) => {
+    setFullName(fullName);
   };
   const onChangeAddressHandler = (address) => {
     setAddress(address);
   };
 
   const onSubmitHanlder = (event) => {
-    // if (email.length === 0 || phoneNumber === 0 || password === 0) {
-    //   Alert.alert("Please input full required fields");
-    // }
-
-    //navigation
-    props.navigation.navigate("RegisterBody", {
-      user: {
-        email: email,
-        phoneNumber: phoneNumber,
-        password: password,
-        firstName: firstName,
-        lastName: lastName,
-        address: address,
-      },
-    });
+    if (
+      email.length === 0 ||
+      phoneNumber.length === 0 ||
+      password.length === 0 ||
+      fullName.length === 0
+    ) {
+      Alert.alert("Please input full required fields");
+    } else {
+      //navigation
+      props.navigation.navigate("RegisterBody", {
+        user: {
+          email: email,
+          phoneNumber: phoneNumber,
+          password: password,
+          name: fullName,
+          address: address,
+        },
+      });
+    }
   };
 
   //setTitle
@@ -141,22 +141,15 @@ const Register = (props) => {
               value={password}
               onChangeText={onChangePasswordHandler}
             />
-
             <Input
               inputContainerStyle={styles.input}
-              placeholder="First Name"
-              value={firstName}
-              onChangeText={onChangeFirstNameHandler}
+              placeholder="Your Name*"
+              value={fullName}
+              onChangeText={onChangeFullNameHandler}
             />
             <Input
               inputContainerStyle={styles.input}
-              placeholder="Last Name"
-              value={lastName}
-              onChangeText={onChangeLastNameHandler}
-            />
-            <Input
-              inputContainerStyle={styles.input}
-              placeholder="Adress"
+              placeholder="Address"
               value={address}
               onChangeText={onChangeAddressHandler}
             />
@@ -215,7 +208,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginTop: 4,
-    height: "65%",
+    height: "60%",
   },
   action: {
     height: "20%",

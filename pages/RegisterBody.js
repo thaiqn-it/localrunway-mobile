@@ -43,21 +43,21 @@ const RegisterBody = (props) => {
     setIsMale(true);
     setIsOther(false);
     setIsFemale(false);
-    setGender("Male");
+    setGender("MALE");
   };
 
   const femaleChoice = () => {
     setIsMale(false);
     setIsOther(false);
     setIsFemale(true);
-    setGender("Female");
+    setGender("FEMALE");
   };
 
   const otherChoice = () => {
     setIsMale(false);
     setIsOther(true);
     setIsFemale(false);
-    setGender("Other");
+    setGender("OTHER");
   };
 
   return (

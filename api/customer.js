@@ -12,8 +12,12 @@ const loginWithFacebook = ({ access_token, ...data }) => {
     access_token,
   });
 };
+const register = (user) => {
+  return defaultInstance.post("/customers/register", user);
+};
 
 export const customerApi = {
   login,
   loginWithFacebook,
+  register,
 };

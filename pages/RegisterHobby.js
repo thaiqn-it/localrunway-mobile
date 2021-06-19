@@ -6,6 +6,7 @@ import {
 } from "react-native";
 import { View, StyleSheet, FlatList, Alert } from "react-native";
 import { Card, Text, Input, Image, Button } from "react-native-elements";
+import { customerApi } from "../api/customer";
 
 import { localBrandApi } from "../api/localbrand";
 const RegisterHobby = (props) => {
@@ -56,21 +57,33 @@ const RegisterHobby = (props) => {
     }
   };
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     let user = props.route.params.user;
     user = {
       ...user,
       job: job,
       hobby: hobby,
-      localBrands: selectedLocalBrands,
+      // localBrands: selectedLocalBrands,
+      status: "ACTIVE",
     };
-    console.log(selectedLocalBrands);
     //api goes here
+    console.log(user);
+    const response = await customerApi.register(user);
+    console.log(response.data);
+    // try {
+    //   const response = await customerApi.register(user);
+    //   console.log(response.data);
+    //   if (response.data.customer._id) {
+    //     Alert.alert("Success", "Registered successfully!");
+    //     props.navigation.navigate("Login");
+    //   }
+    // } catch (err) {
+    //   Alert.alert(err, "Your input is not correct!");
+    // }
   };
 
   const checkItemExist = (idToFind) => {
     const isIn = selectedLocalBrands.findIndex((id) => id === idToFind) != -1;
-    // console.log(idToFind + " From itemexist", selectedLocalBrands, isIn);
     return isIn;
   };
 
@@ -92,7 +105,6 @@ const RegisterHobby = (props) => {
             },
           ]}
         >
-          {console.log(checkItemExist(ItemData.item._id))}
           <Image
             style={styles.tinyLogo}
             source={{
