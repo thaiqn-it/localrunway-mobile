@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { Input, Button, CheckBox } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
+import * as Facebook from "expo-facebook";
 
 const Register = (props) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,6 +22,7 @@ const Register = (props) => {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [address, setAddress] = useState("");
+  const [facebookId, setFacebookId] = useState("");
 
   const onChangeEmailHandler = (email) => {
     setEmail(email);
@@ -55,8 +57,41 @@ const Register = (props) => {
           password: password,
           name: fullName,
           address: address,
+          fb_userId: facebookId,
         },
       });
+    }
+  };
+
+  const continueWithFacebookHandler = async () => {
+    try {
+      await Facebook.initializeAsync({
+        appId: "319135163220953",
+      });
+
+      const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ["public_profile", "email", "user_location"],
+      });
+
+      if (type === "success") {
+        fetch(
+          `https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,location`
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            setFacebookId(data.id);
+            setEmail(data.email);
+            setFullName(data.name);
+          })
+          .catch((e) => console.log(e));
+      } else {
+        Alert.alert(
+          "Message",
+          "If you have just canceled, please input full required fields"
+        );
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
     }
   };
 
@@ -74,6 +109,7 @@ const Register = (props) => {
         <ScrollView>
           <View style={styles.continueContainer}>
             <Button
+              onPress={continueWithFacebookHandler}
               icon={
                 <Icon
                   name="facebook-square"

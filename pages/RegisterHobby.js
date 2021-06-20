@@ -106,7 +106,7 @@ const RegisterHobby = (props) => {
     }
 
     if (errorMsg) {
-      Alert.alert("Error", errorMsg);
+      Alert.alert("Failed", errorMsg);
     } else {
       Alert.alert("Register Successfully", "You will be navigated to Login!");
       setTimeout(() => {
