@@ -3,11 +3,15 @@ import { Avatar, ListItem, Text } from "react-native-elements";
 import { View } from "react-native";
 import { vndFormat } from "../utils";
 import { useNavigation } from "@react-navigation/native";
+
 export default function SearchItem({ item }) {
   const navigation = useNavigation();
   return (
     <ListItem
-      onPress={() => navigation.navigate("Product",item._id)}
+      button
+      onPress={() => {
+        navigation.navigate("Product", item._id);
+      }}
       bottomDivider
       containerStyle={{
         minHeight: 100,
@@ -15,7 +19,9 @@ export default function SearchItem({ item }) {
     >
       <Avatar
         source={{
-          uri: "https://neva.vn/upload/img/ao-so-mi-trang-quan-au-den-soc.jpg",
+          uri:
+            item.thumbnailUrl ??
+            "https://neva.vn/upload/img/ao-so-mi-trang-quan-au-den-soc.jpg",
         }}
         containerStyle={{
           width: 100,
@@ -54,11 +60,15 @@ export default function SearchItem({ item }) {
               backgroundColor: item.color.toLowerCase(),
               width: 20,
               height: 20,
-              borderRadius: 50,
+              borderRadius: "50%",
             }}
           />
         </View>
-
+        <Text
+          style={{
+            marginTop: 4,
+          }}
+        >{`Brand: ${item.brandName}`}</Text>
         <ListItem.Title
           style={{
             fontWeight: "bold",

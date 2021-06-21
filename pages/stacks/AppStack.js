@@ -4,12 +4,13 @@ import Login from "../Login";
 import HomeTabNavigator from "../navigations/HomeTabNavigator";
 import Product from "../Product";
 import HistoryOrders from "../HistoryOrders";
+import RegisterStackNavigator from "../stacks/RegisterStack";
 
 const Stack = createStackNavigator();
 
 export default function AppStack() {
   return (
-    <Stack.Navigator initialRouteName={"HomeTab"}>
+    <Stack.Navigator initialRouteName={"Login"}>
       <Stack.Screen
         name={"Login"}
         component={Login}
@@ -34,6 +35,13 @@ export default function AppStack() {
       <Stack.Screen
         name={"History"}
         component={HistoryOrders}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={"RegisterStack"}
+        component={RegisterStackNavigator}
         options={{
           headerShown: false,
         }}

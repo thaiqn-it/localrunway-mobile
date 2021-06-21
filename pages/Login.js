@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, KeyboardAvoidingView, Alert } from "react-native";
-import { Button, Image, Input, Text } from "react-native-elements";
+import { Button, Divider, Image, Input, Text } from "react-native-elements";
 import { PRIMARY_COLOR, PRIMARY_FONT } from "../constants/styles";
 import { customerApi } from "../api/customer";
 import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import { JWT_TOKEN, JWT_TOKEN_KEY, resetJWTToken } from "../constants";
+import * as Facebook from "expo-facebook";
 
 export default function Login(props) {
   const navigation = useNavigation();
@@ -17,6 +18,7 @@ export default function Login(props) {
   useEffect(() => {
     resetJWTToken().then((token) => {
       if (token) {
+        // return; // test
         navigation.navigate("HomeTab");
       }
     });
@@ -34,6 +36,30 @@ export default function Login(props) {
       setLoginLoading(false);
     }
   };
+
+  const loginByFacebook = async () => {
+    try {
+      await Facebook.initializeAsync({
+        appId: "2943143719307860",
+      });
+      const { token } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ["public_profile"],
+      });
+
+      const res = await customerApi.loginWithFacebook({
+        access_token: token,
+      });
+      await SecureStore.setItemAsync(JWT_TOKEN_KEY, res.data.token);
+      navigation.navigate("HomeTab");
+    } catch ({ message }) {
+      Alert.alert("Login Status", `Fail to login with Facebook`);
+    }
+  };
+
+  const registerHanlder = () => {
+    props.navigation.navigate("RegisterStack");
+  };
+
   return (
     <View style={styles.container}>
       <View
@@ -110,14 +136,34 @@ export default function Login(props) {
           h4
           style={{
             textAlign: "center",
-            marginTop: 10,
+            marginVertical: 10,
             fontFamily: PRIMARY_FONT,
           }}
         >
           Or
         </Text>
         <Button
+          title={"Login With Facebook"}
+          icon={{
+            type: "font-awesome-5",
+            name: "facebook",
+            color: "white",
+          }}
+          iconContainerStyle={{
+            marginRight: 10,
+          }}
+          onPress={loginByFacebook}
+          buttonStyle={{
+            padding: 15,
+            backgroundColor: "#3b5998",
+          }}
+          titleStyle={{
+            fontFamily: PRIMARY_FONT,
+          }}
+        />
+        <Button
           title={"Register An Account"}
+          onPress={registerHanlder}
           buttonStyle={{
             padding: 15,
             borderWidth: 1,
