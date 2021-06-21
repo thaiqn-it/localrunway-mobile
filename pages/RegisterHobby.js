@@ -63,7 +63,7 @@ const RegisterHobby = (props) => {
       ...user,
       job: job,
       hobby: hobby,
-      // localBrands: selectedLocalBrands,
+      firstBoughtBrandIds: selectedLocalBrands,
       status: "ACTIVE",
     };
     //api goes here
@@ -108,7 +108,10 @@ const RegisterHobby = (props) => {
     if (errorMsg) {
       Alert.alert("Failed", errorMsg);
     } else {
-      Alert.alert("Register Successfully", "You will be navigated to Login!");
+      Alert.alert(
+        "Register Successfully",
+        "You will be navigated automatically to Login!"
+      );
       setTimeout(() => {
         props.navigation.navigate("Login");
       }, 2000);
