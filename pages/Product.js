@@ -25,6 +25,7 @@ import { productApi } from '../api/product';
 import { localBrandApi } from '../api/localbrand';
 import { categoryApi } from '../api/category';
 import { useNavigation } from "@react-navigation/native";
+import { CartContext } from '../context/Cart';
 
 function SeparateLine () {
     return(
@@ -258,7 +259,18 @@ export default function Product() {
              </View>  
             <View style={{backgroundColor:'white', borderWidth: 1,padding:10}}>
                 <View style={{width: 300,alignSelf:'center'}}>
-                    <Button style={styles.purchaseButton} color={'red'} title={'Add To Cart'}/>   
+                    <CartContext.Consumer> 
+                        {({dispatch}) => (
+                            <Button style={styles.purchaseButton} 
+                                    color={'red'}
+                                    title={'Add To Cart'}
+                                    onPress={()=>dispatch({type:'INCREASE',
+                                                            item:{
+                                                                product : product,
+                                                                quantity: 1,
+                                                            }})}/>                             
+                        )}                                  
+                    </CartContext.Consumer>
                 </View>
             </View>
        

@@ -13,6 +13,7 @@ import { defaultInstance } from "./api";
 import { NavigationContainer } from "@react-navigation/native";
 import AppStack from "./pages/stacks/AppStack";
 import { useFonts, OpenSans_400Regular } from "@expo-google-fonts/open-sans";
+import CartProvider from "./context/Cart";
 
 const { API_URI } = getEnvVars();
 
@@ -24,8 +25,10 @@ export default function App() {
     return <ActivityIndicator />;
   }
   return (
-    <NavigationContainer>
-      <AppStack />
-    </NavigationContainer>
+    <CartProvider>
+      <NavigationContainer>
+        <AppStack />
+      </NavigationContainer>
+    </CartProvider>
   );
 }

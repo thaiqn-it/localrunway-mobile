@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import Login from "../Login";
 import HomeTabNavigator from "../navigations/HomeTabNavigator";
 import Product from "../Product";
+import HistoryOrders from "../HistoryOrders";
 
 const Stack = createStackNavigator();
 
@@ -26,6 +27,13 @@ export default function AppStack() {
       <Stack.Screen
         name={"Product"}
         component={Product}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={"History"}
+        component={HistoryOrders}
         options={{
           headerShown: false,
         }}

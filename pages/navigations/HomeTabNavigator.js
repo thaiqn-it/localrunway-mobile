@@ -6,6 +6,7 @@ import Search from "../Search";
 import Profile from "../Profile";
 import { Icon } from "react-native-elements";
 import { PRIMARY_COLOR } from "../../constants/styles";
+import Cart from "../Cart";
 
 const Tab = createBottomTabNavigator();
 
@@ -25,6 +26,9 @@ export default function HomeTabNavigator() {
           if (route.name === "Search") {
             iconName = "search";
           }
+          if (route.name === "Cart") {
+            iconName = "shopping-cart";
+          }
           return <Icon name={iconName} type={"material"} />;
         },
       })}
@@ -35,6 +39,7 @@ export default function HomeTabNavigator() {
     >
       <Tab.Screen name={"Feed"} component={Feed} />
       <Tab.Screen name={"Search"} component={Search} />
+      <Tab.Screen name={"Cart"} component={Cart} />
       <Tab.Screen name={"Profile"} component={Profile} />
     </Tab.Navigator>
   );
