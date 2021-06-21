@@ -38,6 +38,7 @@ const ConfirmDialog = ({visible,changeVisible,selectList}) => {
             changeVisible(false)
           }}
           onConfirmPressed={() => {        
+            
             dispatch({type : "DELETE_ITEM", item : selectList})
             setSelect({type : 'REMOVE'})
           }}
@@ -59,7 +60,10 @@ const Product = ({data}) => {
         setVisible(false)
     }, [isSelect])
 
-    
+    useEffect(() => {
+        setVisible(false)
+    }, [state])
+
     return(
         <View style={styles.containerProduct}>      
             <Checkbox
@@ -120,6 +124,7 @@ export default function Cart() {
 
     useEffect(() => {
         setTotal(getTotalPrice())
+        setVisible(false)
     }, [state])
 
     if (state.item.length > 0){  
