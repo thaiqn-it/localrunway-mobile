@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { Input, Button, CheckBox } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
+import * as Facebook from "expo-facebook";
 
 const Register = (props) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,9 +20,9 @@ const Register = (props) => {
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [address, setAddress] = useState("");
+  const [facebookId, setFacebookId] = useState("");
 
   const onChangeEmailHandler = (email) => {
     setEmail(email);
@@ -32,32 +33,66 @@ const Register = (props) => {
   const onChangePasswordHandler = (password) => {
     setPassword(password);
   };
-  const onChangeFirstNameHandler = (firstName) => {
-    setFirstName(firstName);
-  };
-  const onChangeLastNameHandler = (lastName) => {
-    setLastName(lastName);
+  const onChangeFullNameHandler = (fullName) => {
+    setFullName(fullName);
   };
   const onChangeAddressHandler = (address) => {
     setAddress(address);
   };
 
   const onSubmitHanlder = (event) => {
-    // if (email.length === 0 || phoneNumber === 0 || password === 0) {
-    //   Alert.alert("Please input full required fields");
-    // }
+    if (
+      email.length === 0 ||
+      phoneNumber.length === 0 ||
+      password.length === 0 ||
+      fullName.length === 0
+    ) {
+      Alert.alert("Please input full required fields");
+    } else {
+      //navigation
+      props.navigation.navigate("RegisterBody", {
+        user: {
+          email: email,
+          phoneNumber: phoneNumber,
+          password: password,
+          name: fullName,
+          address: address,
+          fb_userId: facebookId,
+        },
+      });
+    }
+  };
 
-    //navigation
-    props.navigation.navigate("RegisterBody", {
-      user: {
-        email: email,
-        phoneNumber: phoneNumber,
-        password: password,
-        firstName: firstName,
-        lastName: lastName,
-        address: address,
-      },
-    });
+  const continueWithFacebookHandler = async () => {
+    try {
+      await Facebook.initializeAsync({
+        appId: "319135163220953",
+      });
+
+      const { type, token } = await Facebook.logInWithReadPermissionsAsync({
+        permissions: ["public_profile", "email", "user_location"],
+      });
+
+      if (type === "success") {
+        fetch(
+          `https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,location`
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            setFacebookId(data.id);
+            setEmail(data.email);
+            setFullName(data.name);
+          })
+          .catch((e) => console.log(e));
+      } else {
+        Alert.alert(
+          "Message",
+          "If you have just canceled, please input full required fields"
+        );
+      }
+    } catch ({ message }) {
+      alert(`Facebook Login Error: ${message}`);
+    }
   };
 
   //setTitle
@@ -74,6 +109,7 @@ const Register = (props) => {
         <ScrollView>
           <View style={styles.continueContainer}>
             <Button
+              onPress={continueWithFacebookHandler}
               icon={
                 <Icon
                   name="facebook-square"
@@ -141,22 +177,15 @@ const Register = (props) => {
               value={password}
               onChangeText={onChangePasswordHandler}
             />
-
             <Input
               inputContainerStyle={styles.input}
-              placeholder="First Name"
-              value={firstName}
-              onChangeText={onChangeFirstNameHandler}
+              placeholder="Your Name*"
+              value={fullName}
+              onChangeText={onChangeFullNameHandler}
             />
             <Input
               inputContainerStyle={styles.input}
-              placeholder="Last Name"
-              value={lastName}
-              onChangeText={onChangeLastNameHandler}
-            />
-            <Input
-              inputContainerStyle={styles.input}
-              placeholder="Adress"
+              placeholder="Address"
               value={address}
               onChangeText={onChangeAddressHandler}
             />
@@ -215,7 +244,7 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginTop: 4,
-    height: "65%",
+    height: "60%",
   },
   action: {
     height: "20%",
