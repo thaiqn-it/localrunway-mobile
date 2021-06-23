@@ -3,6 +3,7 @@ import { Avatar, ListItem, Text } from "react-native-elements";
 import { View } from "react-native";
 import { vndFormat } from "../utils";
 import { useNavigation } from "@react-navigation/native";
+import ColorBox from "./ColorBox";
 
 export default function SearchItem({ item }) {
   const navigation = useNavigation();
@@ -55,14 +56,7 @@ export default function SearchItem({ item }) {
               {item.size}
             </Text>
           </Text>
-          <View
-            style={{
-              backgroundColor: item.color.toLowerCase(),
-              width: 20,
-              height: 20,
-              borderRadius: 50,
-            }}
-          />
+          <ColorBox color={item.color.toLowerCase()} />
         </View>
         <Text
           style={{

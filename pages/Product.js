@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,8 +8,9 @@ import {
   Pressable,
   FlatList,
   Button,
+  TouchableOpacity,
 } from "react-native";
-import { Header } from "react-native-elements";
+import { Badge, Header, Icon } from "react-native-elements";
 import { useRoute } from "@react-navigation/native";
 import {
   FontAwesome5,
@@ -30,7 +31,7 @@ import { productApi } from "../api/product";
 import { localBrandApi } from "../api/localbrand";
 import { categoryApi } from "../api/category";
 import { useNavigation } from "@react-navigation/native";
-import { CartContext } from '../context/Cart';
+import { CartContext } from "../context/Cart";
 
 function SeparateLine() {
   return (
@@ -83,9 +84,17 @@ function BlockDetail({ data }) {
   return (
     <ScrollView style={styles.blockDetailContainer}>
       <View style={styles.titleDetail}>
-        <Text style={{ fontWeight: "bold", fontSize: 15 }}>Product Detail</Text>
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 15,
+            marginLeft: 4,
+            marginBottom: 10,
+          }}
+        >
+          Description
+        </Text>
       </View>
-      <SeparateLine />
       <View style={styles.titleDetail}>
         <View style={{ flex: 3 }}>
           <Text style={styles.textDetail}>Brand</Text>
@@ -98,18 +107,11 @@ function BlockDetail({ data }) {
           <Text style={styles.textInfoDetail}>{data.quantity}</Text>
         </View>
       </View>
-      <SeparateLine />
       <View>
         <Text style={styles.description} numberOfLines={more}>
           {data.description}
         </Text>
       </View>
-      <SeparateLine />
-      <Pressable onPress={toggleNumOfLine}>
-        <Text style={{ color: "red", textAlign: "center", padding: 5 }}>
-          View More
-        </Text>
-      </Pressable>
     </ScrollView>
   );
 }
@@ -186,8 +188,17 @@ function BlockLocalBrand({ data }) {
           style={styles.shopImage}
         />
         <View style={{ marginLeft: 20 }}>
-          <Text style={{ fontSize: 20 }}>{localBrand.name}</Text>
-          <Text>{localBrand.address}</Text>
+          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+            {localBrand.name}
+          </Text>
+          <Text
+            style={{
+              fontSize: 15,
+              marginTop: 5,
+            }}
+          >
+            {localBrand.address}
+          </Text>
         </View>
       </View>
     </View>
@@ -201,6 +212,8 @@ export default function Product() {
   const [product, setProduct] = useState([]);
   const navigation = useNavigation();
 
+  const cartContext = useContext(CartContext);
+
   useEffect(() => {
     productApi
       .getOneById(route.params)
@@ -213,70 +226,63 @@ export default function Product() {
   }, []);
 
   return (
-    <MenuProvider>
+    <MenuProvider
+      style={{
+        backgroundColor: "white",
+      }}
+    >
       <Header
         containerStyle={{
           backgroundColor: "white",
-          shadowOpacity: 0.8,
-          shadowRadius: 8,
+          shadowOpacity: 0.4,
+          shadowRadius: 4,
         }}
         placement="left"
         leftComponent={
-          <FontAwesome5
+          <TouchableOpacity
+            style={{
+              alignItems: "center",
+              flexDirection: "row",
+            }}
             onPress={() => {
               navigation.goBack();
             }}
-            name={"arrow-left"}
-            size={25}
-            style={{ width: 30 }}
-            color={"black"}
-          />
+          >
+            <FontAwesome5
+              name={"chevron-left"}
+              size={20}
+              style={{ width: 30 }}
+              color={"black"}
+            />
+            <Text
+              style={{
+                fontSize: 20,
+                marginLeft: -5,
+              }}
+            >
+              Detail
+            </Text>
+          </TouchableOpacity>
         }
-        centerComponent={{
-          text: product.name,
-          style: { fontSize: 20, color: "black" },
-        }}
+        leftContainerStyle={{ flex: 4, flexDirection: "row" }}
         rightComponent={
-          <View style={{ flexDirection: "row" }}>
-            <View style={{ marginRight: 15 }}>
-              <FontAwesome5 name="shopping-cart" size={25} color="black" />
-            </View>
-            <Menu>
-              <MenuTrigger
-                children={
-                  <SimpleLineIcons
-                    name="options-vertical"
-                    size={25}
-                    color="black"
-                  />
-                }
-              />
-              <MenuOptions>
-                <MenuOption onSelect={() => alert(`Go Home`)}>
-                  <View style={styles.menuOptions}>
-                    <FontAwesome5 name="home" size={24} color="black" />
-                    <Text style={styles.textOption}>{test}</Text>
-                  </View>
-                </MenuOption>
-                <MenuOption onSelect={() => alert(`Report this product`)}>
-                  <View style={styles.menuOptions}>
-                    <SimpleLineIcons
-                      name="exclamation"
-                      size={24}
-                      color="black"
-                    />
-                    <Text style={styles.textOption}>Report this product</Text>
-                  </View>
-                </MenuOption>
-                <MenuOption onSelect={() => alert(`Need Help?`)}>
-                  <View style={styles.menuOptions}>
-                    <Feather name="help-circle" size={24} color="black" />
-                    <Text style={styles.textOption}>Need Help?</Text>
-                  </View>
-                </MenuOption>
-              </MenuOptions>
-            </Menu>
-          </View>
+          <TouchableOpacity
+            style={{ marginRight: 10 }}
+            onPress={() => {
+              navigation.navigate("Cart");
+            }}
+          >
+            <FontAwesome5 name="shopping-cart" size={20} color="black" />
+            <Badge
+              status={"error"}
+              value={cartContext.getTotalItems()}
+              containerStyle={{
+                position: "absolute",
+                top: -6,
+                right: -14,
+              }}
+            />
+          </TouchableOpacity>
         }
       />
       <ScrollView ref={scroll}>
@@ -284,18 +290,20 @@ export default function Product() {
           data={product}
           changeTest={(test) => {
             setTest(test);
-            console.log(test);
           }}
         />
         <BlockLocalBrand data={product} />
         <BlockDetail data={product} />
-        {/* <BlockMoreProduct /> */}
       </ScrollView>
       <View style={styles.iconToTop}>
-        <AntDesign
-          name="totop"
-          size={30}
-          color="red"
+        <Icon
+          name="sort-up"
+          type={"font-awesome-5"}
+          size={40}
+          style={{
+            marginTop: 7,
+          }}
+          color="black"
           onPress={() => {
             scroll.current?.scrollTo({
               y: 0,
@@ -304,20 +312,33 @@ export default function Product() {
           }}
         />
       </View>
-      <View style={{ backgroundColor: "white", borderWidth: 1, padding: 10 }}>
+      <View
+        style={{
+          backgroundColor: "white",
+          shadowOpacity: 0.1,
+          shadowRadius: 2,
+          padding: 10,
+        }}
+      >
         <View style={{ width: 300, alignSelf: "center" }}>
-            <CartContext.Consumer> 
-                {({dispatch}) => (
-                    <Button style={styles.purchaseButton} 
-                            color={'red'}
-                            title={'Add To Cart'}
-                            onPress={()=>dispatch({type:'INCREASE',
-                                                    item:{
-                                                        product : product,
-                                                        quantity: 1,
-                                                    }})}/>                             
-                )}                                  
-            </CartContext.Consumer>
+          <CartContext.Consumer>
+            {({ dispatch }) => (
+              <Button
+                style={styles.purchaseButton}
+                color={"red"}
+                title={"Add To Cart"}
+                onPress={() =>
+                  dispatch({
+                    type: "INCREASE",
+                    item: {
+                      product: product,
+                      quantity: 1,
+                    },
+                  })
+                }
+              />
+            )}
+          </CartContext.Consumer>
         </View>
       </View>
     </MenuProvider>
@@ -341,7 +362,7 @@ const styles = StyleSheet.create({
   },
   titleDetail: {
     flexDirection: "row",
-    padding: 10,
+    marginLeft: 10,
   },
   textDetail: {
     padding: 5,
@@ -353,7 +374,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   description: {
-    padding: 10,
+    marginLeft: 14,
+    marginVertical: 10,
     fontSize: 15,
   },
   containerMoreProduct: {
