@@ -357,7 +357,8 @@ export default function Product() {
                 style={styles.purchaseButton}
                 color={"red"}
                 title={"Add To Cart"}
-                onPress={() =>
+                onPress={() =>{
+                  setVisible(true)
                   dispatch({
                     type: "INCREASE",
                     item: {
@@ -365,6 +366,7 @@ export default function Product() {
                       quantity: 1,
                     },
                   })
+                }
                 }
               />
             )}

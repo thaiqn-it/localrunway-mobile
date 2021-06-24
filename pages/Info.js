@@ -1,5 +1,5 @@
 import React,{ useState } from 'react'
-import { StyleSheet, Text, View,Picker,Button,ScrollView } from 'react-native'
+import { StyleSheet, Text, View,Picker,Button,ScrollView,TouchableOpacity } from 'react-native'
 import { Header,Input } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native';
 import {FontAwesome5} from "@expo/vector-icons";
@@ -18,20 +18,41 @@ export default function Info() {
 
     return (
         <ScrollView style={{height:'100%'}}>
-            <Header 
-                leftComponent={
-                <FontAwesome5
-                            onPress={ () => { navigation.goBack() } }
-                            name={"arrow-left"}
-                            size={25}
-                            style={{width: 30}}
-                            color={'white'}
-                        />
-                    }
-                    centerComponent={{ 
-                        text: 'Infomation', style: {fontSize: 20, color: '#fff' } 
-                    }} 
-                />
+            <Header
+        containerStyle={{
+          backgroundColor: "white",
+        }}
+        leftComponent={
+          <TouchableOpacity
+            style={{
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+            >
+            <FontAwesome5
+            name={"chevron-left"}
+            size={20}
+            style={{ width: 30 }}
+            color={"black"}
+            />
+            <Text
+            style={{
+                fontSize: 20,
+                marginLeft: -5,
+            }}
+            >
+            Back
+            </Text>
+        </TouchableOpacity>
+        }
+            centerComponent={{
+            text: "Info",
+            style: { fontSize: 20, color: "black", fontWeight: "bold" },
+            }}
+        />
             <View>
                 <Text style={styles.title}>Input your information : </Text>
                 <Input  label={"Name :"}
