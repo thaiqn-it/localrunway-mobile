@@ -9,6 +9,12 @@ export default function ColorBox({ color }) {
         width: 20,
         height: 20,
         borderRadius: 50,
+        shadowRadius: 2,
+        shadowOffset: {
+          width: 0,
+          height: 0,
+        },
+        shadowOpacity: 0.1,
       }}
     />
   );

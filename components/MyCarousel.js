@@ -164,10 +164,15 @@ const MyCarousel = ({ data, changeTest }) => {
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.price}>{vndFormat(data.price)}</Text>
         <Text style={{ marginLeft: 25, fontSize: 18 }}>Size : {data.size}</Text>
-        <ColorBox color={color} />
+        <View
+          style={{
+            marginLeft: 10,
+          }}
+        >
+          <ColorBox color={color} />
+        </View>
       </View>
       <View>
-        {/* //Modal size,color picker */}
         <View style={styles.centeredView}>
           <Modal
             animationType="slide"
@@ -273,42 +278,32 @@ const MyCarousel = ({ data, changeTest }) => {
             </View>
           </Modal>
         </View>
-
-        {/* Size,color picker */}
-        {/* <TouchableWithoutFeedback onPress={() => setModalVisible(!modalVisible)}>
-          <View style={styles.stylePicker}>  
-              <View>
-                <Image source={{uri : 'https://cf.shopee.vn/file/c5fd54abd1c1b12040e0f1f22ff3b1e8'}} style={{width:50,height:50}}/>
-              </View>
-              <View>
-                <Text style={styles.pickerTitle}>Color/Size</Text>
-                <Text style={styles.pickerDetail}>Red/40</Text>
-              </View>
-              <View style={{alignSelf:'center',marginHorizontal:150}}>
-                <AntDesign name="right" size={20} color="black"/>
-              </View>       
-          </View>
-        </TouchableWithoutFeedback>    */}
       </View>
       <View style={styles.rating}>
-        <Rating
-          count={5}
-          defaultRating={4}
-          startingValue={4}
-          imageSize={20}
-          fractions={1}
-          onFinishRating={(rating) => setRating(rating)}
-        />
-        <Text style={styles.ratingTitle}>{rating}</Text>
         <View
           style={{
+            alignItems: "center",
             flexDirection: "row",
-            marginLeft: 30,
-            flex: 1,
-            justifyContent: "space-around",
           }}
         >
+          <Rating
+            count={5}
+            defaultRating={4}
+            startingValue={4}
+            imageSize={20}
+            fractions={1}
+          />
+          <Text
+            style={{
+              marginLeft: 5,
+            }}
+          >
+            {rating}/5
+          </Text>
         </View>
+        <Text style={styles.soldText}>
+          {data.quantity > 0 ? "In Stock" : "Out Of Stock"}
+        </Text>
       </View>
     </View>
   );
@@ -325,7 +320,7 @@ const styles = StyleSheet.create({
   },
 
   item: {
-    width: screenWidth - 60,
+    width: screenWidth - 20,
     height: screenWidth - 60,
   },
 
@@ -339,7 +334,7 @@ const styles = StyleSheet.create({
 
   image: {
     ...StyleSheet.absoluteFillObject,
-    resizeMode: "contain",
+    resizeMode: "cover",
   },
   title: {
     flexDirection:'row',
@@ -348,15 +343,17 @@ const styles = StyleSheet.create({
   name : {
     fontSize: 25,
     padding: 10,
+    marginLeft: 5,
   },
   price: {
     color: "red",
     fontSize: 20,
-    marginLeft: 20,
+    marginLeft: 10,
   },
   rating: {
-    padding: 15,
+    paddingHorizontal: 20,
     flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
   },
   ratingTitle: {

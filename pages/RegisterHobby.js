@@ -6,6 +6,7 @@ import {
 } from "react-native";
 import { View, StyleSheet, FlatList, Alert } from "react-native";
 import { Card, Text, Input, Image, Button } from "react-native-elements";
+import { customerApi } from "../api/customer";
 
 import { localBrandApi } from "../api/localbrand";
 const RegisterHobby = (props) => {
@@ -56,21 +57,69 @@ const RegisterHobby = (props) => {
     }
   };
 
-  const submitHandler = () => {
+  const submitHandler = async () => {
     let user = props.route.params.user;
     user = {
       ...user,
       job: job,
       hobby: hobby,
-      localBrands: selectedLocalBrands,
+      firstBoughtBrandIds: selectedLocalBrands,
+      status: "ACTIVE",
     };
-    console.log(selectedLocalBrands);
     //api goes here
+    let errorMsg = "";
+
+    try {
+      const response = await customerApi.register(user);
+    } catch (err) {
+      if (err.response.data.errorParams.phoneNumber) {
+        errorMsg = errorMsg.concat(
+          `\n` + err.response.data.errorParams.phoneNumber
+        );
+      }
+
+      if (err.response.data.errorParams.email) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.email);
+      }
+
+      if (err.response.data.errorParams.password) {
+        errorMsg = errorMsg.concat(
+          `\n` + err.response.data.errorParams.password
+        );
+      }
+
+      if (err.response.data.errorParams.name) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.name);
+      }
+
+      if (err.response.data.errorParams.gender) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.gender);
+      }
+
+      if (err.response.data.errorParams.height) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.height);
+      }
+
+      if (err.response.data.errorParams.weight) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.weight);
+      }
+    }
+
+    if (errorMsg) {
+      Alert.alert("Failed", errorMsg);
+    } else {
+      Alert.alert(
+        "Register Successfully",
+        "You will be navigated automatically to Login!"
+      );
+      setTimeout(() => {
+        props.navigation.navigate("Login");
+      }, 2000);
+    }
   };
 
   const checkItemExist = (idToFind) => {
     const isIn = selectedLocalBrands.findIndex((id) => id === idToFind) != -1;
-    // console.log(idToFind + " From itemexist", selectedLocalBrands, isIn);
     return isIn;
   };
 
@@ -92,7 +141,6 @@ const RegisterHobby = (props) => {
             },
           ]}
         >
-          {console.log(checkItemExist(ItemData.item._id))}
           <Image
             style={styles.tinyLogo}
             source={{
