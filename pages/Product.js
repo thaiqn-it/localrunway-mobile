@@ -166,6 +166,8 @@ function BlockMoreProduct() {
 
 function BlockLocalBrand({ data }) {
   const [localBrand, setLocalBrand] = useState([]);
+  const DEFAULT_LOGO_URL =
+    "https://cdn2.iconfinder.com/data/icons/online-shopping-flat-round/550/store-512.png";
   useEffect(() => {
     if (data.brandId != null) {
       localBrandApi
@@ -183,7 +185,7 @@ function BlockLocalBrand({ data }) {
       <View style={{ flexDirection: "row", padding: 10 }}>
         <Image
           source={{
-            uri: "https://cdn2.iconfinder.com/data/icons/online-shopping-flat-round/550/store-512.png",
+            uri: localBrand.logoUrl ?? DEFAULT_LOGO_URL,
           }}
           style={styles.shopImage}
         />
@@ -195,6 +197,7 @@ function BlockLocalBrand({ data }) {
             style={{
               fontSize: 15,
               marginTop: 5,
+              width: 310,
             }}
           >
             {localBrand.address}
@@ -397,8 +400,6 @@ const styles = StyleSheet.create({
     height: 65,
     width: 65,
     borderRadius: 30,
-    borderWidth: 1,
-    borderColor: "black",
   },
   iconToTop: {
     width: 40,

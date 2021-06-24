@@ -121,7 +121,7 @@ const MyCarousel = ({ data, changeTest }) => {
         ref={carouselRef}
         sliderWidth={screenWidth}
         sliderHeight={screenWidth}
-        itemWidth={screenWidth - 60}
+        itemWidth={screenWidth - 20}
         data={entries}
         renderItem={renderItem}
         hasParallaxImages={true}
@@ -289,14 +289,13 @@ const styles = StyleSheet.create({
 
   item: {
     width: screenWidth - 20,
-    height: screenWidth - 60,
+    height: screenWidth - 20,
   },
 
   imageContainer: {
     flex: 1,
     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
     backgroundColor: "white",
-    borderRadius: 20,
     elevation: 5,
   },
 
