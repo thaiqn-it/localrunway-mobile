@@ -5522,6 +5522,13 @@
   dependencies:
     "prop-types" "^15.7.2"
 
+"react-native-dropdown-picker@^5.1.21":
+  "integrity" "sha512-PmRyQD0JkhNdA2eZuc3I7C1+WX6XLq+erI/hCvzYM1E+oGflI59mBBSBq2o0IDzzdTYeLQecj4yEEIHQRHloTw=="
+  "resolved" "https://registry.npmjs.org/react-native-dropdown-picker/-/react-native-dropdown-picker-5.1.21.tgz"
+  "version" "5.1.21"
+  dependencies:
+    "react-native-gesture-handler" "*"
+
 "react-native-elements@^3.4.1":
   "integrity" "sha512-SPotW75psW1qyZgtiWuiKSTASdd4yNYvf6/vgO6nyl2kEgZG5nP5wtFxL/GsUVxwHh7yc8xnJ3J9pkApa7p9lQ=="
   "resolved" "https://registry.npmjs.org/react-native-elements/-/react-native-elements-3.4.1.tgz"

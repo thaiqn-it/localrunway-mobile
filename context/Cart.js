@@ -69,11 +69,16 @@ export default function CartProvider({children}) {
         return totalPrice;
     }
 
+    const getTotalProduct = () => {
+        return state.item.length;
+    }
+
     return <CartContext.Provider value={{state,
                                         dispatch,
                                         isSelect,
                                         setSelect,
-                                        getTotalPrice,}}
+                                        getTotalPrice,
+                                        getTotalProduct,}}
             >
                 {children}
             </CartContext.Provider>

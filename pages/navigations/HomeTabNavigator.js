@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useContext} from "react";
 import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Feed from "../Feed";
@@ -7,10 +7,12 @@ import Profile from "../Profile";
 import { Icon } from "react-native-elements";
 import { PRIMARY_COLOR } from "../../constants/styles";
 import Cart from "../Cart";
+import { CartContext } from '../../context/Cart';
 
 const Tab = createBottomTabNavigator();
 
 export default function HomeTabNavigator() {
+  const { getTotalProduct } = useContext(CartContext)
   return (
     <Tab.Navigator
       initialRouteName={"Search"} // test
@@ -39,7 +41,7 @@ export default function HomeTabNavigator() {
     >
       <Tab.Screen name={"Feed"} component={Feed} />
       <Tab.Screen name={"Search"} component={Search} />
-      <Tab.Screen name={"Cart"} component={Cart} />
+      <Tab.Screen name={"Cart"} component={Cart} options={{tabBarBadge : getTotalProduct()}}/>
       <Tab.Screen name={"Profile"} component={Profile} />
     </Tab.Navigator>
   );

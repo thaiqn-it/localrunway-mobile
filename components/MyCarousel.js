@@ -19,6 +19,29 @@ import {
 } from "react-native";
 import ColorBox from "./ColorBox";
 
+const hashtag = [
+  {
+    id : 1,
+    name : 'muahe',
+  },
+  {
+    id : 2,
+    name : 'muadong',
+  },
+  {
+    id : 3,
+    name : 'hocsinh',
+  },
+  {
+    id : 4,
+    name : 'huyenbi',
+  },
+  {
+    id : 5,
+    name : 'dethuong',
+  },
+];
+
 const ENTRIES1 = [
   {
     id: 1,
@@ -126,7 +149,18 @@ const MyCarousel = ({ data, changeTest }) => {
         renderItem={renderItem}
         hasParallaxImages={true}
       />
-      <Text style={styles.title}>{data.name}</Text>
+      <View style={styles.title}>
+        <Text style={styles.name}>{data.name}</Text>
+        <FlatList data={hashtag}
+                  horizontal
+                  keyExtractor={(item) => item.name}
+                  showsHorizontalScrollIndicator={false}
+                  renderItem={({item}) => (<View style={styles.hashtag}>
+                                          <Text>{item.name}</Text>
+                                        </View>)}
+                  />
+        
+      </View>  
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Text style={styles.price}>{vndFormat(data.price)}</Text>
         <Text style={{ marginLeft: 25, fontSize: 18 }}>Size : {data.size}</Text>
@@ -274,7 +308,6 @@ const MyCarousel = ({ data, changeTest }) => {
             justifyContent: "space-around",
           }}
         >
-          <Text style={styles.soldText}>Quantity : {data.quantity}</Text>
         </View>
       </View>
     </View>
@@ -309,6 +342,10 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   title: {
+    flexDirection:'row',
+    alignItems:'center',
+  },
+  name : {
     fontSize: 25,
     padding: 10,
   },
@@ -402,5 +439,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#2196F3",
     width: "100%",
     height: 50,
+  },
+  hashtag : {
+    height: 'auto',
+    width: 'auto',
+    borderRadius:10,
+    padding:5,
+    margin:10,
+    borderWidth:1,
+    alignItems:'center',
+    justifyContent:'center',
   },
 });

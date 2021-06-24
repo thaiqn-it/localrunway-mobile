@@ -5,6 +5,7 @@ import {    StyleSheet,
             FlatList,
             Pressable,
             Button,
+            Image,
  
 } from 'react-native'
 import { Header,ListItem,Avatar } from 'react-native-elements' 
@@ -146,6 +147,7 @@ export default function Cart() {
                 />
                         
                 <ListItem
+                    onPress={() => navigation.navigate("Info")}
                     bottomDivider>
                     <MaterialIcons name="location-pin" size={24} color="#2196F3" />
                     <ListItem.Content>
@@ -218,7 +220,7 @@ export default function Cart() {
                  </View>                     
             </View>
     )} else{
-        return <View style={{flex:1,alignSelf:'center'}}>
+        return <View style={{flex:1,alignSelf:'center',backgroundColor:'white'}}>
                     <Header 
                     leftComponent={
                     <FontAwesome5
@@ -233,7 +235,17 @@ export default function Cart() {
                             text: 'Cart', style: {fontSize: 20, color: '#fff' } 
                         }} 
                     />
-                    <Text>Cart is empty</Text>
+                    <Image  source={require('../assets/cartempty.png')}
+                            
+                            style={{width:200,height:200,alignSelf:'center'}}/>
+                    <Text style={{fontSize:20,textAlign:'center',color:'gray'}}>Cart is empty !!!</Text> 
+
+                    <View style={{width:200, alignSelf:'center',marginTop:40}}>
+                        <Button title={'Click here to shopping'}
+                                onPress={() => navigation.navigate("Search")}/>
+                    </View>
+                    
+
             </View>
     }
 }

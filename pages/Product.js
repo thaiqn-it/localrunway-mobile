@@ -31,6 +31,35 @@ import { localBrandApi } from "../api/localbrand";
 import { categoryApi } from "../api/category";
 import { useNavigation } from "@react-navigation/native";
 import { CartContext } from '../context/Cart';
+import AwesomeAlert from 'react-native-awesome-alerts';
+
+const SuccessDialog = ({visible,changeVisible,navigation}) => {
+  return(
+  <View style={styles.container}>
+      <AwesomeAlert
+        show={visible}
+        showProgress={false}
+        title="You have added to cart success !!!"
+        closeOnTouchOutside={true}
+        closeOnHardwareBackPress={true}
+        showCancelButton={true}
+        showConfirmButton={true}
+        cancelText="Cancel"
+        confirmText="Go to cart"
+        confirmButtonColor="red"
+        onDismiss={() => {
+          changeVisible(false)
+        }}
+        onCancelPressed={() => {
+          changeVisible(false)
+        }}
+        onConfirmPressed={() => {        
+          changeVisible(false)
+          navigation.navigate("Cart")
+        }}
+      />
+  </View>
+)}
 
 function SeparateLine() {
   return (
@@ -200,6 +229,7 @@ export default function Product() {
   const [test, setTest] = useState("First");
   const [product, setProduct] = useState([]);
   const navigation = useNavigation();
+  const [visible,setVisible] = useState(false); 
 
   useEffect(() => {
     productApi
@@ -239,7 +269,7 @@ export default function Product() {
         rightComponent={
           <View style={{ flexDirection: "row" }}>
             <View style={{ marginRight: 15 }}>
-              <FontAwesome5 name="shopping-cart" size={25} color="black" />
+              <FontAwesome5 name="shopping-cart" size={25} color="black" onPress={() => navigation.navigate("Cart")}/>
             </View>
             <Menu>
               <MenuTrigger
@@ -311,15 +341,22 @@ export default function Product() {
                     <Button style={styles.purchaseButton} 
                             color={'red'}
                             title={'Add To Cart'}
-                            onPress={()=>dispatch({type:'INCREASE',
+                            onPress={()=> {
+                                          dispatch({type:'INCREASE',
                                                     item:{
                                                         product : product,
                                                         quantity: 1,
-                                                    }})}/>                             
+                                                    }})
+                                          setVisible(true)   
+                                        }}   
+                                                  />                             
                 )}                                  
             </CartContext.Consumer>
         </View>
       </View>
+      <SuccessDialog  changeVisible={visible => setVisible(visible)} 
+                                visible={visible}
+                                navigation={navigation}/>
     </MenuProvider>
   );
 }
