@@ -162,7 +162,7 @@ export default function Cart() {
               flexDirection: "row",
             }}
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate("Search");
             }}
           >
             <FontAwesome5
@@ -177,7 +177,7 @@ export default function Cart() {
                 marginLeft: -5,
               }}
             >
-              Back
+              Search
             </Text>
           </TouchableOpacity>
         }

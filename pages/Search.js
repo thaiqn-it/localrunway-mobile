@@ -45,6 +45,7 @@ export default function Search() {
       setLoading(true);
       productApi
         .search({
+          type: "DP",
           queryValue: searchValue,
           page,
           ...filter,

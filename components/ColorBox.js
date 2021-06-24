@@ -15,6 +15,7 @@ export default function ColorBox({ color }) {
           height: 0,
         },
         shadowOpacity: 0.1,
+        shadowColor: "#555",
       }}
     />
   );

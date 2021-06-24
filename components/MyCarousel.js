@@ -19,20 +19,20 @@ import {
 } from "react-native";
 import ColorBox from "./ColorBox";
 
-const ENTRIES1 = [
+const DEFAULT_MEDIA = [
   {
     id: 1,
-    image:
+    mediaUrl:
       "https://www.kvbro.com/wp-content/uploads/2020/11/quan-ao-giay-dep.jpg",
   },
   {
     id: 2,
-    image:
+    mediaUrl:
       "https://www.kvbro.com/wp-content/uploads/2020/11/quan-ao-giay-dep.jpg",
   },
   {
     id: 3,
-    image:
+    mediaUrl:
       "https://www.kvbro.com/wp-content/uploads/2020/11/quan-ao-giay-dep.jpg",
   },
 ];
@@ -95,17 +95,27 @@ const MyCarousel = ({ data, changeTest }) => {
     if (data.color != null) {
       setColor(data.color.toLowerCase());
     }
+    if (data.media) {
+      setEntries(
+        data.media.map((item) => {
+          return {
+            mediaUrl: item.mediaUrl,
+            id: item._id,
+          };
+        })
+      );
+    }
   }, [data]);
 
   useEffect(() => {
-    setEntries(ENTRIES1);
+    setEntries(DEFAULT_MEDIA);
   }, []);
 
   const renderItem = ({ item, index }, parallaxProps) => {
     return (
       <View style={styles.item}>
         <ParallaxImage
-          source={{ uri: item.image }}
+          source={{ uri: item.mediaUrl }}
           containerStyle={styles.imageContainer}
           style={styles.image}
           parallaxFactor={0.4}
@@ -295,13 +305,12 @@ const styles = StyleSheet.create({
   imageContainer: {
     flex: 1,
     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
-    backgroundColor: "white",
     elevation: 5,
   },
 
   image: {
     ...StyleSheet.absoluteFillObject,
-    resizeMode: "cover",
+    resizeMode: "contain",
   },
   title: {
     fontSize: 25,

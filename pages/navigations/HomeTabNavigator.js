@@ -38,7 +38,13 @@ export default function HomeTabNavigator() {
       }}
     >
       <Tab.Screen name={"Feed"} component={Feed} />
-      <Tab.Screen name={"Search"} component={Search} />
+      <Tab.Screen
+        name={"Search"}
+        component={Search}
+        options={{
+          title: "Search",
+        }}
+      />
       <Tab.Screen name={"Cart"} component={Cart} />
       <Tab.Screen name={"Profile"} component={Profile} />
     </Tab.Navigator>
