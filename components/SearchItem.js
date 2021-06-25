@@ -4,6 +4,8 @@ import { View } from "react-native";
 import { vndFormat } from "../utils";
 import { useNavigation } from "@react-navigation/native";
 import ColorBox from "./ColorBox";
+import Rating from "./ProductRating";
+import ProductRating from "./ProductRating";
 
 export default function SearchItem({ item }) {
   const navigation = useNavigation();
@@ -63,6 +65,13 @@ export default function SearchItem({ item }) {
             marginTop: 4,
           }}
         >{`Brand: ${item.brandName}`}</Text>
+        <View
+          style={{
+            marginTop: 3,
+          }}
+        >
+          <ProductRating rating={item.rating} />
+        </View>
         <ListItem.Title
           style={{
             fontWeight: "bold",

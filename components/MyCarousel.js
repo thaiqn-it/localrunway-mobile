@@ -18,6 +18,7 @@ import {
   Button,
 } from "react-native";
 import ColorBox from "./ColorBox";
+import ProductRating from "./ProductRating";
 
 const DEFAULT_MEDIA = [
   {
@@ -258,27 +259,7 @@ const MyCarousel = ({ data, changeTest }) => {
         </View>
       </View>
       <View style={styles.rating}>
-        <View
-          style={{
-            alignItems: "center",
-            flexDirection: "row",
-          }}
-        >
-          <Rating
-            count={5}
-            defaultRating={4}
-            startingValue={4}
-            imageSize={20}
-            fractions={1}
-          />
-          <Text
-            style={{
-              marginLeft: 5,
-            }}
-          >
-            {rating}/5
-          </Text>
-        </View>
+        <ProductRating rating={data.rating} />
         <Text style={styles.soldText}>
           {data.quantity > 0 ? "In Stock" : "Out Of Stock"}
         </Text>
