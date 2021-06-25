@@ -19,6 +19,7 @@ import {
 } from "react-native";
 import ColorBox from "./ColorBox";
 import ProductRating from "./ProductRating";
+import Hashtag from "./Hashtag";
 
 const DEFAULT_MEDIA = [
   {
@@ -79,8 +80,8 @@ const { width: screenWidth } = Dimensions.get("window");
 
 const MyCarousel = ({ data, changeTest }) => {
   const [entries, setEntries] = useState([]);
+  const [hashtags, setHashtags] = useState([]);
   const carouselRef = useRef(null);
-  const [rating, setRating] = useState(4);
   const [modalVisible, setModalVisible] = useState(false);
   const goForward = () => {
     carouselRef.current.snapToNext();
@@ -105,6 +106,9 @@ const MyCarousel = ({ data, changeTest }) => {
           };
         })
       );
+    }
+    if (Array.isArray(data.hashtags)) {
+      setHashtags(data.hashtags);
     }
   }, [data]);
 
@@ -263,6 +267,18 @@ const MyCarousel = ({ data, changeTest }) => {
         <Text style={styles.soldText}>
           {data.quantity > 0 ? "In Stock" : "Out Of Stock"}
         </Text>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          marginLeft: 15,
+          marginTop: 10,
+        }}
+      >
+        {hashtags.map((hashtag) => {
+          return <Hashtag key={hashtag._id} hashtag={hashtag} />;
+        })}
       </View>
     </View>
   );

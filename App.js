@@ -18,6 +18,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context/src/SafeAreaCon
 
 const { API_URI } = getEnvVars();
 
+console.disableYellowBox = true;
+
 export default function App() {
   let [fontsLoaded] = useFonts({
     OpenSans_400Regular,
@@ -26,12 +28,12 @@ export default function App() {
     return <ActivityIndicator />;
   }
   return (
-  <CartProvider>
+    <CartProvider>
       <SafeAreaProvider>
         <NavigationContainer>
           <AppStack />
         </NavigationContainer>
       </SafeAreaProvider>
-  </CartProvider>
+    </CartProvider>
   );
 }
