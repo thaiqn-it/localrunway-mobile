@@ -50,6 +50,25 @@ const SortBy = ({ filter, setFilter }) => {
   );
 };
 
+const ApplyBodyMeasurement = ({ filter, setFilter }) => {
+  return (
+    <Card containerStyle={styles.cardContainer}>
+      <Card.Title style={{ textAlign: "left" }}>
+        Apply Body Measurement
+      </Card.Title>
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+        }}
+      >
+        <CheckBox containerStyle={styles.cbContainer} title={"Yes"} />
+        <CheckBox containerStyle={styles.cbContainer} title={"No"} />
+      </View>
+    </Card>
+  );
+};
+
 const Prices = ({ filter, setFilter }) => {
   const MIN_PRICE = 100000;
   const MAX_PRICE = 2000000;
@@ -179,6 +198,7 @@ export default function SearchFilter({
           }
         />
         <ScrollView>
+          <ApplyBodyMeasurement filter={filter} setFilter={setFilter} />
           <SortBy filter={filter} setFilter={setFilter} />
           <Prices filter={filter} setFilter={setFilter} />
           <Brands filter={filter} setFilter={setFilter} />
@@ -200,5 +220,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
     shadowOffset: { height: 0, width: 0 },
     shadowRadius: 0,
+    marginVertical: 0,
   },
 });

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Feed from "../Feed";
@@ -7,16 +7,20 @@ import Profile from "../Profile";
 import { Icon } from "react-native-elements";
 import { PRIMARY_COLOR } from "../../constants/styles";
 import Cart from "../Cart";
+import { CartContext } from "../../context/Cart";
 
 const Tab = createBottomTabNavigator();
 
 export default function HomeTabNavigator() {
+  const cartContext = useContext(CartContext);
+  const totalCartItems = cartContext.getTotalItems();
   return (
     <Tab.Navigator
       initialRouteName={"Search"} // test
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
+          let iconType = "material";
           if (route.name === "Feed") {
             iconName = "trending-up";
           }
@@ -27,9 +31,10 @@ export default function HomeTabNavigator() {
             iconName = "search";
           }
           if (route.name === "Cart") {
-            iconName = "shopping-cart";
+            iconType = "antdesign";
+            iconName = "shoppingcart";
           }
-          return <Icon name={iconName} type={"material"} />;
+          return <Icon name={iconName} type={iconType} />;
         },
       })}
       tabBarOptions={{
@@ -45,7 +50,13 @@ export default function HomeTabNavigator() {
           title: "Search",
         }}
       />
-      <Tab.Screen name={"Cart"} component={Cart} />
+      <Tab.Screen
+        name={"Cart"}
+        component={Cart}
+        options={{
+          tabBarBadge: totalCartItems === 0 ? undefined : totalCartItems,
+        }}
+      />
       <Tab.Screen name={"Profile"} component={Profile} />
     </Tab.Navigator>
   );

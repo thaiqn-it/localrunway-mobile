@@ -263,7 +263,7 @@ export default function Product() {
                 marginLeft: -5,
               }}
             >
-              Detail
+              Search
             </Text>
           </TouchableOpacity>
         }
@@ -275,7 +275,12 @@ export default function Product() {
               navigation.navigate("Cart");
             }}
           >
-            <FontAwesome5 name="shopping-cart" size={20} color="black" />
+            <Icon
+              name="shoppingcart"
+              type={"antdesign"}
+              size={20}
+              color="black"
+            />
             <Badge
               status={"error"}
               value={cartContext.getTotalItems()}
