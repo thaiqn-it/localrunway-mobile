@@ -83,7 +83,9 @@ export default function CartProvider({ children }) {
     });
     return total;
   };
-
+  const getTotalProduct = () => {
+    return state.item.length;
+  }
   return (
     <CartContext.Provider
       value={{
@@ -93,6 +95,7 @@ export default function CartProvider({ children }) {
         setSelect,
         getTotalPrice,
         getTotalItems,
+        getTotalProduct,
       }}
     >
       {children}

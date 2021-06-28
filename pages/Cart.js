@@ -197,11 +197,17 @@ export default function Cart() {
           >
             No Products
           </Text>
+            <View style={{width:200, alignSelf:'center',marginTop:40}}>
+                <Button title={'Click here to shopping'}
+                        onPress={() => navigation.navigate("Search")}/>
+            </View>
         </View>
       )}
       {state.item.length > 0 && (
         <View>
-          <ListItem bottomDivider>
+          <ListItem 
+            onPress={() => navigation.navigate("Info")}
+            bottomDivider>
             <MaterialIcons name="location-pin" size={24} color="#2196F3" />
             <ListItem.Content>
               <View style={{ flexDirection: "row" }}>

@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Button } from "react-native";
-import { Video } from "expo-av";
+import { View, StyleSheet,Image,Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-// const { width, height } = Dimensions.get("window");
+ const { width, height } = Dimensions.get("window");
 const Splash = () => {
   const navigation = useNavigation();
 
@@ -14,31 +13,16 @@ const Splash = () => {
       setIsShown(true);
       navigation.navigate("Login");
       return;
-    }, 3000);
+    }, 2500);
     
   };
 
-  const video = React.useRef(null);
-  const [status, setStatus] = React.useState({});
   return (
     <View style={styles.container}>
-      <Video
-        onLoad={splashTimeoutHandler}
-        ref={video}
-        style={styles.video}
-        source={require("../assets/splash-video.mp4")}
-        resizeMode="contain"
-        shouldPlay
-        onPlaybackStatusUpdate={() => video.current.playAsync()}
-      />
-      {/* <View style={styles.buttons}>
-        <Button
-          title={status.isPlaying ? 'Pause' : 'Play'}
-          onPress={() =>
-            status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()
-          }
-        />
-      </View> */}
+      <Image source={require("../assets/newSplash.png")}
+             style={styles.image}
+             onLoad={splashTimeoutHandler}
+             />
     </View>
   );
 };
@@ -49,15 +33,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#ecf0f1",
   },
-  video: {
-    alignSelf: "center",
-    width: 600,
-    height: 500,
-  },
-  buttons: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  image: {
+    height: height,
+    width: width,
+    resizeMode:"contain",
+  }
 });
 export default Splash;
