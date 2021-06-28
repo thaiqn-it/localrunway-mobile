@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -21,7 +21,8 @@ import { vndFormat } from "../utils";
 import SearchItem from "../components/SearchItem";
 import SearchFilter from "../components/SearchFilter";
 
-export default function Search() {
+export default function Search({ route }) {
+  const searchBarRef = useRef(null);
   const [searchValue, setSearchValue] = useState("");
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
@@ -97,6 +98,7 @@ export default function Search() {
         }}
         centerComponent={
           <SearchBar
+            ref={searchBarRef}
             platform={"ios"}
             placeholder={"Type search here..."}
             containerStyle={{

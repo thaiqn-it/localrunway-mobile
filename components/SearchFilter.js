@@ -5,6 +5,7 @@ import {
   CheckBox,
   Header,
   ListItem,
+  Switch,
   Text,
 } from "react-native-elements";
 import { View, StyleSheet, ScrollView } from "react-native";
@@ -53,17 +54,21 @@ const SortBy = ({ filter, setFilter }) => {
 const ApplyBodyMeasurement = ({ filter, setFilter }) => {
   return (
     <Card containerStyle={styles.cardContainer}>
-      <Card.Title style={{ textAlign: "left" }}>
-        Apply Body Measurement
-      </Card.Title>
       <View
         style={{
           flexDirection: "row",
           flexWrap: "wrap",
+          alignItems: "center",
         }}
       >
-        <CheckBox containerStyle={styles.cbContainer} title={"Yes"} />
-        <CheckBox containerStyle={styles.cbContainer} title={"No"} />
+        <Card.Title style={{ textAlign: "left" }}>
+          Apply Body Measurement
+        </Card.Title>
+        <Switch
+          style={{
+            marginLeft: 20,
+          }}
+        />
       </View>
     </Card>
   );
