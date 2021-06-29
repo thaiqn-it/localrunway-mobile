@@ -22,7 +22,7 @@ const ConfirmDialog = ({ visible, changeVisible, selectList }) => {
       <AwesomeAlert
         show={visible}
         showProgress={false}
-        title="Do you want to delete these product ? "
+        title="Do you want to delete this product?"
         closeOnTouchOutside={true}
         closeOnHardwareBackPress={true}
         showCancelButton={true}

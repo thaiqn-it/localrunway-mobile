@@ -8,6 +8,7 @@ import { Icon } from "react-native-elements";
 import { PRIMARY_COLOR } from "../../constants/styles";
 import Cart from "../Cart";
 import { CartContext } from "../../context/Cart";
+import FeedStack from "../stacks/FeedStack";
 
 const Tab = createBottomTabNavigator();
 
@@ -42,7 +43,7 @@ export default function HomeTabNavigator() {
         inactiveTintColor: "gray",
       }}
     >
-      <Tab.Screen name={"Feed"} component={Feed} />
+      <Tab.Screen name={"Feed"} component={FeedStack} />
       <Tab.Screen
         name={"Search"}
         component={Search}

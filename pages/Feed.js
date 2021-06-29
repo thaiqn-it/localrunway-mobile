@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   StyleSheet,
@@ -16,54 +16,66 @@ import Hashtag from "../components/Hashtag";
 import { useNavigation } from "@react-navigation/native";
 
 const Brand = ({ data }) => {
+  const navigation = useNavigation();
   const DEFAULT_WIDTH = 100;
   return (
-    <View
-      style={{
-        width: DEFAULT_WIDTH,
-        height: DEFAULT_WIDTH,
-        marginBottom: 30,
-        shadowOpacity: 0.1,
-        shadowRadius: 10,
+    <TouchableOpacity
+      onPress={() => {
+        navigation.push("Search", {
+          passedFilter: {
+            brandIds: [data._id],
+          },
+        });
       }}
     >
-      <Image
-        source={{
-          uri: data.logoUrl,
-        }}
+      <View
         style={{
           width: DEFAULT_WIDTH,
           height: DEFAULT_WIDTH,
-          borderRadius: DEFAULT_WIDTH / 2,
-        }}
-      />
-      <View
-        style={{
-          backgroundColor: "white",
-          padding: 8,
+          marginBottom: 30,
           shadowOpacity: 0.1,
-          zIndex: 10,
-          maxWidth: 80,
-          bottom: 20,
-          borderRadius: 2,
-          left: DEFAULT_WIDTH / 2 - 40,
+          shadowRadius: 10,
         }}
       >
-        <Text
+        <Image
+          source={{
+            uri: data.logoUrl,
+          }}
           style={{
-            fontFamily: PRIMARY_FONT,
-            fontSize: 10,
-            textAlign: "center",
+            width: DEFAULT_WIDTH,
+            height: DEFAULT_WIDTH,
+            borderRadius: DEFAULT_WIDTH / 2,
+          }}
+        />
+        <View
+          style={{
+            backgroundColor: "white",
+            padding: 8,
+            shadowOpacity: 0.1,
+            zIndex: 10,
+            maxWidth: 80,
+            bottom: 20,
+            borderRadius: 2,
+            left: DEFAULT_WIDTH / 2 - 40,
           }}
         >
-          {data.name}
-        </Text>
+          <Text
+            style={{
+              fontFamily: PRIMARY_FONT,
+              fontSize: 10,
+              textAlign: "center",
+            }}
+          >
+            {data.name}
+          </Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
 export default function Feed() {
+  const [searchValue, setSearchValue] = useState("");
   const [localBrands, setLocalBrands] = useState([]);
   const [hashtags, setHashtags] = useState([]);
   const navigation = useNavigation();
@@ -97,9 +109,16 @@ export default function Feed() {
             backgroundColor: "rgba(0,0,0,0)",
             paddingTop: 0,
           }}
+          value={searchValue}
+          onChangeText={setSearchValue}
           cancelButtonTitle={"Clear"}
           inputContainerStyle={{
             backgroundColor: "#fff",
+          }}
+          onEndEditing={() => {
+            navigation.push("Search", {
+              searchValue,
+            });
           }}
         />
 

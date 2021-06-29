@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import {
   Avatar,
+  Badge,
   Header,
   Icon,
   ListItem,
@@ -23,7 +24,9 @@ import SearchFilter from "../components/SearchFilter";
 
 export default function Search({ route }) {
   const searchBarRef = useRef(null);
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState(
+    route.params?.searchValue ?? ""
+  );
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState(false);
@@ -35,7 +38,17 @@ export default function Search({ route }) {
     brandIds: [],
     categoryId: null,
     prices: [],
+    ...(route.params?.passedFilter ?? {}),
   });
+
+  const hasActivateFilter = () => {
+    for (let p in filter) {
+      if (filter[p] == null) continue;
+      if (Array.isArray(filter[p]) && filter[p].length === 0) continue;
+      return true;
+    }
+    return false;
+  };
 
   useEffect(() => {
     setSearch(true);
@@ -120,13 +133,25 @@ export default function Search({ route }) {
           flex: 7,
         }}
         rightComponent={
-          <Icon
-            name={"sliders-h"}
-            type={"font-awesome-5"}
-            onPress={() => {
-              setFilterVisible(!filterVisible);
-            }}
-          />
+          <View>
+            <Icon
+              name={"sliders-h"}
+              type={"font-awesome-5"}
+              onPress={() => {
+                setFilterVisible(!filterVisible);
+              }}
+            />
+            {hasActivateFilter() && (
+              <Badge
+                status={"success"}
+                containerStyle={{
+                  position: "absolute",
+                  top: -1,
+                  right: -4,
+                }}
+              />
+            )}
+          </View>
         }
         rightContainerStyle={{
           flex: 1,
