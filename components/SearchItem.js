@@ -58,7 +58,7 @@ export default function SearchItem({ item }) {
               {item.size}
             </Text>
           </Text>
-          <ColorBox color={item.color.toLowerCase()} />
+          <ColorBox color={item.color} />
         </View>
         <Text
           style={{

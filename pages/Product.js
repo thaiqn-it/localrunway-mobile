@@ -295,7 +295,7 @@ export default function Product() {
                 marginLeft: -5,
               }}
             >
-              Search
+              Back
             </Text>
           </TouchableOpacity>
         }

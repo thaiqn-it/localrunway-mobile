@@ -7,6 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Keyboard,
+  FlatList,
 } from "react-native";
 import { Card, Header, SearchBar, Text } from "react-native-elements";
 import { FULL_HEIGHT, PRIMARY_FONT } from "../constants/styles";
@@ -14,6 +15,8 @@ import { localBrandApi } from "../api/localbrand";
 import { hashtagApi } from "../api/hashtag";
 import Hashtag from "../components/Hashtag";
 import { useNavigation } from "@react-navigation/native";
+import { productApi } from "../api/product";
+import SearchItem from "../components/SearchItem";
 
 const Brand = ({ data }) => {
   const navigation = useNavigation();
@@ -61,9 +64,9 @@ const Brand = ({ data }) => {
         >
           <Text
             style={{
-              fontFamily: PRIMARY_FONT,
               fontSize: 10,
               textAlign: "center",
+              fontWeight: "bold",
             }}
           >
             {data.name}
@@ -77,6 +80,7 @@ const Brand = ({ data }) => {
 export default function Feed() {
   const [searchValue, setSearchValue] = useState("");
   const [localBrands, setLocalBrands] = useState([]);
+  const [bestRatingProducts, setBestRatingProducts] = useState([]);
   const [hashtags, setHashtags] = useState([]);
   const navigation = useNavigation();
   useEffect(() => {
@@ -86,6 +90,14 @@ export default function Feed() {
     hashtagApi.getAll().then((res) => {
       setHashtags(res.data.hashtags);
     });
+    productApi
+      .search({
+        sort: "-rating",
+        type: "DP",
+      })
+      .then((res) => {
+        setBestRatingProducts(res.data.products);
+      });
   }, []);
 
   return (
@@ -136,6 +148,15 @@ export default function Feed() {
         </View>
         <View style={styles.block}>
           <Text style={styles.title}>Best Ratings</Text>
+          <View>
+            <FlatList
+              horizontal={true}
+              data={bestRatingProducts}
+              renderItem={({ item, index }) => {
+                return <SearchItem item={item} />;
+              }}
+            />
+          </View>
         </View>
         <View style={styles.block}>
           <Text style={styles.title}>Brands</Text>
@@ -166,7 +187,7 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "bold",
     fontSize: 25,
-    marginBottom: 20,
+    marginBottom: 10,
   },
   block: {
     marginBottom: 20,

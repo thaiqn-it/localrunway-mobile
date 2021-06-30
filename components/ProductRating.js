@@ -9,7 +9,12 @@ export default function ProductRating({ rating }) {
         flexDirection: "row",
       }}
     >
-      <Rating startingValue={rating} imageSize={15} fractions={1} />
+      <Rating
+        startingValue={rating}
+        imageSize={15}
+        fractions={1}
+        readonly={true}
+      />
       {rating > 0 && (
         <Text
           style={{
