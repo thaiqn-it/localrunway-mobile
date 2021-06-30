@@ -142,7 +142,17 @@ export default function Feed() {
             }}
           >
             {hashtags.map((hashtag) => {
-              return <Hashtag hashtag={hashtag} />;
+              return (
+                <Hashtag
+                  key={hashtag._id}
+                  hashtag={hashtag}
+                  onPress={() => {
+                    navigation.push("Search", {
+                      searchValue: hashtag.name,
+                    });
+                  }}
+                />
+              );
             })}
           </View>
         </View>
@@ -159,7 +169,7 @@ export default function Feed() {
           </View>
         </View>
         <View style={styles.block}>
-          <Text style={styles.title}>Brands</Text>
+          <Text style={styles.title}>Trending Brands</Text>
           <View
             style={{
               flex: 1,
