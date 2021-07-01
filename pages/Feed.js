@@ -206,7 +206,7 @@ export default function Feed() {
         </View>
 
         <View style={styles.block}>
-          <Text style={styles.title}>Famous Brands</Text>
+          <Text style={styles.title}>Featured Brands</Text>
           <View
             style={{
               flex: 1,

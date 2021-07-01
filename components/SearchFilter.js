@@ -11,6 +11,7 @@ import {
 import { View, StyleSheet, ScrollView } from "react-native";
 import { localBrandApi } from "../api/localbrand";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
+import { DEFAULT_FILTER } from "../pages/Search";
 
 const SortBy = ({ filter, setFilter }) => {
   const toggleValue = (value) => () => {
@@ -177,6 +178,21 @@ export default function SearchFilter({
         }}
       >
         <Header
+          leftComponent={
+            <Text
+              onPress={() => {
+                setVisible(false);
+                setFilter(DEFAULT_FILTER);
+                doneFilter();
+              }}
+              style={{
+                fontSize: 18,
+                marginLeft: 10,
+              }}
+            >
+              Clear All
+            </Text>
+          }
           containerStyle={{
             backgroundColor: "white",
           }}

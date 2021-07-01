@@ -22,6 +22,13 @@ import { vndFormat } from "../utils";
 import SearchItem from "../components/SearchItem";
 import SearchFilter from "../components/SearchFilter";
 
+export const DEFAULT_FILTER = {
+  sort: null,
+  brandIds: [],
+  categoryId: null,
+  prices: [],
+};
+
 export default function Search({ route }) {
   const searchBarRef = useRef(null);
   const [searchValue, setSearchValue] = useState(
@@ -34,10 +41,7 @@ export default function Search({ route }) {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
   const [filter, setFilter] = useState({
-    sort: null,
-    brandIds: [],
-    categoryId: null,
-    prices: [],
+    ...DEFAULT_FILTER,
     ...(route.params?.passedFilter ?? {}),
   });
 
