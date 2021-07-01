@@ -10,13 +10,14 @@ import {
   FlatList,
 } from "react-native";
 import { Card, Header, SearchBar, Text } from "react-native-elements";
-import { FULL_HEIGHT, PRIMARY_FONT } from "../constants/styles";
+import { FULL_HEIGHT, FULL_WIDTH, PRIMARY_FONT } from "../constants/styles";
 import { localBrandApi } from "../api/localbrand";
 import { hashtagApi } from "../api/hashtag";
 import Hashtag from "../components/Hashtag";
 import { useNavigation } from "@react-navigation/native";
 import { productApi } from "../api/product";
 import SearchItem from "../components/SearchItem";
+import { BANNER_URLS } from "../constants/data";
 
 const Brand = ({ data }) => {
   const navigation = useNavigation();
@@ -135,6 +136,15 @@ export default function Feed() {
         />
 
         <View style={styles.block}>
+          <Text
+            style={{
+              marginLeft: 5,
+              color: "gray",
+              marginBottom: 5,
+            }}
+          >
+            fashionaholics usually search for:
+          </Text>
           <View
             style={{
               flexDirection: "row",
@@ -157,6 +167,32 @@ export default function Feed() {
           </View>
         </View>
         <View style={styles.block}>
+          <View>
+            <FlatList
+              horizontal={true}
+              data={BANNER_URLS}
+              renderItem={({ item, index }) => {
+                return (
+                  <View
+                    key={`${index}`}
+                    style={{
+                      marginRight: 10,
+                    }}
+                  >
+                    <Image
+                      source={{
+                        uri: item,
+                        height: 250,
+                        width: FULL_WIDTH * 0.75,
+                      }}
+                    />
+                  </View>
+                );
+              }}
+            />
+          </View>
+        </View>
+        <View style={styles.block}>
           <Text style={styles.title}>Best Ratings</Text>
           <View>
             <FlatList
@@ -168,8 +204,9 @@ export default function Feed() {
             />
           </View>
         </View>
+
         <View style={styles.block}>
-          <Text style={styles.title}>Trending Brands</Text>
+          <Text style={styles.title}>Famous Brands</Text>
           <View
             style={{
               flex: 1,

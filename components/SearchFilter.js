@@ -27,6 +27,8 @@ const SortBy = ({ filter, setFilter }) => {
     { title: "Price (-)", value: "-price" },
     { title: "Name (+)", value: "+name" },
     { title: "Name (-)", value: "-name" },
+    { title: "Rating (-)", value: "-rating" },
+    { title: "Rating (+)", value: "+rating" },
   ];
   return (
     <Card containerStyle={styles.cardContainer}>
