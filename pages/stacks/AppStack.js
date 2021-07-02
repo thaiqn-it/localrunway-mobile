@@ -7,6 +7,7 @@ import HistoryOrders from "../HistoryOrders";
 import RegisterStackNavigator from "../stacks/RegisterStack";
 import Splash from "../Splash";
 import Info from "../Info";
+import Order from "../Order";
 
 const Stack = createStackNavigator();
 
@@ -58,6 +59,13 @@ export default function AppStack() {
       <Stack.Screen
         name={"Info"}
         component={Info}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={"Order"}
+        component={Order}
         options={{
           headerShown: false,
         }}

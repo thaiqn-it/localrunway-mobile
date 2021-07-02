@@ -1,9 +1,9 @@
 import React,{ useState } from 'react'
-import { StyleSheet, Text, View,Picker,Button,ScrollView,TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View,Button,ScrollView,TouchableOpacity } from 'react-native'
 import { Header,Input } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native';
 import {FontAwesome5} from "@expo/vector-icons";
-
+import {Picker} from '@react-native-picker/picker';
 
 const data = require("../data/address.json")
 

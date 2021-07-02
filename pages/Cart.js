@@ -144,6 +144,10 @@ export default function Cart() {
   const [visible, setVisible] = useState(false);
   const [total, setTotal] = useState(0);
 
+  const [ address,setAddress ] = useState("VN");
+  const [ phoneNumber,setPhoneNumber ] = useState("0945492733");
+  const [ recipientName,setRecipientName ] = useState("Thai");
+
   useEffect(() => {
     setTotal(getTotalPrice());
     setVisible(false);
@@ -252,6 +256,11 @@ export default function Cart() {
             </View>
             <View>
               <Button
+                onPress={() => navigation.navigate("Order", {                
+                       recipientName : recipientName,
+                       phoneNumber : phoneNumber,
+                       address : address,               
+                })}
                 icon={{
                   type: "font-awesome-5",
                   name: "shopping-cart",
