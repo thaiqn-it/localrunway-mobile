@@ -21,13 +21,9 @@ import { productApi } from "../api/product";
 import { vndFormat } from "../utils";
 import SearchItem from "../components/SearchItem";
 import SearchFilter from "../components/SearchFilter";
-
-export const DEFAULT_FILTER = {
-  sort: null,
-  brandIds: [],
-  categoryId: null,
-  prices: [],
-};
+import MaterialCommunityIcon from "react-native-paper/src/components/MaterialCommunityIcon";
+import SearchMeasurement from "../components/SearchMeasurement";
+import { DEFAULT_FILTER, DEFAULT_MEASUREMENT } from "../constants/data";
 
 export default function Search({ route }) {
   const searchBarRef = useRef(null);
@@ -44,12 +40,31 @@ export default function Search({ route }) {
     ...DEFAULT_FILTER,
     ...(route.params?.passedFilter ?? {}),
   });
+  const [measurement, setMeasurement] = useState(DEFAULT_MEASUREMENT);
+  const [measurementVisible, setMeasurementVisible] = useState(false);
+
+  const cleanMeasurement = (measurement) => {
+    let ret = {};
+    for (let prop in measurement) {
+      if (measurement[prop].enable) {
+        ret[prop] = measurement[prop].value;
+      }
+    }
+    return ret;
+  };
 
   const hasActivateFilter = () => {
     for (let p in filter) {
       if (filter[p] == null) continue;
       if (Array.isArray(filter[p]) && filter[p].length === 0) continue;
       return true;
+    }
+    return false;
+  };
+
+  const hasActiveMeasurement = () => {
+    for (let p in measurement) {
+      if (measurement[p].enable) return true;
     }
     return false;
   };
@@ -67,6 +82,7 @@ export default function Search({ route }) {
           queryValue: searchValue,
           page,
           ...filter,
+          measurement: cleanMeasurement(measurement),
         })
         .then((res) => {
           const data = res.data;
@@ -107,6 +123,13 @@ export default function Search({ route }) {
         setFilter={setFilter}
         doneFilter={finishSearch}
       />
+      <SearchMeasurement
+        visible={measurementVisible}
+        measurement={measurement}
+        setMeasurement={setMeasurement}
+        setVisible={setMeasurementVisible}
+        onFinish={finishSearch}
+      />
       <Header
         containerStyle={{
           backgroundColor: "#fff",
@@ -124,6 +147,7 @@ export default function Search({ route }) {
             value={searchValue}
             onChangeText={setSearchValue}
             cancelButtonTitle={"Clear"}
+            clearIcon={null}
             inputContainerStyle={{
               backgroundColor: "#fff",
             }}
@@ -137,28 +161,60 @@ export default function Search({ route }) {
           flex: 7,
         }}
         rightComponent={
-          <View>
-            <Icon
-              name={"sliders-h"}
-              type={"font-awesome-5"}
-              onPress={() => {
-                setFilterVisible(!filterVisible);
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <View
+              style={{
+                marginRight: 8,
               }}
-            />
-            {hasActivateFilter() && (
-              <Badge
-                status={"success"}
-                containerStyle={{
-                  position: "absolute",
-                  top: -1,
-                  right: -4,
+            >
+              <Icon
+                name={"sliders-h"}
+                type={"font-awesome-5"}
+                onPress={() => {
+                  setFilterVisible(!filterVisible);
                 }}
               />
-            )}
+              {hasActivateFilter() && (
+                <Badge
+                  status={"success"}
+                  containerStyle={{
+                    position: "absolute",
+                    top: -1,
+                    right: -4,
+                  }}
+                />
+              )}
+            </View>
+            <View>
+              <Icon
+                name={"square-foot"}
+                type={"material"}
+                size={35}
+                onPress={() => {
+                  setMeasurementVisible(!measurementVisible);
+                }}
+              />
+              {hasActiveMeasurement() && (
+                <Badge
+                  status={"success"}
+                  containerStyle={{
+                    position: "absolute",
+                    top: 4,
+                    left: 3,
+                  }}
+                />
+              )}
+            </View>
           </View>
         }
         rightContainerStyle={{
-          flex: 1,
+          flex: 3,
           justifyContent: "center",
         }}
       />

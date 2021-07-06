@@ -11,8 +11,7 @@ import {
 import { View, StyleSheet, ScrollView } from "react-native";
 import { localBrandApi } from "../api/localbrand";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
-import { DEFAULT_FILTER } from "../pages/Search";
-
+import { DEFAULT_FILTER } from "../constants/data";
 const SortBy = ({ filter, setFilter }) => {
   const toggleValue = (value) => () => {
     setFilter({
@@ -49,29 +48,6 @@ const SortBy = ({ filter, setFilter }) => {
             title={title}
           />
         ))}
-      </View>
-    </Card>
-  );
-};
-
-const ApplyBodyMeasurement = ({ filter, setFilter }) => {
-  return (
-    <Card containerStyle={styles.cardContainer}>
-      <View
-        style={{
-          flexDirection: "row",
-          flexWrap: "wrap",
-          alignItems: "center",
-        }}
-      >
-        <Card.Title style={{ textAlign: "left" }}>
-          Apply Body Measurement
-        </Card.Title>
-        <Switch
-          style={{
-            marginLeft: 20,
-          }}
-        />
       </View>
     </Card>
   );
@@ -221,7 +197,6 @@ export default function SearchFilter({
           }
         />
         <ScrollView>
-          <ApplyBodyMeasurement filter={filter} setFilter={setFilter} />
           <SortBy filter={filter} setFilter={setFilter} />
           <Prices filter={filter} setFilter={setFilter} />
           <Brands filter={filter} setFilter={setFilter} />

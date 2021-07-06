@@ -10,7 +10,7 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import { Badge, Header, Icon } from "react-native-elements";
+import { Badge, Divider, Header, Icon } from "react-native-elements";
 import { useRoute } from "@react-navigation/native";
 import {
   FontAwesome5,
@@ -114,6 +114,37 @@ function BlockDetail({ data }) {
 
   return (
     <ScrollView style={styles.blockDetailContainer}>
+      <View style={styles.titleDetail}>
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 15,
+            marginLeft: 4,
+            marginBottom: 10,
+          }}
+        >
+          Recommended size measurements for this product:
+        </Text>
+      </View>
+      <View style={styles.titleDetail}>
+        <View style={{ flex: 3 }}>
+          <Text style={styles.textDetail}>Weight</Text>
+          <Text style={styles.textDetail}>Height</Text>
+          <Text style={styles.textDetail}>3-round measurement:</Text>
+        </View>
+        <View style={{ flex: 7 }}>
+          <Text style={styles.textInfoDetail}>
+            {data.minWeight} - {data.maxWeight} kg
+          </Text>
+          <Text style={styles.textInfoDetail}>
+            {data.minHeight} - {data.maxHeight} cm
+          </Text>
+          <Text style={styles.textInfoDetail}>
+            {`Bust (${data.minBust} - ${data.maxBust}cm), Waist (${data.minWaist} - ${data.maxWaist}cm), Hip (${data.minHip} - ${data.maxHip}cm)`}
+          </Text>
+        </View>
+      </View>
+
       <View style={styles.titleDetail}>
         <Text
           style={{

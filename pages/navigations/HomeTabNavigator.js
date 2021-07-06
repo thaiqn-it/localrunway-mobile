@@ -17,7 +17,7 @@ export default function HomeTabNavigator() {
   const totalCartItems = cartContext.getTotalItems();
   return (
     <Tab.Navigator
-      initialRouteName={"feed"} // test
+      initialRouteName={"Feed"} // test
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
