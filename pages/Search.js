@@ -23,7 +23,12 @@ import SearchItem from "../components/SearchItem";
 import SearchFilter from "../components/SearchFilter";
 import MaterialCommunityIcon from "react-native-paper/src/components/MaterialCommunityIcon";
 import SearchMeasurement from "../components/SearchMeasurement";
-import { DEFAULT_FILTER, DEFAULT_MEASUREMENT } from "../constants/data";
+import {
+  cacheMeasurements,
+  DEFAULT_FILTER,
+  DEFAULT_MEASUREMENT,
+  loadCachedMeasurements,
+} from "../constants/data";
 
 export default function Search({ route }) {
   const searchBarRef = useRef(null);
@@ -70,6 +75,12 @@ export default function Search({ route }) {
   };
 
   useEffect(() => {
+    loadCachedMeasurements().then((data) => {
+      setMeasurement({
+        ...DEFAULT_MEASUREMENT,
+        ...data,
+      });
+    });
     setSearch(true);
   }, []);
 
@@ -128,7 +139,10 @@ export default function Search({ route }) {
         measurement={measurement}
         setMeasurement={setMeasurement}
         setVisible={setMeasurementVisible}
-        onFinish={finishSearch}
+        onFinish={() => {
+          cacheMeasurements({ ...measurement });
+          finishSearch();
+        }}
       />
       <Header
         containerStyle={{
