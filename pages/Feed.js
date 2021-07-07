@@ -9,7 +9,7 @@ import {
   Keyboard,
   FlatList,
 } from "react-native";
-import { Card, Header, SearchBar, Text } from "react-native-elements";
+import { Badge, Card, Header, SearchBar, Text } from "react-native-elements";
 import { FULL_HEIGHT, FULL_WIDTH, PRIMARY_FONT } from "../constants/styles";
 import { localBrandApi } from "../api/localbrand";
 import { hashtagApi } from "../api/hashtag";
@@ -123,13 +123,30 @@ export default function Feed() {
             />
             <Text
               style={{
-                marginLeft: 4,
+                marginLeft: 6,
                 fontSize: 15,
                 fontWeight: "bold",
+                letterSpacing: 2,
               }}
             >
               LocalRunway
             </Text>
+            <Badge
+              value={"TM"}
+              badgeStyle={{
+                backgroundColor: "white",
+              }}
+              textStyle={{
+                color: "black",
+                fontSize: 8,
+                fontWeight: "bold",
+              }}
+              containerStyle={{
+                position: "absolute",
+                right: -18,
+                top: 6,
+              }}
+            />
           </View>
         }
         containerStyle={{
