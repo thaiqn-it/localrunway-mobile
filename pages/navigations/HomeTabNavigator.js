@@ -1,4 +1,4 @@
-import React,{useContext} from "react";
+import React,{useContext,useEffect} from "react";
 import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Feed from "../Feed";
@@ -8,11 +8,26 @@ import { Icon } from "react-native-elements";
 import { PRIMARY_COLOR } from "../../constants/styles";
 import Cart from "../Cart";
 import { CartContext } from '../../context/Cart';
+import { CustomerContext } from "../../context/Customer";
+import { customerApi } from "../../api/customer";
 
 const Tab = createBottomTabNavigator();
 
 export default function HomeTabNavigator() {
   const { getTotalProduct } = useContext(CartContext)
+  const { setCustomer } = useContext(CustomerContext)
+
+  useEffect(() => {
+    async function loadCustomer () {
+      const customer = await customerApi.getCustomer()
+      setCustomer({
+        type : 'LOAD',
+        data : customer.data
+      })
+    }   
+    loadCustomer()
+  }, [])
+
   return (
     <Tab.Navigator
       initialRouteName={"Search"} // test

@@ -1,114 +1,125 @@
-import React from 'react'
+import React, { useEffect,useState } from 'react'
 import { StyleSheet,
         Text,
-        View 
+        View,
+        FlatList, 
+        TouchableOpacity,
 } from 'react-native'
 import { Header,ListItem,Avatar } from 'react-native-elements'
-import {FontAwesome5, MaterialIcons} from "@expo/vector-icons";
+import {FontAwesome5} from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { vndFormat } from "../utils";
+import { orderApi } from '../api/order';
 
-const DATA = [
-    {
-        image : 'https://cf.shopee.vn/file/a61450378a8d324716b87ac3989b12ab',
-        name : 'Jogger',
-        price : '250000',
-    },
-    {
-        image : 'https://cf.shopee.vn/file/a61450378a8d324716b87ac3989b12ab',
-        name : 'Jogger',
-        price : '250000',
-    },
-    {
-        image : 'https://cf.shopee.vn/file/a61450378a8d324716b87ac3989b12ab',
-        name : 'Jogger',
-        price : '250000',
-    },
-]
+function HistoryOrderComponent ({data,navigation}){
+    return(
+        <ListItem
+            onPress={() => navigation.navigate("Order",data.item._id)}
+            bottomDivider>
+            <Avatar
+                source={{
+                uri: data.item.localbrand.logoUrl,
+                }}
+                containerStyle={{
+                width: 100,
+                height: 100,
+                }}
+            />
+            <ListItem.Content>
+                <ListItem.Title>{data.item.localbrand.name}</ListItem.Title>
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        marginTop: 5,
+                    }}
+                    >
+                    <Text
+                        style={{
+                        marginRight: 10,
+                        }}
+                    >
+                        <Text
+                        style={{
+                            fontWeight: "bold",
+                        }}
+                        >
+                        {data.item.localbrand.address}
+                        </Text>
+                    </Text>
+                    </View>
+                    <ListItem.Title
+                    style={{
+                        fontWeight: "bold",
+                        marginTop: 20,
+                    }}
+                    >
+                    {vndFormat(data.item.total)}
+                    </ListItem.Title>
+            </ListItem.Content>
+            <ListItem.Chevron />
+        </ListItem>
+    )
+}
 
 export default function HistoryOrders() {
     const navigation = useNavigation();
+    const [ orders,setOrders ] = useState([])
+
+    useEffect(() => {
+        orderApi.getAll().then(res => {
+            setOrders(res.data.orders)
+        })
+    }, [])
+
     return (
         <View>
             <Header 
+              containerStyle={{
+                backgroundColor: "white",
+              }}
               leftComponent={
-              <FontAwesome5
-                          onPress={ () => { navigation.goBack() } }
-                          name={"arrow-left"}
-                          size={25}
-                          style={{width: 30}}
-                          color={'white'}
-                      />
+                <TouchableOpacity
+                  style={{
+                    alignItems: "center",
+                    flexDirection: "row",
+                  }}
+                  onPress={() => {
+                    navigation.goBack();
+                  }}
+                >
+                  <FontAwesome5
+                    name={"chevron-left"}
+                    size={20}
+                    style={{ width: 30 }}
+                    color={"black"}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      marginLeft: -5,
+                    }}
+                  >
+                    Back
+                  </Text>
+                </TouchableOpacity>
               }
-              centerComponent={{ 
-                  text: 'History order', style: {fontSize: 20, color: '#fff' } 
-              }} 
+              centerComponent={{
+                text: "History Orders",
+                style: { fontSize: 20, color: "black", fontWeight: "bold" },
+              }}
               rightComponent={
-                <FontAwesome5 onPress={() => navigation.navigate("Cart")} name="shopping-cart" size={25} color="white" /> 
+                <FontAwesome5   onPress={() => navigation.navigate("Cart")} 
+                                name="shopping-cart" 
+                                size={25} 
+                                color="black" /> 
               }
              />
-            <View>
-            {                
-                DATA.map((item,i) => (
-                <ListItem
-                        key={i} 
-                        bottomDivider>
-                        <Avatar
-                            source={{
-                            uri: item.image,
-                            }}
-                            containerStyle={{
-                            width: 100,
-                            height: 100,
-                            }}
-                        />
-                        <ListItem.Content>
-                            <ListItem.Title>{item.name}</ListItem.Title>
-                            <View
-                                style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    marginTop: 5,
-                                }}
-                                >
-                                <Text
-                                    style={{
-                                    marginRight: 10,
-                                    }}
-                                >
-                                    Size:{" "}
-                                    <Text
-                                    style={{
-                                        fontWeight: "bold",
-                                    }}
-                                    >
-                                    {item.size}
-                                    </Text>
-                                </Text>
-                                <View
-                                    style={{
-                                    backgroundColor: 'red',
-                                    width: 20,
-                                    height: 20,
-                                    borderRadius: 50,
-                                    }}
-                                />
-                                </View>
-
-                                <ListItem.Title
-                                style={{
-                                    fontWeight: "bold",
-                                    marginTop: 20,
-                                }}
-                                >
-                                {vndFormat(item.price)}
-                                </ListItem.Title>
-                        </ListItem.Content>
-                        <ListItem.Chevron />
-                    </ListItem>
-                    ))
-                }
-            </View>
+            { orders.length > 0 && (
+                <FlatList   data={orders}
+                            renderItem={item => <HistoryOrderComponent data={item} navigation={navigation}/>}
+                            keyExtractor={item => item._id}/>
+            )}
         </View>
     )
 }

@@ -1,13 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View,
         StyleSheet,
         Text,
+        Pressable,
+        TouchableOpacity,
         }from "react-native";
 import { Header,Avatar,ListItem } from "react-native-elements";
 import {FontAwesome5, MaterialIcons} from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import { JWT_TOKEN, JWT_TOKEN_KEY, resetJWTToken } from "../constants";
+import { CustomerContext } from "../context/Customer";
+import { CartContext } from "../context/Cart";
 
 const OPTIONS = [
   {
@@ -23,9 +27,12 @@ const OPTIONS = [
 
 export default function Profile() {
   const navigation = useNavigation();
+  const { customer } = useContext(CustomerContext)
+  const { state,dispatch } = useContext(CartContext)
 
   const logout = async () => {
     await SecureStore.deleteItemAsync(JWT_TOKEN_KEY);
+    dispatch({ type: "DELETE_ITEM", item: state })
     navigation.navigate('Login');
   }
 
@@ -36,24 +43,45 @@ export default function Profile() {
   return(
       <View style={{flex:1}}>
           <Header 
+              containerStyle={{
+                backgroundColor: "white",
+              }}
               leftComponent={
-              <FontAwesome5
-                          onPress={ () => { navigation.goBack() } }
-                          name={"arrow-left"}
-                          size={25}
-                          style={{width: 30}}
-                          color={'white'}
-                      />
+                <TouchableOpacity
+                  style={{
+                    alignItems: "center",
+                    flexDirection: "row",
+                  }}
+                  onPress={() => {
+                    navigation.goBack();
+                  }}
+                >
+                  <FontAwesome5
+                    name={"chevron-left"}
+                    size={20}
+                    style={{ width: 30 }}
+                    color={"black"}
+                  />
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      marginLeft: -5,
+                    }}
+                  >
+                    Back
+                  </Text>
+                </TouchableOpacity>
               }
-              centerComponent={{ 
-                  text: 'Profile', style: {fontSize: 20, color: '#fff' } 
-              }} 
+              centerComponent={{
+                text: "Profile",
+                style: { fontSize: 20, color: "black", fontWeight: "bold" },
+              }}
               rightComponent={
               <MaterialIcons 
                         onPress={logout}
                         name="logout" 
                         size={24} 
-                        color="white" />
+                        color="black" />
               }
           />
           <View style={{flex:1}}>
@@ -64,7 +92,12 @@ export default function Profile() {
                           size={70}
                           source={{uri : 'https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png'}}
                       />
-                      <Text style={styles.name} >Nguyen Van B</Text>
+                      <View>
+                        <Text style={styles.name}>{customer.name}</Text>
+                        <Pressable onPress={() => navigation.navigate("Customer")}>
+                          <Text style={{color : '#2196F3',marginLeft :20}}>Change information</Text>
+                        </Pressable>
+                      </View>    
                   </View>
               </View>
               <View style={styles.optionContainer}>

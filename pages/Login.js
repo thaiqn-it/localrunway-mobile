@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import { JWT_TOKEN, JWT_TOKEN_KEY, resetJWTToken } from "../constants";
 import * as Facebook from "expo-facebook";
+import { loadToken } from "../api";
 
 export default function Login(props) {
   const navigation = useNavigation();
@@ -16,8 +17,9 @@ export default function Login(props) {
   const [loginLoading, setLoginLoading] = useState(false);
 
   useEffect(() => {
-    resetJWTToken().then((token) => {
+    resetJWTToken().then(async (token) => {
       if (token) {
+        await loadToken();
         // return; // test
         navigation.navigate("HomeTab");
       }
@@ -29,6 +31,7 @@ export default function Login(props) {
     try {
       const res = await customerApi.login(phoneNumber, password);
       await SecureStore.setItemAsync(JWT_TOKEN_KEY, res.data.token);
+      await loadToken();
       navigation.navigate("HomeTab");
     } catch (err) {
       Alert.alert("Login Status", "Wrong phone number or password");
