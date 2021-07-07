@@ -18,6 +18,8 @@ import { useNavigation } from "@react-navigation/native";
 import { productApi } from "../api/product";
 import SearchItem from "../components/SearchItem";
 import { BANNER_URLS } from "../constants/data";
+import icon from "../assets/local-runway-icon.png";
+import { Image as RNEImage } from "react-native-elements";
 
 const Brand = ({ data }) => {
   const navigation = useNavigation();
@@ -104,12 +106,32 @@ export default function Feed() {
   return (
     <View>
       <Header
-        centerComponent={{
-          text: "Home",
-          style: {
-            fontWeight: "bold",
-          },
-        }}
+        centerComponent={
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Image
+              source={icon}
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 20,
+              }}
+            />
+            <Text
+              style={{
+                marginLeft: 4,
+                fontSize: 15,
+                fontWeight: "bold",
+              }}
+            >
+              LocalRunway
+            </Text>
+          </View>
+        }
         containerStyle={{
           backgroundColor: "white",
         }}
