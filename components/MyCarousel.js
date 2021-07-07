@@ -18,44 +18,23 @@ import {
   Button,
 } from "react-native";
 import ColorBox from "./ColorBox";
+import ProductRating from "./ProductRating";
+import Hashtag from "./Hashtag";
 
-const hashtag = [
-  {
-    id : 1,
-    name : 'muahe',
-  },
-  {
-    id : 2,
-    name : 'muadong',
-  },
-  {
-    id : 3,
-    name : 'hocsinh',
-  },
-  {
-    id : 4,
-    name : 'huyenbi',
-  },
-  {
-    id : 5,
-    name : 'dethuong',
-  },
-];
-
-const ENTRIES1 = [
+const DEFAULT_MEDIA = [
   {
     id: 1,
-    image:
+    mediaUrl:
       "https://www.kvbro.com/wp-content/uploads/2020/11/quan-ao-giay-dep.jpg",
   },
   {
     id: 2,
-    image:
+    mediaUrl:
       "https://www.kvbro.com/wp-content/uploads/2020/11/quan-ao-giay-dep.jpg",
   },
   {
     id: 3,
-    image:
+    mediaUrl:
       "https://www.kvbro.com/wp-content/uploads/2020/11/quan-ao-giay-dep.jpg",
   },
 ];
@@ -101,8 +80,8 @@ const { width: screenWidth } = Dimensions.get("window");
 
 const MyCarousel = ({ data, changeTest }) => {
   const [entries, setEntries] = useState([]);
+  const [hashtags, setHashtags] = useState([]);
   const carouselRef = useRef(null);
-  const [rating, setRating] = useState(4);
   const [modalVisible, setModalVisible] = useState(false);
   const goForward = () => {
     carouselRef.current.snapToNext();
@@ -118,17 +97,30 @@ const MyCarousel = ({ data, changeTest }) => {
     if (data.color != null) {
       setColor(data.color.toLowerCase());
     }
+    if (data.media) {
+      setEntries(
+        data.media.map((item) => {
+          return {
+            mediaUrl: item.mediaUrl,
+            id: item._id,
+          };
+        })
+      );
+    }
+    if (Array.isArray(data.hashtags)) {
+      setHashtags(data.hashtags);
+    }
   }, [data]);
 
   useEffect(() => {
-    setEntries(ENTRIES1);
+    setEntries(DEFAULT_MEDIA);
   }, []);
 
   const renderItem = ({ item, index }, parallaxProps) => {
     return (
       <View style={styles.item}>
         <ParallaxImage
-          source={{ uri: item.image }}
+          source={{ uri: item.mediaUrl }}
           containerStyle={styles.imageContainer}
           style={styles.image}
           parallaxFactor={0.4}
@@ -144,24 +136,15 @@ const MyCarousel = ({ data, changeTest }) => {
         ref={carouselRef}
         sliderWidth={screenWidth}
         sliderHeight={screenWidth}
-        itemWidth={screenWidth - 60}
+        itemWidth={screenWidth - 20}
         data={entries}
         renderItem={renderItem}
         hasParallaxImages={true}
       />
-      <View style={styles.title}>
-        <Text style={styles.name}>{data.name}</Text>
-        <FlatList data={hashtag}
-                  horizontal
-                  keyExtractor={(item) => item.name}
-                  showsHorizontalScrollIndicator={false}
-                  renderItem={({item}) => (<View style={styles.hashtag}>
-                                          <Text>{item.name}</Text>
-                                        </View>)}
-                  />
-        
-      </View>  
-      <View style={{ flexDirection: "row", alignItems: "center" }}>
+      <Text style={styles.title}>{data.name}</Text>
+      <View
+        style={{ flexDirection: "row", alignItems: "center", marginLeft: 10 }}
+      >
         <Text style={styles.price}>{vndFormat(data.price)}</Text>
         <Text style={{ marginLeft: 25, fontSize: 18 }}>Size : {data.size}</Text>
         <View
@@ -280,30 +263,22 @@ const MyCarousel = ({ data, changeTest }) => {
         </View>
       </View>
       <View style={styles.rating}>
-        <View
-          style={{
-            alignItems: "center",
-            flexDirection: "row",
-          }}
-        >
-          <Rating
-            count={5}
-            defaultRating={4}
-            startingValue={4}
-            imageSize={20}
-            fractions={1}
-          />
-          <Text
-            style={{
-              marginLeft: 5,
-            }}
-          >
-            {rating}/5
-          </Text>
-        </View>
+        <ProductRating rating={data.rating} />
         <Text style={styles.soldText}>
           {data.quantity > 0 ? "In Stock" : "Out Of Stock"}
         </Text>
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          marginLeft: 15,
+          marginTop: 10,
+        }}
+      >
+        {hashtags.map((hashtag) => {
+          return <Hashtag key={hashtag._id} hashtag={hashtag} />;
+        })}
       </View>
     </View>
   );
@@ -321,26 +296,20 @@ const styles = StyleSheet.create({
 
   item: {
     width: screenWidth - 20,
-    height: screenWidth - 60,
+    height: screenWidth - 20,
   },
 
   imageContainer: {
     flex: 1,
     marginBottom: Platform.select({ ios: 0, android: 1 }), // Prevent a random Android rendering issue
-    backgroundColor: "white",
-    borderRadius: 20,
     elevation: 5,
   },
 
   image: {
     ...StyleSheet.absoluteFillObject,
-    resizeMode: "cover",
+    resizeMode: "contain",
   },
   title: {
-    flexDirection:'row',
-    alignItems:'center',
-  },
-  name : {
     fontSize: 25,
     padding: 10,
     marginLeft: 5,
@@ -436,15 +405,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#2196F3",
     width: "100%",
     height: 50,
-  },
-  hashtag : {
-    height: 'auto',
-    width: 'auto',
-    borderRadius:10,
-    padding:5,
-    margin:10,
-    borderWidth:1,
-    alignItems:'center',
-    justifyContent:'center',
   },
 });

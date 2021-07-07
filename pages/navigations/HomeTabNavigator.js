@@ -10,11 +10,10 @@ import Cart from "../Cart";
 import { CartContext } from '../../context/Cart';
 import { CustomerContext } from "../../context/Customer";
 import { customerApi } from "../../api/customer";
-
+import FeedStack from "../stacks/FeedStack";
 const Tab = createBottomTabNavigator();
 
 export default function HomeTabNavigator() {
-  const { getTotalProduct } = useContext(CartContext)
   const { setCustomer } = useContext(CustomerContext)
 
   useEffect(() => {
@@ -28,12 +27,15 @@ export default function HomeTabNavigator() {
     loadCustomer()
   }, [])
 
+  const cartContext = useContext(CartContext);
+  const totalCartItems = cartContext.getTotalItems();
   return (
     <Tab.Navigator
-      initialRouteName={"Search"} // test
+      initialRouteName={"Feed"} // test
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
+          let iconType = "material";
           if (route.name === "Feed") {
             iconName = "trending-up";
           }
@@ -44,9 +46,10 @@ export default function HomeTabNavigator() {
             iconName = "search";
           }
           if (route.name === "Cart") {
-            iconName = "shopping-cart";
+            iconType = "antdesign";
+            iconName = "shoppingcart";
           }
-          return <Icon name={iconName} type={"material"} />;
+          return <Icon name={iconName} type={iconType} />;
         },
       })}
       tabBarOptions={{
@@ -54,9 +57,21 @@ export default function HomeTabNavigator() {
         inactiveTintColor: "gray",
       }}
     >
-      <Tab.Screen name={"Feed"} component={Feed} />
-      <Tab.Screen name={"Search"} component={Search} />
-      <Tab.Screen name={"Cart"} component={Cart} options={{tabBarBadge : getTotalProduct()}}/>
+      <Tab.Screen name={"Feed"} component={FeedStack} />
+      <Tab.Screen
+        name={"Search"}
+        component={Search}
+        options={{
+          title: "Search",
+        }}
+      />
+      <Tab.Screen
+        name={"Cart"}
+        component={Cart}
+        options={{
+          tabBarBadge: totalCartItems === 0 ? undefined : totalCartItems,
+        }}
+      />
       <Tab.Screen name={"Profile"} component={Profile} />
     </Tab.Navigator>
   );

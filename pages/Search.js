@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import {
   Avatar,
+  Badge,
   Header,
   Icon,
   ListItem,
@@ -20,9 +21,20 @@ import { productApi } from "../api/product";
 import { vndFormat } from "../utils";
 import SearchItem from "../components/SearchItem";
 import SearchFilter from "../components/SearchFilter";
+import MaterialCommunityIcon from "react-native-paper/src/components/MaterialCommunityIcon";
+import SearchMeasurement from "../components/SearchMeasurement";
+import {
+  cacheMeasurements,
+  DEFAULT_FILTER,
+  DEFAULT_MEASUREMENT,
+  loadCachedMeasurements,
+} from "../constants/data";
 
-export default function Search() {
-  const [searchValue, setSearchValue] = useState("");
+export default function Search({ route }) {
+  const searchBarRef = useRef(null);
+  const [searchValue, setSearchValue] = useState(
+    route.params?.searchValue ?? ""
+  );
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState(false);
@@ -30,13 +42,45 @@ export default function Search() {
   const [hasNextPage, setHasNextPage] = useState(false);
   const [filterVisible, setFilterVisible] = useState(false);
   const [filter, setFilter] = useState({
-    sort: null,
-    brandIds: [],
-    categoryId: null,
-    prices: [],
+    ...DEFAULT_FILTER,
+    ...(route.params?.passedFilter ?? {}),
   });
+  const [measurement, setMeasurement] = useState(DEFAULT_MEASUREMENT);
+  const [measurementVisible, setMeasurementVisible] = useState(false);
+
+  const cleanMeasurement = (measurement) => {
+    let ret = {};
+    for (let prop in measurement) {
+      if (measurement[prop].enable) {
+        ret[prop] = measurement[prop].value;
+      }
+    }
+    return ret;
+  };
+
+  const hasActivateFilter = () => {
+    for (let p in filter) {
+      if (filter[p] == null) continue;
+      if (Array.isArray(filter[p]) && filter[p].length === 0) continue;
+      return true;
+    }
+    return false;
+  };
+
+  const hasActiveMeasurement = () => {
+    for (let p in measurement) {
+      if (measurement[p].enable) return true;
+    }
+    return false;
+  };
 
   useEffect(() => {
+    loadCachedMeasurements().then((data) => {
+      setMeasurement({
+        ...DEFAULT_MEASUREMENT,
+        ...data,
+      });
+    });
     setSearch(true);
   }, []);
 
@@ -45,9 +89,11 @@ export default function Search() {
       setLoading(true);
       productApi
         .search({
+          type: "DP",
           queryValue: searchValue,
           page,
           ...filter,
+          measurement: cleanMeasurement(measurement),
         })
         .then((res) => {
           const data = res.data;
@@ -88,6 +134,16 @@ export default function Search() {
         setFilter={setFilter}
         doneFilter={finishSearch}
       />
+      <SearchMeasurement
+        visible={measurementVisible}
+        measurement={measurement}
+        setMeasurement={setMeasurement}
+        setVisible={setMeasurementVisible}
+        onFinish={() => {
+          cacheMeasurements({ ...measurement });
+          finishSearch();
+        }}
+      />
       <Header
         containerStyle={{
           backgroundColor: "#fff",
@@ -96,6 +152,7 @@ export default function Search() {
         }}
         centerComponent={
           <SearchBar
+            ref={searchBarRef}
             platform={"ios"}
             placeholder={"Type search here..."}
             containerStyle={{
@@ -104,6 +161,7 @@ export default function Search() {
             value={searchValue}
             onChangeText={setSearchValue}
             cancelButtonTitle={"Clear"}
+            clearIcon={null}
             inputContainerStyle={{
               backgroundColor: "#fff",
             }}
@@ -117,16 +175,60 @@ export default function Search() {
           flex: 7,
         }}
         rightComponent={
-          <Icon
-            name={"sliders-h"}
-            type={"font-awesome-5"}
-            onPress={() => {
-              setFilterVisible(!filterVisible);
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
             }}
-          />
+          >
+            <View
+              style={{
+                marginRight: 8,
+              }}
+            >
+              <Icon
+                name={"sliders-h"}
+                type={"font-awesome-5"}
+                onPress={() => {
+                  setFilterVisible(!filterVisible);
+                }}
+              />
+              {hasActivateFilter() && (
+                <Badge
+                  status={"success"}
+                  containerStyle={{
+                    position: "absolute",
+                    top: -1,
+                    right: -4,
+                  }}
+                />
+              )}
+            </View>
+            <View>
+              <Icon
+                name={"square-foot"}
+                type={"material"}
+                size={35}
+                onPress={() => {
+                  setMeasurementVisible(!measurementVisible);
+                }}
+              />
+              {hasActiveMeasurement() && (
+                <Badge
+                  status={"success"}
+                  containerStyle={{
+                    position: "absolute",
+                    top: 4,
+                    left: 3,
+                  }}
+                />
+              )}
+            </View>
+          </View>
         }
         rightContainerStyle={{
-          flex: 1,
+          flex: 3,
           justifyContent: "center",
         }}
       />

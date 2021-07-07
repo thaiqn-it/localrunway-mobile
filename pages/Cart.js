@@ -23,7 +23,7 @@ const ConfirmDialog = ({ visible, changeVisible, selectList }) => {
       <AwesomeAlert
         show={visible}
         showProgress={false}
-        title="Do you want to delete these product ? "
+        title="Do you want to delete this product?"
         closeOnTouchOutside={true}
         closeOnHardwareBackPress={true}
         showCancelButton={true}
@@ -83,7 +83,7 @@ const Product = ({ data }) => {
       />
       <Avatar
         source={{
-          uri: "https://bizweb.dktcdn.net/100/348/395/products/ot-tee-black-sau-t2-f358de4f-79f7-49a3-a98d-3c68de16ff08.jpg?v=1590993471227",
+          uri: data.product.thumbnailUrl,
         }}
         containerStyle={{ width: 100, height: 100 }}
       />
@@ -170,7 +170,7 @@ export default function Cart() {
               flexDirection: "row",
             }}
             onPress={() => {
-              navigation.goBack();
+              navigation.navigate("Search");
             }}
           >
             <FontAwesome5
@@ -185,7 +185,7 @@ export default function Cart() {
                 marginLeft: -5,
               }}
             >
-              Back
+              Search
             </Text>
           </TouchableOpacity>
         }
@@ -205,10 +205,30 @@ export default function Cart() {
           >
             No Products
           </Text>
-            <View style={{width:200, alignSelf:'center',marginTop:40}}>
-                <Button title={'Click here to shopping'}
-                        onPress={() => navigation.navigate("Search")}/>
-            </View>
+          <View style={{ alignSelf: "center", marginTop: 20 }}>
+            <Button
+              icon={{
+                type: "font-awesome-5",
+                name: "shopping-cart",
+                size: 15,
+                color: "black",
+              }}
+              buttonStyle={{
+                backgroundColor: "white",
+              }}
+              containerStyle={{
+                borderWidth: 1,
+                borderColor: "black",
+              }}
+              titleStyle={{
+                color: "black",
+              }}
+              onPress={() => {
+                navigation.navigate("Search");
+              }}
+              title={"Go Shopping"}
+            />
+          </View>
         </View>
       )}
       {state.item.length > 0 && (

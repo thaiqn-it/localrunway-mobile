@@ -10,7 +10,7 @@ import {
   Button,
   TouchableOpacity,
 } from "react-native";
-import { Badge, Header, Icon } from "react-native-elements";
+import { Badge, Divider, Header, Icon } from "react-native-elements";
 import { useRoute } from "@react-navigation/native";
 import {
   FontAwesome5,
@@ -31,36 +31,38 @@ import { productApi } from "../api/product";
 import { localBrandApi } from "../api/localbrand";
 import { categoryApi } from "../api/category";
 import { useNavigation } from "@react-navigation/native";
-import { CartContext } from '../context/Cart';
-import AwesomeAlert from 'react-native-awesome-alerts';
+import { CartContext } from "../context/Cart";
+import AwesomeAlert from "react-native-awesome-alerts";
 
-const SuccessDialog = ({visible,changeVisible,navigation}) => {
-  return(
-  <View style={styles.container}>
+const SuccessDialog = ({ visible, changeVisible, navigation }) => {
+  return (
+    <View style={styles.container}>
       <AwesomeAlert
         show={visible}
         showProgress={false}
-        title="You have added to cart success !!!"
+        title="This product has been added to your cart!"
         closeOnTouchOutside={true}
         closeOnHardwareBackPress={true}
         showCancelButton={true}
         showConfirmButton={true}
-        cancelText="Cancel"
-        confirmText="Go to cart"
-        confirmButtonColor="red"
+        cancelText="Go To Cart"
+        confirmText="Done"
+        confirmButtonColor="green"
+        cancelButtonColor={"red"}
         onDismiss={() => {
-          changeVisible(false)
+          changeVisible(false);
         }}
         onCancelPressed={() => {
-          changeVisible(false)
+          changeVisible(false);
+          navigation.navigate("Cart");
         }}
-        onConfirmPressed={() => {        
-          changeVisible(false)
-          navigation.navigate("Cart")
+        onConfirmPressed={() => {
+          changeVisible(false);
         }}
       />
-  </View>
-)}
+    </View>
+  );
+};
 
 function SeparateLine() {
   return (
@@ -112,6 +114,37 @@ function BlockDetail({ data }) {
 
   return (
     <ScrollView style={styles.blockDetailContainer}>
+      <View style={styles.titleDetail}>
+        <Text
+          style={{
+            fontWeight: "bold",
+            fontSize: 15,
+            marginLeft: 4,
+            marginBottom: 10,
+          }}
+        >
+          Recommended size measurements for this product:
+        </Text>
+      </View>
+      <View style={styles.titleDetail}>
+        <View style={{ flex: 3 }}>
+          <Text style={styles.textDetail}>Weight</Text>
+          <Text style={styles.textDetail}>Height</Text>
+          <Text style={styles.textDetail}>3-round measurement:</Text>
+        </View>
+        <View style={{ flex: 7 }}>
+          <Text style={styles.textInfoDetail}>
+            {data.minWeight} - {data.maxWeight} kg
+          </Text>
+          <Text style={styles.textInfoDetail}>
+            {data.minHeight} - {data.maxHeight} cm
+          </Text>
+          <Text style={styles.textInfoDetail}>
+            {`Bust (${data.minBust} - ${data.maxBust}cm), Waist (${data.minWaist} - ${data.maxWaist}cm), Hip (${data.minHip} - ${data.maxHip}cm)`}
+          </Text>
+        </View>
+      </View>
+
       <View style={styles.titleDetail}>
         <Text
           style={{
@@ -195,6 +228,8 @@ function BlockMoreProduct() {
 
 function BlockLocalBrand({ data }) {
   const [localBrand, setLocalBrand] = useState([]);
+  const DEFAULT_LOGO_URL =
+    "https://cdn2.iconfinder.com/data/icons/online-shopping-flat-round/550/store-512.png";
   useEffect(() => {
     if (data.brandId != null) {
       localBrandApi
@@ -212,7 +247,7 @@ function BlockLocalBrand({ data }) {
       <View style={{ flexDirection: "row", padding: 10 }}>
         <Image
           source={{
-            uri: "https://cdn2.iconfinder.com/data/icons/online-shopping-flat-round/550/store-512.png",
+            uri: localBrand.logoUrl ?? DEFAULT_LOGO_URL,
           }}
           style={styles.shopImage}
         />
@@ -224,6 +259,7 @@ function BlockLocalBrand({ data }) {
             style={{
               fontSize: 15,
               marginTop: 5,
+              width: 310,
             }}
           >
             {localBrand.address}
@@ -240,7 +276,7 @@ export default function Product() {
   const [test, setTest] = useState("First");
   const [product, setProduct] = useState([]);
   const navigation = useNavigation();
-  const [visible,setVisible] = useState(false); 
+  const [visible, setVisible] = useState(false);
 
   const cartContext = useContext(CartContext);
 
@@ -290,7 +326,7 @@ export default function Product() {
                 marginLeft: -5,
               }}
             >
-              Detail
+              Back
             </Text>
           </TouchableOpacity>
         }
@@ -302,16 +338,23 @@ export default function Product() {
               navigation.navigate("Cart");
             }}
           >
-            <FontAwesome5 name="shopping-cart" size={20} color="black" />
-            <Badge
-              status={"error"}
-              value={cartContext.getTotalItems()}
-              containerStyle={{
-                position: "absolute",
-                top: -6,
-                right: -14,
-              }}
+            <Icon
+              name="shoppingcart"
+              type={"antdesign"}
+              size={20}
+              color="black"
             />
+            {cartContext.getTotalItems() > 0 && (
+              <Badge
+                status={"error"}
+                value={cartContext.getTotalItems()}
+                containerStyle={{
+                  position: "absolute",
+                  top: -6,
+                  right: -14,
+                }}
+              />
+            )}
           </TouchableOpacity>
         }
       />
@@ -357,25 +400,26 @@ export default function Product() {
                 style={styles.purchaseButton}
                 color={"red"}
                 title={"Add To Cart"}
-                onPress={() =>{
-                  setVisible(true)
+                onPress={() => {
+                  setVisible(true);
                   dispatch({
                     type: "INCREASE",
                     item: {
                       product: product,
                       quantity: 1,
                     },
-                  })
-                }
-                }
+                  });
+                }}
               />
             )}
           </CartContext.Consumer>
         </View>
       </View>
-      <SuccessDialog  changeVisible={visible => setVisible(visible)} 
-                                visible={visible}
-                                navigation={navigation}/>
+      <SuccessDialog
+        changeVisible={(visible) => setVisible(visible)}
+        visible={visible}
+        navigation={navigation}
+      />
     </MenuProvider>
   );
 }
@@ -432,8 +476,6 @@ const styles = StyleSheet.create({
     height: 65,
     width: 65,
     borderRadius: 30,
-    borderWidth: 1,
-    borderColor: "black",
   },
   iconToTop: {
     width: 40,

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Button,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -18,6 +19,8 @@ import CustomerProvider from "./context/Customer";
 import { SafeAreaProvider } from "react-native-safe-area-context/src/SafeAreaContext";
 
 const { API_URI } = getEnvVars();
+
+console.disableYellowBox = true;
 
 export default function App() {
   let [fontsLoaded] = useFonts({

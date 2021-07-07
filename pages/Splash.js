@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { View, StyleSheet,Image,Dimensions } from "react-native";
+import { View, StyleSheet, Image, Dimensions } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
- const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 const Splash = () => {
   const navigation = useNavigation();
 
@@ -14,15 +14,15 @@ const Splash = () => {
       navigation.navigate("Login");
       return;
     }, 2500);
-    
   };
 
   return (
     <View style={styles.container}>
-      <Image source={require("../assets/newSplash.png")}
-             style={styles.image}
-             onLoad={splashTimeoutHandler}
-             />
+      <Image
+        source={require("../assets/splash-screen-reformat.png")}
+        style={styles.image}
+        onLoad={splashTimeoutHandler}
+      />
     </View>
   );
 };
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   image: {
     height: height,
     width: width,
-    resizeMode:"contain",
-  }
+    resizeMode: "contain",
+  },
 });
 export default Splash;

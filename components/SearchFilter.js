@@ -5,12 +5,13 @@ import {
   CheckBox,
   Header,
   ListItem,
+  Switch,
   Text,
 } from "react-native-elements";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { localBrandApi } from "../api/localbrand";
 import MultiSlider from "@ptomasroos/react-native-multi-slider";
-
+import { DEFAULT_FILTER } from "../constants/data";
 const SortBy = ({ filter, setFilter }) => {
   const toggleValue = (value) => () => {
     setFilter({
@@ -26,6 +27,8 @@ const SortBy = ({ filter, setFilter }) => {
     { title: "Price (-)", value: "-price" },
     { title: "Name (+)", value: "+name" },
     { title: "Name (-)", value: "-name" },
+    { title: "Rating (-)", value: "-rating" },
+    { title: "Rating (+)", value: "+rating" },
   ];
   return (
     <Card containerStyle={styles.cardContainer}>
@@ -151,6 +154,21 @@ export default function SearchFilter({
         }}
       >
         <Header
+          leftComponent={
+            <Text
+              onPress={() => {
+                setVisible(false);
+                setFilter(DEFAULT_FILTER);
+                doneFilter();
+              }}
+              style={{
+                fontSize: 18,
+                marginLeft: 10,
+              }}
+            >
+              Clear All
+            </Text>
+          }
           containerStyle={{
             backgroundColor: "white",
           }}
@@ -200,5 +218,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0,
     shadowOffset: { height: 0, width: 0 },
     shadowRadius: 0,
+    marginVertical: 0,
   },
 });

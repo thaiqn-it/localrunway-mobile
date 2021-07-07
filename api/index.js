@@ -17,4 +17,3 @@ export const loadToken = async () => {
 }
 
 export { defaultInstance };
-
