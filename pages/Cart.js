@@ -66,21 +66,6 @@ const Product = ({ data }) => {
 
   return (
     <View style={styles.containerProduct}>
-      <Checkbox
-        status={isSelected ? "checked" : "unchecked"}
-        onPress={() => {
-          setSelection(!isSelected);
-          if (!isSelected) {
-            isSelect.item.push(data.product._id);
-          } else {
-            isSelect.item.splice(
-              isSelect.item.findIndex((id) => data.product._id === id),
-              1
-            );
-          }
-          setSelect({ type: "SELECT_ALL", item: isSelect.item });
-        }}
-      />
       <Avatar
         source={{
           uri: data.product.thumbnailUrl,
@@ -343,9 +328,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   containerProduct: {
+    padding : 15,
+    marginLeft : 5,
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 10,
     backgroundColor: "white",
   },
   orderButton: {
