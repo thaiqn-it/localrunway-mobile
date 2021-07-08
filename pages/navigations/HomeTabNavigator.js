@@ -14,14 +14,14 @@ import FeedStack from "../stacks/FeedStack";
 const Tab = createBottomTabNavigator();
 
 export default function HomeTabNavigator() {
-  const { setCustomer } = useContext(CustomerContext)
+  const { setCustomer,getCustomerFromDB } = useContext(CustomerContext)
 
   useEffect(() => {
     async function loadCustomer () {
-      const customer = await customerApi.getCustomer()
+      const data = await getCustomerFromDB()
       setCustomer({
         type : 'LOAD',
-        data : customer.data
+        data : data,
       })
     }   
     loadCustomer()

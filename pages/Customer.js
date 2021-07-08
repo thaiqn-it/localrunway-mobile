@@ -12,7 +12,7 @@ import { CustomerContext } from '../context/Customer';
 import { customerApi } from '../api/customer';
 
 export default function Customer() {
-    const { customer } = useContext(CustomerContext)
+    const { customer,setCustomer,getCustomerFromDB } = useContext(CustomerContext)
     const navigation = useNavigation();
     const [ isChangePasw, setChangePasw ] = useState(false);
     // customer attr
@@ -83,6 +83,17 @@ export default function Customer() {
         }
     }, [])
 
+    const loadCustomer = () => {
+        async function load () {
+        const data = await getCustomerFromDB()
+        setCustomer({
+            type : 'LOAD',
+            data : data,
+        })
+        }   
+        load()
+    }
+
     const updatePassword = async (err) => {
         let errorMsg = err;
         try {
@@ -101,7 +112,10 @@ export default function Customer() {
         } 
         if (errorMsg) {
             Alert.alert("Failed", 'Something went wrong !!! Check your password');
-        } else Alert.alert("Successfull !!!");
+        } else {
+            loadCustomer();
+            Alert.alert("Successfull !!!")
+        };
     }
 
     const updateInformation = async () => {
@@ -153,7 +167,10 @@ export default function Customer() {
             updateInformation().then(err => {
                 if (err) {
                     Alert.alert("Error","Something went wrong !!!")
-                } else Alert.alert("Successfull !!!")
+                } else {
+                    loadCustomer();
+                    Alert.alert("Successfull !!!")
+                };
             })            
         } 
     }

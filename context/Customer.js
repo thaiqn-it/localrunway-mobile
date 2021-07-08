@@ -19,6 +19,11 @@ const generateId = (address) => {
   return idIndex;
 }
 
+const getCustomerFromDB = async () => {
+  const customer = await customerApi.getCustomer()
+  return customer.data
+}
+
 const addressReducer = (state,action) => {
   switch (action.type) {
       case "NEW_ADDRESS" : 
@@ -99,6 +104,7 @@ export default function CustomerProvider({ children }) {
           state,
           dispatch,
           setCustomer,
+          getCustomerFromDB,
         }}
       >
         {children}
