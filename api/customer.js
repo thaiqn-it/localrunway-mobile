@@ -29,6 +29,11 @@ const changePassword = (password,newPassword) => {
         password,
         newPassword,
     })
+};    
+const setExpoPushToken = (token) => {
+  return defaultInstance.post("/customers/setExpoPushToken", {
+    token,
+  });
 };
 
 export const customerApi = {
@@ -38,4 +43,5 @@ export const customerApi = {
   getCustomer,
   updateCustomer,
   changePassword,
+  setExpoPushToken,
 };
