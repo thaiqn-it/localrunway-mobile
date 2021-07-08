@@ -19,6 +19,7 @@ import * as SecureStore from "expo-secure-store";
 import { JWT_TOKEN, JWT_TOKEN_KEY, resetJWTToken } from "../constants";
 import * as Facebook from "expo-facebook";
 import bgImage from "../assets/splash-none-text.png";
+import { registerForPushNotificationsAsync } from "../components/PushNotification";
 
 export default function Login(props) {
   const navigation = useNavigation();
@@ -28,19 +29,28 @@ export default function Login(props) {
   const [loginLoading, setLoginLoading] = useState(false);
 
   useEffect(() => {
-    resetJWTToken().then((token) => {
+    resetJWTToken().then(async (token) => {
       if (token) {
         // return; // test
+        await pushNotification();
         navigation.navigate("HomeTab");
       }
     });
   }, []);
+
+  const pushNotification = async () => {
+    const pushToken = await registerForPushNotificationsAsync();
+    customerApi.setExpoPushToken(pushToken).then(() => {
+      console.log("Push Token successfully");
+    });
+  };
 
   const login = async () => {
     setLoginLoading(true);
     try {
       const res = await customerApi.login(phoneNumber, password);
       await SecureStore.setItemAsync(JWT_TOKEN_KEY, res.data.token);
+      await pushNotification();
       navigation.navigate("HomeTab");
     } catch (err) {
       Alert.alert("Login Status", "Wrong phone number or password");
@@ -62,6 +72,7 @@ export default function Login(props) {
         access_token: token,
       });
       await SecureStore.setItemAsync(JWT_TOKEN_KEY, res.data.token);
+      await pushNotification();
       navigation.navigate("HomeTab");
     } catch ({ message }) {
       Alert.alert("Login Status", `Fail to login with Facebook`);

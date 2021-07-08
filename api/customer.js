@@ -16,8 +16,15 @@ const register = (user) => {
   return defaultInstance.post("/customers/register", user);
 };
 
+const setExpoPushToken = (token) => {
+  return defaultInstance.post("/customers/setExpoPushToken", {
+    token,
+  });
+};
+
 export const customerApi = {
   login,
   loginWithFacebook,
   register,
+  setExpoPushToken,
 };
