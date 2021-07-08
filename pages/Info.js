@@ -3,9 +3,9 @@ import { StyleSheet, Text, View,Button,ScrollView,TouchableOpacity } from 'react
 import { Header,Input } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native';
 import {FontAwesome5} from "@expo/vector-icons";
-import {Picker} from '@react-native-picker/picker';
 import { CustomerContext } from '../context/Customer';
 import * as SecureStore from "expo-secure-store";
+import ModalSelector from 'react-native-modal-selector'
 
 const data = require("../data/address.json")
 
@@ -31,7 +31,7 @@ export default function Info() {
     const [ phoneErr,setPhoneErr ] = useState();
     const [ addressErr,setAddressErr ] = useState();
     const [ emailErr,setEmailErr ] = useState();
-
+    
     useEffect(() => {
         setEmail(customer.email)
         setName(customer.name)
@@ -39,9 +39,9 @@ export default function Info() {
     }, [])
 
     const saveHandler = () => {
-        const coummuneName = data.commune.find(item => item.idCoummune == coummune).name
-        const districtName = data.district.find(item => item.idDistrict == district).name
-        const provinceName = data.province.find(item => item.idProvince == province).name
+        const coummuneName = data.commune.find(item => item.key == coummune).label
+        const districtName = data.district.find(item => item.key == district).label
+        const provinceName = data.province.find(item => item.key == province).label
         const location =    street + ',' +  
                             coummuneName + ',' +  
                             districtName + ',' +
@@ -158,56 +158,37 @@ export default function Info() {
              
                 <View style={styles.picker}>
                     <Text style={styles.pickerLabel}>Province : </Text>
-                    <Picker
-                        selectedValue={province}
-                        style={{ height: 70, width: 250 }}
-                        onValueChange={(itemValue, itemIndex) => setProvince(itemValue)}
-                    >
-                        {provinceData.map((province) => {
-                            return(
-                                <Picker.Item    label={province.name} 
-                                                value={province.idProvince} 
-                                                key={province.idProvince}/>
-                            )
-                        })}
-                    </Picker>
+                    <ModalSelector
+                        initValue={"Province"}
+                        style={{width:200}}
+                        selectedKey={province}
+                        data={provinceData}
+                        onChange={item => setProvince(item.key)}
+                    />
                 </View>
                 
                 <View style={styles.picker}>
                     <Text style={styles.pickerLabel}>District : </Text>
-                    <Picker
-                    selectedValue={district}
-                    style={{ height: 70, width: 250 }}
-                    onValueChange={(itemValue, itemIndex) => setDistrict(itemValue)}
-                    >
-                        {districtData.map((district) => {
-                            return(
-                                <Picker.Item    label={district.name} 
-                                                value={district.idDistrict} 
-                                                key={district.idDistrict}/>
-                            )
-                        })}
-                    </Picker>
+                    <ModalSelector
+                        initValue={"District"}
+                        style={{width:200}}
+                        selectedKey={district}
+                        data={districtData}
+                        onChange={item => setDistrict(item.key)}
+                    />
                 </View>
                 
                 <View style={styles.picker}>
                     <Text style={styles.pickerLabel}>Commune : </Text>
-                    <Picker
-                    selectedValue={coummune}
-                    style={{ height: 70, width: 250 }}
-                    onValueChange={(itemValue, itemIndex) => {
-                        setCoummune(itemValue)
-                    }}
-                    >
-                        {coummuneData.map((coummune) => {
-                            return(
-                                <Picker.Item    label={coummune.name} 
-                                                value={coummune.idCoummune} 
-                                                key={coummune.idCoummune}/>
-                            )
-                        })}
-                    </Picker>
-                </View>            
+                    <ModalSelector
+                        initValue={"Coummune"}
+                        style={{width:200}}
+                        selectedKey={coummune}
+                        data={coummuneData}
+                        onChange={item => setCoummune(item.key)}
+                    />
+                </View>      
+                
             </View>  
             <View style={{width:200,alignSelf:'center'}}>
                 <Button onPress={async () => {
@@ -235,6 +216,7 @@ const styles = StyleSheet.create({
     },
     pickerLabel : {
         fontSize:17,
+        width : 100
     },
     title : {
         fontSize :25,
