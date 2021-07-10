@@ -1,42 +1,99 @@
 import React, { useState } from "react";
-import { ScrollView } from "react-native";
-import { View, StyleSheet } from "react-native";
-import { Text, Button, Card, CheckBox } from "react-native-elements";
-import BodySlider from "../components/BodySlider";
+import { ScrollView, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ImageBackground,
+} from "react-native";
+import { Text, Button, Card, CheckBox, Input } from "react-native-elements";
+import { customerApi } from "../api/customer";
+import { FULL_WIDTH } from "../constants/styles";
 
 const RegisterBody = (props) => {
   const user = props.route.params.user;
   const navigation = props.navigation;
 
-  const [heightValue, setHeightValue] = useState(0);
-  const [weightValue, setWeightValue] = useState(0);
-  const [bustValue, setBustValue] = useState(0);
-  const [waistValue, setWaistValue] = useState(0);
-  const [hipValue, setHipValue] = useState(0);
-
   const [isMale, setIsMale] = useState(false);
   const [isFemale, setIsFemale] = useState(false);
   const [isOther, setIsOther] = useState(false);
   const [gender, setGender] = useState("");
+  const [job, setJob] = useState("");
+  const [hobby, setHobby] = useState("");
+
+  const jobInputHandler = (job) => {
+    setJob(job);
+  };
+
+  const hobbyInputHandler = (hobby) => {
+    setHobby(hobby);
+  };
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Body Measurements",
+      title: "Find Your Style",
     });
   }, [navigation]);
 
-  const submitHandler = () => {
-    props.navigation.navigate("RegisterHobby", {
-      user: {
-        ...user,
-        height: heightValue,
-        weight: weightValue,
-        bust: bustValue,
-        waist: waistValue,
-        hip: hipValue,
-        gender: gender,
-      },
-    });
+  const submitHandler = async () => {
+    let user = props.route.params.user;
+    user = {
+      ...user,
+      gender: gender,
+      hobby: hobby,
+      job: job,
+    };
+    //api goes here
+    let errorMsg = "";
+
+    try {
+      const response = await customerApi.register(user);
+    } catch (err) {
+      if (err.response.data.errorParams.phoneNumber) {
+        errorMsg = errorMsg.concat(
+          `\n` + err.response.data.errorParams.phoneNumber
+        );
+      }
+
+      if (err.response.data.errorParams.email) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.email);
+      }
+
+      if (err.response.data.errorParams.password) {
+        errorMsg = errorMsg.concat(
+          `\n` + err.response.data.errorParams.password
+        );
+      }
+
+      if (err.response.data.errorParams.name) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.name);
+      }
+
+      if (err.response.data.errorParams.gender) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.gender);
+      }
+
+      if (err.response.data.errorParams.height) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.height);
+      }
+
+      if (err.response.data.errorParams.weight) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.weight);
+      }
+    }
+
+    if (errorMsg) {
+      Alert.alert("Failed", errorMsg);
+    } else {
+      Alert.alert(
+        "Register Successfully",
+        "You will be navigated automatically to Login!"
+      );
+      setTimeout(() => {
+        props.navigation.navigate("Login");
+      }, 2000);
+    }
   };
 
   const maleChoice = () => {
@@ -64,94 +121,92 @@ const RegisterBody = (props) => {
     <View style={styles.container}>
       <View style={styles.introduction}>
         <Text h4 style={{ fontWeight: "bold" }}>
-          WE HELP YOU FIND THE RIGHT SIZE
+          NOW IS YOUR TURN
         </Text>
-        <Text>
-          <Text>We calculate the perfect fit based on {"\n"}</Text>
-          <Text style={{ fontWeight: "bold" }}> your unique measurements.</Text>
-        </Text>
-      </View>
-
-      <ScrollView style={{ height: "80%" }}>
-        <Card>
-          <Text>Your Gender: </Text>
-          <View
+        <Text style={{ textAlign: "center" }}>
+          <Text>We will know what activities you're into {"\n"}</Text>
+          <Text>to </Text>
+          <Text
             style={{
+              fontWeight: "bold",
               flexDirection: "row",
-              justifyContent: "space-evenly",
-              width: "100%",
-              marginRight: 20,
             }}
           >
-            <CheckBox
-              center
-              title="Male"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checked={isMale}
-              containerStyle={{ width: "29%" }}
-              onPress={maleChoice}
-            />
-            <CheckBox
-              center
-              title="Female"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              containerStyle={{ width: "29%" }}
-              checked={isFemale}
-              onPress={femaleChoice}
-            />
-            <CheckBox
-              center
-              title="Other"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              containerStyle={{ width: "29%" }}
-              checked={isOther}
-              onPress={otherChoice}
-            />
-          </View>
-        </Card>
-        <BodySlider
-          title={"Height (cm):"}
-          maxValue={250}
-          value={heightValue}
-          onStretch={setHeightValue}
-          result={"Your Height: " + heightValue + " cm"}
-        />
+            provide suitable outfits.
+          </Text>
+        </Text>
+      </View>
+      <ImageBackground
+        source={{
+          uri: "https://firebasestorage.googleapis.com/v0/b/local-runway-image.appspot.com/o/media%2Fhobby.png?alt=media&token=32b484ef-aa0c-4589-a1e1-6a989cea31be",
+        }}
+        style={{ width: FULL_WIDTH, height: 450 }}
+      >
+        <ScrollView style={{ height: "70%", marginTop: "15%" }}>
+          <Card>
+            <Text>Your Gender: </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                width: "100%",
+                marginRight: 20,
+              }}
+            >
+              <CheckBox
+                center
+                title="Male"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={isMale}
+                containerStyle={{ width: "29%" }}
+                onPress={maleChoice}
+              />
+              <CheckBox
+                center
+                title="Female"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                containerStyle={{ width: "29%" }}
+                checked={isFemale}
+                onPress={femaleChoice}
+              />
+              <CheckBox
+                center
+                title="Other"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                containerStyle={{ width: "29%" }}
+                checked={isOther}
+                onPress={otherChoice}
+              />
+            </View>
+          </Card>
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <Card>
+              <Input
+                inputContainerStyle={styles.input}
+                placeholder="What's your job?"
+                value={job}
+                onChangeText={jobInputHandler}
+              />
+              <Input
+                inputContainerStyle={styles.input}
+                placeholder="Text here your most favorite hobby!"
+                value={hobby}
+                onChangeText={hobbyInputHandler}
+              />
+            </Card>
+          </TouchableWithoutFeedback>
 
-        <BodySlider
-          title={"Weight (kg):"}
-          maxValue={200}
-          value={weightValue}
-          onStretch={setWeightValue}
-          result={"Your Weight: " + weightValue + " kg"}
-        />
-
-        <BodySlider
-          title={"Bust (cm):"}
-          maxValue={150}
-          value={bustValue}
-          onStretch={setBustValue}
-          result={"Your Bust: " + bustValue + " cm"}
-        />
-
-        <BodySlider
-          title={"Waist (cm):"}
-          maxValue={100}
-          value={waistValue}
-          onStretch={setWaistValue}
-          result={"Your Waist: " + waistValue + " cm"}
-        />
-
-        <BodySlider
-          title={"Hip (cm):"}
-          maxValue={100}
-          value={hipValue}
-          onStretch={setHipValue}
-          result={"Your Hip: " + hipValue + " cm"}
-        />
-      </ScrollView>
+          {/* <Image
+          source={{
+            uri: "https://firebasestorage.googleapis.com/v0/b/local-runway-image.appspot.com/o/media%2Fregister-quote.png?alt=media&token=0347aa44-367f-4e93-8e81-4669525c582a",
+          }}
+          style={{ width: FULL_WIDTH, height: FULL_HEIGHT }}
+        /> */}
+        </ScrollView>
+      </ImageBackground>
 
       <View
         style={{
@@ -162,13 +217,17 @@ const RegisterBody = (props) => {
         }}
       >
         <Button
-          title="Next"
+          title="Submit"
           buttonStyle={{
             borderWidth: 1,
             borderColor: "#000000",
             width: 150,
             backgroundColor: "#000000",
             marginHorizontal: 10,
+            backgroundColor: "#f5f5f5",
+          }}
+          titleStyle={{
+            color: "#000000",
           }}
           onPress={submitHandler}
         />
@@ -188,6 +247,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
+    marginBottom: "5%",
+  },
+  input: {
+    borderWidth: 1,
+    paddingLeft: 10,
+    width: "100%",
   },
 });
 
