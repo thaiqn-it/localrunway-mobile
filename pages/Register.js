@@ -42,7 +42,6 @@ const Register = (props) => {
 
   const onSubmitHanlder = (event) => {
     if (
-      email.length === 0 ||
       phoneNumber.length === 0 ||
       password.length === 0 ||
       fullName.length === 0
@@ -150,7 +149,7 @@ const Register = (props) => {
           <View style={styles.inputContainer}>
             <Input
               inputContainerStyle={styles.input}
-              placeholder={"Email Address*"}
+              placeholder={"Email Address"}
               value={email}
               onChangeText={onChangeEmailHandler}
             />
