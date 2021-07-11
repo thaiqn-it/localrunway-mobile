@@ -75,6 +75,7 @@ export default function Login(props) {
         access_token: token,
       });
       await SecureStore.setItemAsync(JWT_TOKEN_KEY, res.data.token);
+      await loadToken();
       await pushNotification();
       navigation.navigate("HomeTab");
     } catch ({ message }) {

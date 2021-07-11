@@ -20,14 +20,9 @@ export default function Customer() {
     const [ email,setEmail ] = useState(null);
     const [ job,setJob ] = useState(null);
     const [ hobby,setHobby ] = useState(null);
-    const [ heightValue, setHeightValue ] = useState(0);
-    const [ weightValue, setWeightValue ] = useState(0);
     const [ oldPasw,setOldPasw ] = useState(null);
     const [ newPasw,setNewPasw ] = useState(null);
     const [ confirmPasw,setConfirmPasw ] = useState(null);
-    const waist = customer.waist;
-    const hip = customer.hip;
-    const bust = customer.bust;
 
     //gender
     const [ isMale, setIsMale ] = useState(false);
@@ -68,8 +63,6 @@ export default function Customer() {
         setEmail(customer.email)
         setJob(customer.job)
         setHobby(customer.hobby)
-        setHeightValue(customer.height)
-        setWeightValue(customer.weight)
         if (customer.gender === 'MALE') {
             setIsMale(true);
             setGender("MALE")
@@ -123,14 +116,9 @@ export default function Customer() {
         const customer = {
             email : email,
             hobby : hobby,
-            job : job,
-            waist : waist,
-            hip : hip,
-            bust : bust,        
+            job : job,    
             name : name,
             gender : gender,
-            height : heightValue,
-            weight : weightValue,
         }
         try {
             const response = await customerApi.updateCustomer(customer)
