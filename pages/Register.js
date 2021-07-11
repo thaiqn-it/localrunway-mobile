@@ -212,7 +212,8 @@ const Register = (props) => {
                 borderWidth: 1,
                 borderColor: "#000000",
                 width: 200,
-                backgroundColor: "#000000",
+                backgroundColor: "#f5f5f5",
+                height: 45,
               }}
               containerStyle={{
                 marginVertical: 10,
@@ -220,6 +221,9 @@ const Register = (props) => {
                 justifyContent: "center",
                 textAlign: "center",
                 width: "100%",
+              }}
+              titleStyle={{
+                color: "#000000",
               }}
             />
           </View>

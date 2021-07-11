@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { Text, Button, Card, CheckBox, Input } from "react-native-elements";
 import { customerApi } from "../api/customer";
-import { FULL_WIDTH } from "../constants/styles";
+import { FULL_HEIGHT, FULL_WIDTH } from "../constants/styles";
 
 const RegisterBody = (props) => {
   const user = props.route.params.user;
@@ -119,30 +119,31 @@ const RegisterBody = (props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.introduction}>
-        <Text h4 style={{ fontWeight: "bold" }}>
-          NOW IS YOUR TURN
-        </Text>
-        <Text style={{ textAlign: "center" }}>
-          <Text>We will know what activities you're into {"\n"}</Text>
-          <Text>to </Text>
-          <Text
-            style={{
-              fontWeight: "bold",
-              flexDirection: "row",
-            }}
-          >
-            provide suitable outfits.
-          </Text>
-        </Text>
-      </View>
       <ImageBackground
         source={{
-          uri: "https://firebasestorage.googleapis.com/v0/b/local-runway-image.appspot.com/o/media%2Fhobby.png?alt=media&token=32b484ef-aa0c-4589-a1e1-6a989cea31be",
+          uri: "https://firebasestorage.googleapis.com/v0/b/local-runway-image.appspot.com/o/hobby05.png?alt=media&token=35f06a1b-9fe2-4fcc-a882-a49703f3e9e7",
         }}
-        style={{ width: FULL_WIDTH, height: 450 }}
+        style={{ width: FULL_WIDTH, height: FULL_HEIGHT }}
       >
-        <ScrollView style={{ height: "70%", marginTop: "15%" }}>
+        <View style={styles.introduction}>
+          <Text h4 style={{ fontWeight: "bold" }}>
+            NOW IS YOUR TURN
+          </Text>
+          <Text style={{ textAlign: "center" }}>
+            <Text>We will know what activities you're into {"\n"}</Text>
+            <Text>to </Text>
+            <Text
+              style={{
+                fontWeight: "bold",
+                flexDirection: "row",
+              }}
+            >
+              provide suitable outfits.
+            </Text>
+          </Text>
+        </View>
+
+        <ScrollView style={{ height: "60%", marginTop: "5%" }}>
           <Card>
             <Text>Your Gender: </Text>
             <View
@@ -198,40 +199,32 @@ const RegisterBody = (props) => {
               />
             </Card>
           </TouchableWithoutFeedback>
-
-          {/* <Image
-          source={{
-            uri: "https://firebasestorage.googleapis.com/v0/b/local-runway-image.appspot.com/o/media%2Fregister-quote.png?alt=media&token=0347aa44-367f-4e93-8e81-4669525c582a",
-          }}
-          style={{ width: FULL_WIDTH, height: FULL_HEIGHT }}
-        /> */}
+          <View
+            style={{
+              height: "20%",
+              flexDirection: "row",
+              justifyContent: "center",
+              marginTop: 30,
+            }}
+          >
+            <Button
+              title="Submit"
+              buttonStyle={{
+                borderWidth: 1,
+                borderColor: "#000000",
+                width: 150,
+                height: 45,
+                marginHorizontal: 10,
+                backgroundColor: "#f5f5f5",
+              }}
+              titleStyle={{
+                color: "#000000",
+              }}
+              onPress={submitHandler}
+            />
+          </View>
         </ScrollView>
       </ImageBackground>
-
-      <View
-        style={{
-          height: "10%",
-          flexDirection: "row",
-          justifyContent: "center",
-          paddingTop: 10,
-        }}
-      >
-        <Button
-          title="Submit"
-          buttonStyle={{
-            borderWidth: 1,
-            borderColor: "#000000",
-            width: 150,
-            backgroundColor: "#000000",
-            marginHorizontal: 10,
-            backgroundColor: "#f5f5f5",
-          }}
-          titleStyle={{
-            color: "#000000",
-          }}
-          onPress={submitHandler}
-        />
-      </View>
     </View>
   );
 };
@@ -247,7 +240,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
-    marginBottom: "5%",
   },
   input: {
     borderWidth: 1,
