@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React,{useContext,useEffect} from "react";
 import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Feed from "../Feed";
@@ -7,12 +7,26 @@ import Profile from "../Profile";
 import { Icon } from "react-native-elements";
 import { PRIMARY_COLOR } from "../../constants/styles";
 import Cart from "../Cart";
-import { CartContext } from "../../context/Cart";
+import { CartContext } from '../../context/Cart';
+import { CustomerContext } from "../../context/Customer";
+import { customerApi } from "../../api/customer";
 import FeedStack from "../stacks/FeedStack";
-
 const Tab = createBottomTabNavigator();
 
 export default function HomeTabNavigator() {
+  const { setCustomer,getCustomerFromDB } = useContext(CustomerContext)
+
+  useEffect(() => {
+    async function loadCustomer () {
+      const data = await getCustomerFromDB()
+      setCustomer({
+        type : 'LOAD',
+        data : data,
+      })
+    }   
+    loadCustomer()
+  }, [])
+
   const cartContext = useContext(CartContext);
   const totalCartItems = cartContext.getTotalItems();
   return (

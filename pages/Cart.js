@@ -14,6 +14,7 @@ import { vndFormat } from "../utils";
 import { CartContext } from "../context/Cart";
 import InputSpinner from "react-native-input-spinner";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { CustomerContext } from "../context/Customer";
 
 const ConfirmDialog = ({ visible, changeVisible, selectList }) => {
   const { dispatch, setSelect } = useContext(CartContext);
@@ -65,21 +66,6 @@ const Product = ({ data }) => {
 
   return (
     <View style={styles.containerProduct}>
-      <Checkbox
-        status={isSelected ? "checked" : "unchecked"}
-        onPress={() => {
-          setSelection(!isSelected);
-          if (!isSelected) {
-            isSelect.item.push(data.product._id);
-          } else {
-            isSelect.item.splice(
-              isSelect.item.findIndex((id) => data.product._id === id),
-              1
-            );
-          }
-          setSelect({ type: "SELECT_ALL", item: isSelect.item });
-        }}
-      />
       <Avatar
         source={{
           uri: data.product.thumbnailUrl,
@@ -140,9 +126,16 @@ const renderItem = ({ item }) => <Product data={item} />;
 export default function Cart() {
   const navigation = useNavigation();
   const { state, setSelect, isSelect, getTotalPrice } = useContext(CartContext);
-  const [isSelected, setSelection] = useState(false);
   const [visible, setVisible] = useState(false);
   const [total, setTotal] = useState(0);
+  const customerContext = useContext(CustomerContext)
+
+  const address = customerContext.state.address.find(item => item.select == true 
+                                                    && item.customerId == customerContext.customer._id)
+
+  const changeAddress = (location => {
+    setAddress(location);
+  })
 
   useEffect(() => {
     setTotal(getTotalPrice());
@@ -225,24 +218,48 @@ export default function Cart() {
       )}
       {state.item.length > 0 && (
         <View>
-          <ListItem onPress={() => navigation.navigate("Info")} bottomDivider>
-            <MaterialIcons name="location-pin" size={24} color="#2196F3" />
-            <ListItem.Content>
-              <View style={{ flexDirection: "row" }}>
-                <View style={{ marginRight: 10 }}>
-                  <Text style={styles.title}>Nguyễn Quốc Thái</Text>
+          {address !== undefined && (
+            <ListItem 
+              onPress={() => navigation.navigate("Address")}
+              bottomDivider>
+              <MaterialIcons name="location-pin" size={24} color="#2196F3" />
+              <ListItem.Content>
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ marginRight: 10 }}>
+                    <Text style={styles.title}>
+                      {address.customer.name}
+                    </Text>
+                  </View>
+                  <View>
+                    <Text style={styles.title}>
+                      {address.customer.phone}
+                    </Text>
+                  </View>
                 </View>
-                <View>
-                  <Text style={styles.title}>09453927233</Text>
+                <ListItem.Subtitle>
+                  {address.address}
+                </ListItem.Subtitle>
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+          )}
+          {address === undefined && (
+            <ListItem 
+              onPress={() => navigation.navigate("Address")}
+              bottomDivider>
+              <MaterialIcons name="location-pin" size={24} color="#2196F3" />
+              <ListItem.Content>
+                <View style={{ flexDirection: "row" }}>
+                  <View style={{ marginRight: 10 }}>
+                    <Text style={styles.title}>
+                      Click here to add address
+                    </Text>
+                  </View>
                 </View>
-              </View>
-              <ListItem.Subtitle>
-                123 Man thiện , Q.9 , TP.HCM
-              </ListItem.Subtitle>
-            </ListItem.Content>
-            <ListItem.Chevron />
-          </ListItem>
-
+              </ListItem.Content>
+              <ListItem.Chevron />
+            </ListItem>
+          )}
           <ConfirmDialog
             changeVisible={(visible) => setVisible(visible)}
             visible={visible}
@@ -270,6 +287,7 @@ export default function Cart() {
             </View>
             <View>
               <Button
+                onPress={() => navigation.navigate("CreateOrder")}
                 icon={{
                   type: "font-awesome-5",
                   name: "shopping-cart",
@@ -310,9 +328,10 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   containerProduct: {
+    padding : 15,
+    marginLeft : 5,
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 10,
     backgroundColor: "white",
   },
   orderButton: {

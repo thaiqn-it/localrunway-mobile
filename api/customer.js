@@ -16,6 +16,20 @@ const register = (user) => {
   return defaultInstance.post("/customers/register", user);
 };
 
+const getCustomer = () => {
+  return defaultInstance.get("/customers/me");
+};
+
+const updateCustomer = (customer) => {
+    return defaultInstance.put("/customers/me",customer)
+};
+
+const changePassword = (password,newPassword) => {
+    return defaultInstance.put("/customers/resetPassword",{
+        password,
+        newPassword,
+    })
+};    
 const setExpoPushToken = (token) => {
   return defaultInstance.post("/customers/setExpoPushToken", {
     token,
@@ -26,5 +40,8 @@ export const customerApi = {
   login,
   loginWithFacebook,
   register,
+  getCustomer,
+  updateCustomer,
+  changePassword,
   setExpoPushToken,
 };

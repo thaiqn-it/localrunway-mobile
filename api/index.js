@@ -8,8 +8,12 @@ const defaultInstance = axios.create({
   baseURL: API_URI,
 });
 
-resetJWTToken().then((token) => {
-  defaultInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-});
+export const loadToken = async () => {
+  await resetJWTToken().then(token => {
+    defaultInstance.defaults.headers.common[
+      "Authorization"
+    ] = `Bearer ${token}`;
+  })
+}
 
 export { defaultInstance };

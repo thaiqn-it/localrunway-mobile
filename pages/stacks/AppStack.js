@@ -7,6 +7,10 @@ import HistoryOrders from "../HistoryOrders";
 import RegisterStackNavigator from "../stacks/RegisterStack";
 import Splash from "../Splash";
 import Info from "../Info";
+import Order from "../Order";
+import Address from "../Address";
+import CreateOrder from "../CreateOrder";
+import Customer from "../Customer";
 
 const Stack = createStackNavigator();
 
@@ -42,6 +46,13 @@ export default function AppStack() {
         }}
       />
       <Stack.Screen
+        name={"Address"}
+        component={Address}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
         name={"RegisterStack"}
         component={RegisterStackNavigator}
         options={{
@@ -58,6 +69,27 @@ export default function AppStack() {
       <Stack.Screen
         name={"Info"}
         component={Info}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={"Order"}
+        component={Order}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={"CreateOrder"}
+        component={CreateOrder}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name={"Customer"}
+        component={Customer}
         options={{
           headerShown: false,
         }}

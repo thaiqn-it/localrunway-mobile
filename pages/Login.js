@@ -18,6 +18,7 @@ import { useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import { JWT_TOKEN, JWT_TOKEN_KEY, resetJWTToken } from "../constants";
 import * as Facebook from "expo-facebook";
+import { loadToken } from "../api";
 import bgImage from "../assets/splash-none-text.png";
 import { registerForPushNotificationsAsync } from "../components/PushNotification";
 
@@ -31,6 +32,7 @@ export default function Login(props) {
   useEffect(() => {
     resetJWTToken().then(async (token) => {
       if (token) {
+        await loadToken();
         // return; // test
         await pushNotification();
         navigation.navigate("HomeTab");
@@ -50,6 +52,7 @@ export default function Login(props) {
     try {
       const res = await customerApi.login(phoneNumber, password);
       await SecureStore.setItemAsync(JWT_TOKEN_KEY, res.data.token);
+      await loadToken();
       await pushNotification();
       navigation.navigate("HomeTab");
     } catch (err) {
