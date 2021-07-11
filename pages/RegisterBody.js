@@ -127,7 +127,7 @@ const RegisterBody = (props) => {
       >
         <View style={styles.introduction}>
           <Text h4 style={{ fontWeight: "bold" }}>
-            NOW IS YOUR TURN
+            NOW IT'S YOUR TURN
           </Text>
           <Text style={{ textAlign: "center" }}>
             <Text>We will know what activities you're into {"\n"}</Text>
