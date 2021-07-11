@@ -38,12 +38,28 @@ const RegisterBody = (props) => {
 
   const submitHandler = async () => {
     let user = props.route.params.user;
-    user = {
-      ...user,
-      gender: gender,
-      hobby: hobby,
-      job: job,
-    };
+
+    if (gender.length !== 0) {
+      user = {
+        ...user,
+        gender: gender,
+      };
+    }
+
+    if (hobby.length !== 0) {
+      user = {
+        ...user,
+        hobby: hobby,
+      };
+    }
+
+    if (job.length !== 0) {
+      user = {
+        ...user,
+        job: job,
+      };
+    }
+
     //api goes here
     let errorMsg = "";
 
@@ -73,14 +89,6 @@ const RegisterBody = (props) => {
       if (err.response.data.errorParams.gender) {
         errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.gender);
       }
-
-      if (err.response.data.errorParams.height) {
-        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.height);
-      }
-
-      if (err.response.data.errorParams.weight) {
-        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.weight);
-      }
     }
 
     if (errorMsg) {
@@ -92,7 +100,7 @@ const RegisterBody = (props) => {
       );
       setTimeout(() => {
         props.navigation.navigate("Login");
-      }, 2000);
+      }, 3000);
     }
   };
 
