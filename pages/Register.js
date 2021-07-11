@@ -49,15 +49,35 @@ const Register = (props) => {
       Alert.alert("Please input full required fields");
     } else {
       //navigation
-      props.navigation.navigate("RegisterBody", {
-        user: {
+      let user = {
+        phoneNumber: phoneNumber,
+        password: password,
+        name: fullName,
+      };
+
+      if (email.length !== 0) {
+        user = {
+          ...user,
           email: email,
-          phoneNumber: phoneNumber,
-          password: password,
-          name: fullName,
+        };
+      }
+
+      if (address.length !== 0) {
+        user = {
+          ...user,
           address: address,
+        };
+      }
+
+      if (facebookId.length !== 0) {
+        user = {
+          ...user,
           fb_userId: facebookId,
-        },
+        };
+      }
+
+      props.navigation.navigate("RegisterBody", {
+        user: user,
       });
     }
   };
