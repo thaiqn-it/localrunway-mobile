@@ -42,7 +42,6 @@ const Register = (props) => {
 
   const onSubmitHanlder = (event) => {
     if (
-      email.length === 0 ||
       phoneNumber.length === 0 ||
       password.length === 0 ||
       fullName.length === 0
@@ -50,15 +49,35 @@ const Register = (props) => {
       Alert.alert("Please input full required fields");
     } else {
       //navigation
-      props.navigation.navigate("RegisterBody", {
-        user: {
+      let user = {
+        phoneNumber: phoneNumber,
+        password: password,
+        name: fullName,
+      };
+
+      if (email.length !== 0) {
+        user = {
+          ...user,
           email: email,
-          phoneNumber: phoneNumber,
-          password: password,
-          name: fullName,
+        };
+      }
+
+      if (address.length !== 0) {
+        user = {
+          ...user,
           address: address,
+        };
+      }
+
+      if (facebookId.length !== 0) {
+        user = {
+          ...user,
           fb_userId: facebookId,
-        },
+        };
+      }
+
+      props.navigation.navigate("RegisterBody", {
+        user: user,
       });
     }
   };
@@ -150,7 +169,7 @@ const Register = (props) => {
           <View style={styles.inputContainer}>
             <Input
               inputContainerStyle={styles.input}
-              placeholder={"Email Address*"}
+              placeholder={"Email Address"}
               value={email}
               onChangeText={onChangeEmailHandler}
             />
@@ -212,7 +231,8 @@ const Register = (props) => {
                 borderWidth: 1,
                 borderColor: "#000000",
                 width: 200,
-                backgroundColor: "#000000",
+                backgroundColor: "#f5f5f5",
+                height: 45,
               }}
               containerStyle={{
                 marginVertical: 10,
@@ -220,6 +240,9 @@ const Register = (props) => {
                 justifyContent: "center",
                 textAlign: "center",
                 width: "100%",
+              }}
+              titleStyle={{
+                color: "#000000",
               }}
             />
           </View>

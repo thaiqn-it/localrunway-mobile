@@ -1,42 +1,107 @@
 import React, { useState } from "react";
-import { ScrollView } from "react-native";
-import { View, StyleSheet } from "react-native";
-import { Text, Button, Card, CheckBox } from "react-native-elements";
-import BodySlider from "../components/BodySlider";
+import { ScrollView, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ImageBackground,
+} from "react-native";
+import { Text, Button, Card, CheckBox, Input } from "react-native-elements";
+import { customerApi } from "../api/customer";
+import { FULL_HEIGHT, FULL_WIDTH } from "../constants/styles";
 
 const RegisterBody = (props) => {
   const user = props.route.params.user;
   const navigation = props.navigation;
 
-  const [heightValue, setHeightValue] = useState(0);
-  const [weightValue, setWeightValue] = useState(0);
-  const [bustValue, setBustValue] = useState(0);
-  const [waistValue, setWaistValue] = useState(0);
-  const [hipValue, setHipValue] = useState(0);
-
   const [isMale, setIsMale] = useState(false);
   const [isFemale, setIsFemale] = useState(false);
   const [isOther, setIsOther] = useState(false);
   const [gender, setGender] = useState("");
+  const [job, setJob] = useState("");
+  const [hobby, setHobby] = useState("");
+
+  const jobInputHandler = (job) => {
+    setJob(job);
+  };
+
+  const hobbyInputHandler = (hobby) => {
+    setHobby(hobby);
+  };
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Body Measurements",
+      title: "Find Your Style",
     });
   }, [navigation]);
 
-  const submitHandler = () => {
-    props.navigation.navigate("RegisterHobby", {
-      user: {
+  const submitHandler = async () => {
+    let user = props.route.params.user;
+
+    if (gender.length !== 0) {
+      user = {
         ...user,
-        height: heightValue,
-        weight: weightValue,
-        bust: bustValue,
-        waist: waistValue,
-        hip: hipValue,
         gender: gender,
-      },
-    });
+      };
+    }
+
+    if (hobby.length !== 0) {
+      user = {
+        ...user,
+        hobby: hobby,
+      };
+    }
+
+    if (job.length !== 0) {
+      user = {
+        ...user,
+        job: job,
+      };
+    }
+
+    //api goes here
+    let errorMsg = "";
+
+    try {
+      const response = await customerApi.register(user);
+    } catch (err) {
+      if (err.response.data.errorParams.phoneNumber) {
+        errorMsg = errorMsg.concat(
+          `\n` + err.response.data.errorParams.phoneNumber
+        );
+      }
+
+      if (err.response.data.errorParams.email) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.email);
+      }
+
+      if (err.response.data.errorParams.password) {
+        errorMsg = errorMsg.concat(
+          `\n` + err.response.data.errorParams.password
+        );
+      }
+
+      if (err.response.data.errorParams.name) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.name);
+      }
+
+      if (err.response.data.errorParams.gender) {
+        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.gender);
+      }
+    }
+
+    if (errorMsg) {
+      Alert.alert("Failed", errorMsg);
+    } else {
+      Alert.alert(
+        "Register Successfully",
+        "You will be navigated automatically to Login!"
+      );
+      setTimeout(() => {
+        props.navigation.navigate("Login");
+      }, 3000);
+    }
   };
 
   const maleChoice = () => {
@@ -62,117 +127,112 @@ const RegisterBody = (props) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.introduction}>
-        <Text h4 style={{ fontWeight: "bold" }}>
-          WE HELP YOU FIND THE RIGHT SIZE
-        </Text>
-        <Text>
-          <Text>We calculate the perfect fit based on {"\n"}</Text>
-          <Text style={{ fontWeight: "bold" }}> your unique measurements.</Text>
-        </Text>
-      </View>
+      <ImageBackground
+        source={{
+          uri: "https://firebasestorage.googleapis.com/v0/b/local-runway-image.appspot.com/o/hobby05.png?alt=media&token=35f06a1b-9fe2-4fcc-a882-a49703f3e9e7",
+        }}
+        style={{ width: FULL_WIDTH, height: FULL_HEIGHT }}
+      >
+        <View style={styles.introduction}>
+          <Text h4 style={{ fontWeight: "bold" }}>
+            NOW IT'S YOUR TURN
+          </Text>
+          <Text style={{ textAlign: "center" }}>
+            <Text>We will know what activities you're into {"\n"}</Text>
+            <Text>to </Text>
+            <Text
+              style={{
+                fontWeight: "bold",
+                flexDirection: "row",
+              }}
+            >
+              provide suitable outfits.
+            </Text>
+          </Text>
+        </View>
 
-      <ScrollView style={{ height: "80%" }}>
-        <Card>
-          <Text>Your Gender: </Text>
+        <ScrollView style={{ height: "60%", marginTop: "5%" }}>
+          <Card>
+            <Text>Your Gender: </Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                width: "100%",
+                marginRight: 20,
+              }}
+            >
+              <CheckBox
+                center
+                title="Male"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                checked={isMale}
+                containerStyle={{ width: "29%" }}
+                onPress={maleChoice}
+              />
+              <CheckBox
+                center
+                title="Female"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                containerStyle={{ width: "29%" }}
+                checked={isFemale}
+                onPress={femaleChoice}
+              />
+              <CheckBox
+                center
+                title="Other"
+                checkedIcon="dot-circle-o"
+                uncheckedIcon="circle-o"
+                containerStyle={{ width: "29%" }}
+                checked={isOther}
+                onPress={otherChoice}
+              />
+            </View>
+          </Card>
+          <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+            <Card>
+              <Input
+                inputContainerStyle={styles.input}
+                placeholder="What's your job?"
+                value={job}
+                onChangeText={jobInputHandler}
+              />
+              <Input
+                inputContainerStyle={styles.input}
+                placeholder="Text here your most favorite hobby!"
+                value={hobby}
+                onChangeText={hobbyInputHandler}
+              />
+            </Card>
+          </TouchableWithoutFeedback>
           <View
             style={{
+              height: "20%",
               flexDirection: "row",
-              justifyContent: "space-evenly",
-              width: "100%",
-              marginRight: 20,
+              justifyContent: "center",
+              marginTop: 30,
             }}
           >
-            <CheckBox
-              center
-              title="Male"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              checked={isMale}
-              containerStyle={{ width: "29%" }}
-              onPress={maleChoice}
-            />
-            <CheckBox
-              center
-              title="Female"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              containerStyle={{ width: "29%" }}
-              checked={isFemale}
-              onPress={femaleChoice}
-            />
-            <CheckBox
-              center
-              title="Other"
-              checkedIcon="dot-circle-o"
-              uncheckedIcon="circle-o"
-              containerStyle={{ width: "29%" }}
-              checked={isOther}
-              onPress={otherChoice}
+            <Button
+              title="Submit"
+              buttonStyle={{
+                borderWidth: 1,
+                borderColor: "#000000",
+                width: 150,
+                height: 45,
+                marginHorizontal: 10,
+                backgroundColor: "#f5f5f5",
+              }}
+              titleStyle={{
+                color: "#000000",
+              }}
+              onPress={submitHandler}
             />
           </View>
-        </Card>
-        <BodySlider
-          title={"Height (cm):"}
-          maxValue={250}
-          value={heightValue}
-          onStretch={setHeightValue}
-          result={"Your Height: " + heightValue + " cm"}
-        />
-
-        <BodySlider
-          title={"Weight (kg):"}
-          maxValue={200}
-          value={weightValue}
-          onStretch={setWeightValue}
-          result={"Your Weight: " + weightValue + " kg"}
-        />
-
-        <BodySlider
-          title={"Bust (cm):"}
-          maxValue={150}
-          value={bustValue}
-          onStretch={setBustValue}
-          result={"Your Bust: " + bustValue + " cm"}
-        />
-
-        <BodySlider
-          title={"Waist (cm):"}
-          maxValue={100}
-          value={waistValue}
-          onStretch={setWaistValue}
-          result={"Your Waist: " + waistValue + " cm"}
-        />
-
-        <BodySlider
-          title={"Hip (cm):"}
-          maxValue={100}
-          value={hipValue}
-          onStretch={setHipValue}
-          result={"Your Hip: " + hipValue + " cm"}
-        />
-      </ScrollView>
-
-      <View
-        style={{
-          height: "10%",
-          flexDirection: "row",
-          justifyContent: "center",
-          paddingTop: 10,
-        }}
-      >
-        <Button
-          title="Next"
-          buttonStyle={{
-            borderWidth: 1,
-            borderColor: "#000000",
-            width: 150,
-            backgroundColor: "#000000",
-            marginHorizontal: 10,
-          }}
-          onPress={submitHandler}
-        />
-      </View>
+        </ScrollView>
+      </ImageBackground>
     </View>
   );
 };
@@ -188,6 +248,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
+  },
+  input: {
+    borderWidth: 1,
+    paddingLeft: 10,
+    width: "100%",
   },
 });
 
