@@ -18,7 +18,6 @@ const Register = (props) => {
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
   const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [address, setAddress] = useState("");
@@ -26,9 +25,6 @@ const Register = (props) => {
 
   const onChangeEmailHandler = (email) => {
     setEmail(email);
-  };
-  const onChangePhoneNumberHandler = (phoneNumber) => {
-    setPhoneNumber(phoneNumber);
   };
   const onChangePasswordHandler = (password) => {
     setPassword(password);
@@ -41,16 +37,11 @@ const Register = (props) => {
   };
 
   const onSubmitHanlder = (event) => {
-    if (
-      phoneNumber.length === 0 ||
-      password.length === 0 ||
-      fullName.length === 0
-    ) {
+    if (password.length === 0 || fullName.length === 0) {
       Alert.alert("Please input full required fields");
     } else {
       //navigation
       let user = {
-        phoneNumber: phoneNumber,
         password: password,
         name: fullName,
       };
@@ -173,15 +164,6 @@ const Register = (props) => {
               value={email}
               onChangeText={onChangeEmailHandler}
             />
-
-            <Input
-              multiline={false}
-              inputContainerStyle={styles.input}
-              placeholder="Phone number*"
-              maxLength={12}
-              value={phoneNumber}
-              onChangeText={onChangePhoneNumberHandler}
-            />
             <Input
               inputContainerStyle={styles.input}
               placeholder="Password*"
@@ -208,43 +190,42 @@ const Register = (props) => {
               value={address}
               onChangeText={onChangeAddressHandler}
             />
-          </View>
+            <View style={styles.action}>
+              <View>
+                <CheckBox
+                  title="By signing up, you agree to the Terms of Service and Privacy Policy"
+                  checked={isCheckboxChecked}
+                  onPress={() =>
+                    setIsCheckboxChecked(isCheckboxChecked ? false : true)
+                  }
+                  containerStyle={{ backgroundColor: "none" }}
+                  checkedColor="#000000"
+                />
+              </View>
 
-          <View style={styles.action}>
-            <View style={styles.actionContent}>
-              <CheckBox
-                title="By signing up, you agree to the Terms of Service and Privacy Policy"
-                checked={isCheckboxChecked}
-                onPress={() =>
-                  setIsCheckboxChecked(isCheckboxChecked ? false : true)
-                }
-                containerStyle={{ backgroundColor: "none" }}
-                checkedColor="#000000"
+              <Button
+                disabled={isCheckboxChecked ? false : true}
+                onPress={onSubmitHanlder}
+                title="Next"
+                buttonStyle={{
+                  borderWidth: 1,
+                  borderColor: "#000000",
+                  width: 200,
+                  backgroundColor: "#f5f5f5",
+                  height: 45,
+                }}
+                containerStyle={{
+                  marginVertical: 10,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  width: "100%",
+                }}
+                titleStyle={{
+                  color: "#000000",
+                }}
               />
             </View>
-
-            <Button
-              disabled={isCheckboxChecked ? false : true}
-              onPress={onSubmitHanlder}
-              title="Next"
-              buttonStyle={{
-                borderWidth: 1,
-                borderColor: "#000000",
-                width: 200,
-                backgroundColor: "#f5f5f5",
-                height: 45,
-              }}
-              containerStyle={{
-                marginVertical: 10,
-                flexDirection: "row",
-                justifyContent: "center",
-                textAlign: "center",
-                width: "100%",
-              }}
-              titleStyle={{
-                color: "#000000",
-              }}
-            />
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
@@ -254,7 +235,7 @@ const Register = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#fff",
+    backgroundColor: "#f5f5f5",
   },
   continueContainer: {
     width: "100%",
@@ -266,8 +247,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   inputContainer: {
-    marginTop: 4,
-    height: "60%",
+    marginTop: 30,
   },
   action: {
     height: "20%",
