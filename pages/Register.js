@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Keyboard } from "react-native";
 import { Alert } from "react-native";
 import {
@@ -12,6 +12,10 @@ import {
 import { Input, Button, CheckBox } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as Facebook from "expo-facebook";
+import { customerApi } from "../api/customer";
+import { JWT_TOKEN_KEY } from "../constants";
+import * as SecureStore from "expo-secure-store";
+import { registerForPushNotificationsAsync } from "../components/PushNotification";
 
 const Register = (props) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,7 +25,6 @@ const Register = (props) => {
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [address, setAddress] = useState("");
-  const [facebookId, setFacebookId] = useState("");
 
   const onChangeEmailHandler = (email) => {
     setEmail(email);
@@ -60,56 +63,121 @@ const Register = (props) => {
         };
       }
 
-      if (facebookId.length !== 0) {
-        user = {
-          ...user,
-          fb_userId: facebookId,
-        };
-      }
-
-      props.navigation.navigate("RegisterBody", {
+      props.navigation.navigate("RegisterLifeStyle", {
         user: user,
       });
     }
   };
 
   const continueWithFacebookHandler = async () => {
+    const user = props.route.params.user;
+    const { phoneNumber } = user;
+    let facebook_access_token = "";
     try {
       await Facebook.initializeAsync({
         appId: "319135163220953",
       });
 
       const { type, token } = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ["public_profile", "email", "user_location"],
+        permissions: ["public_profile", "email"],
       });
 
       if (type === "success") {
-        fetch(
-          `https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,location`
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            setFacebookId(data.id);
-            setEmail(data.email);
-            setFullName(data.name);
-          })
-          .catch((e) => console.log(e));
+        facebook_access_token = token;
+        const res = await customerApi.registerFacebook(token, phoneNumber);
+        if (res.data.customer) {
+          const access_token = token;
+          const resToken = await customerApi.loginWithFacebook({
+            access_token,
+          });
+          await SecureStore.setItemAsync(JWT_TOKEN_KEY, resToken.data.token);
+
+          Alert.alert(
+            "Message",
+            "Register Succesfully, Press Next to provide your hobby",
+            [
+              {
+                text: "Next",
+                onPress: () => {
+                  props.navigation.navigate("RegisterLifeStyleFb", {
+                    user: res.data.customer,
+                    facebook_access_token,
+                  });
+                },
+              },
+            ]
+          );
+        }
       } else {
         Alert.alert(
-          "Message",
+          "Notification",
           "If you have just canceled, please input full required fields"
         );
       }
-    } catch ({ message }) {
-      alert(`Facebook Login Error: ${message}`);
+    } catch (err) {
+      if (err.response.data.errorParams.access_token) {
+        Alert.alert(
+          "Message",
+          "Your account is already exists, you will be automatically navigated to Home!"
+        );
+        await loginByFacebook(facebook_access_token);
+      }
+
+      if (err.response.data.errorParams.phoneNumber) {
+        Alert.alert("Failed", err.response.data.errorParams.phoneNumber, [
+          {
+            text: "Cancel",
+            onPress: () => {
+              props.navigation.navigate("RegisterPhone");
+            },
+          },
+          {
+            text: "Go Back",
+            onPress: () => {
+              props.navigation.navigate("RegisterPhone");
+            },
+          },
+        ]);
+      }
+
+      let serverErrors = "";
+      const { type } = err;
+      if (type === "OAuthException") {
+        serverErrors = serverErrors.concat(
+          "\n" + "Facebook Erorrs, please try again"
+        );
+      }
+
+      if (serverErrors.length !== 0) {
+        Alert.alert("Server Error", serverErrors);
+      }
     }
+  };
+
+  const loginByFacebook = async (token) => {
+    try {
+      const res = await customerApi.loginWithFacebook({
+        access_token: token,
+      });
+      await SecureStore.setItemAsync(JWT_TOKEN_KEY, res.data.token);
+      await pushNotification();
+      props.navigation.navigate("HomeTab");
+    } catch ({ message }) {
+      Alert.alert("Login Status", `Fail to login with Facebook`);
+    }
+  };
+  const pushNotification = async () => {
+    const pushToken = await registerForPushNotificationsAsync();
+    customerApi.setExpoPushToken(pushToken).then(() => {
+      console.log("Push Token successfully");
+    });
   };
 
   //setTitle
   const navigation = props.navigation;
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Register",
+      title: "Your Information",
     });
   }, [navigation]);
 

@@ -2,50 +2,29 @@ import React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
 
 import Register from "../Register";
-import RegisterBody from "../RegisterBody";
-import RegisterHobby from "../RegisterHobby";
+import RegisterLifeStyle from "../RegisterLifeStyle";
+import RegisterLifeStyleFb from "../RegisterLifeStyleFb";
 import RegisterPhone from "../RegisterPhone";
+import HomeTabNavigator from "../navigations/HomeTabNavigator";
 
 const Stack = createStackNavigator();
 
 const RegisterStackNavigator = () => {
   return (
     <Stack.Navigator initialRouteName={"RegisterPhone"}>
+      <Stack.Screen name={"RegisterPhone"} component={RegisterPhone} />
+      <Stack.Screen name={"Register"} component={Register} />
+      <Stack.Screen name={"RegisterLifeStyle"} component={RegisterLifeStyle} />
       <Stack.Screen
-        name={"RegisterPhone"}
-        component={RegisterPhone}
-        options={
-          {
-            // headerShown: false,
-          }
-        }
+        name={"RegisterLifeStyleFb"}
+        component={RegisterLifeStyleFb}
       />
       <Stack.Screen
-        name={"Register"}
-        component={Register}
-        options={
-          {
-            // headerShown: false,
-          }
-        }
-      />
-      <Stack.Screen
-        name={"RegisterBody"}
-        component={RegisterBody}
-        options={
-          {
-            // headerShown: false,
-          }
-        }
-      />
-      <Stack.Screen
-        name={"RegisterHobby"}
-        component={RegisterHobby}
-        options={
-          {
-            // headerShown: false,
-          }
-        }
+        name={"HomeTab"}
+        component={HomeTabNavigator}
+        options={{
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
   );

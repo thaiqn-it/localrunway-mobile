@@ -4,13 +4,12 @@ import { Alert } from "react-native";
 import {
   View,
   StyleSheet,
-  Text,
   ScrollView,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
   ImageBackground,
 } from "react-native";
-import { Input, Button, Card } from "react-native-elements";
+import { Input, Button, Text } from "react-native-elements";
 import { FULL_HEIGHT, FULL_WIDTH } from "../constants/styles";
 
 const RegisterPhone = (props) => {
@@ -38,7 +37,7 @@ const RegisterPhone = (props) => {
   const navigation = props.navigation;
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Register Phone",
+      title: "Phone Number",
     });
   }, [navigation]);
 

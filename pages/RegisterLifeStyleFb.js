@@ -8,10 +8,14 @@ import {
   ImageBackground,
 } from "react-native";
 import { Text, Button, Card, CheckBox, Input } from "react-native-elements";
+import { loadToken } from "../api";
 import { customerApi } from "../api/customer";
+import { JWT_TOKEN, JWT_TOKEN_KEY } from "../constants";
 import { FULL_HEIGHT, FULL_WIDTH } from "../constants/styles";
+import * as SecureStore from "expo-secure-store";
+import { registerForPushNotificationsAsync } from "../components/PushNotification";
 
-const RegisterBody = (props) => {
+const RegisterLifeStyleFb = (props) => {
   const user = props.route.params.user;
   const navigation = props.navigation;
 
@@ -38,7 +42,7 @@ const RegisterBody = (props) => {
 
   const submitHandler = async () => {
     let user = props.route.params.user;
-
+    const facebook_access_token = props.route.params.facebook_access_token;
     if (gender.length !== 0) {
       user = {
         ...user,
@@ -62,31 +66,12 @@ const RegisterBody = (props) => {
 
     //api goes here
     let errorMsg = "";
-
+    // console.log(user);
     try {
-      const response = await customerApi.register(user);
+      await loadToken();
+      await customerApi.updateCustomer(user);
     } catch (err) {
-      if (err.response.data.errorParams.phoneNumber) {
-        errorMsg = errorMsg.concat(
-          `\n` + err.response.data.errorParams.phoneNumber
-        );
-      }
-
-      if (err.response.data.errorParams.email) {
-        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.email);
-      }
-
-      if (err.response.data.errorParams.password) {
-        errorMsg = errorMsg.concat(
-          `\n` + err.response.data.errorParams.password
-        );
-      }
-
-      if (err.response.data.errorParams.name) {
-        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.name);
-      }
-
-      if (err.response.data.errorParams.gender) {
+      if (err.response.data.errorParams) {
         errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.gender);
       }
     }
@@ -94,14 +79,28 @@ const RegisterBody = (props) => {
     if (errorMsg) {
       Alert.alert("Failed", errorMsg);
     } else {
-      Alert.alert(
-        "Register Successfully",
-        "You will be navigated automatically to Login!"
-      );
-      setTimeout(() => {
-        props.navigation.navigate("Login");
-      }, 3000);
+      Alert.alert("Greate!", "You are now ready to discover your new style!");
+      await loginByFacebook(facebook_access_token);
     }
+  };
+
+  const loginByFacebook = async (token) => {
+    try {
+      const res = await customerApi.loginWithFacebook({
+        access_token: token,
+      });
+      await SecureStore.setItemAsync(JWT_TOKEN_KEY, res.data.token);
+      await pushNotification();
+      props.navigation.navigate("HomeTab");
+    } catch ({ message }) {
+      Alert.alert("Login Status", `Fail to login with Facebook`);
+    }
+  };
+  const pushNotification = async () => {
+    const pushToken = await registerForPushNotificationsAsync();
+    customerApi.setExpoPushToken(pushToken).then(() => {
+      console.log("Push Token successfully");
+    });
   };
 
   const maleChoice = () => {
@@ -256,4 +255,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegisterBody;
+export default RegisterLifeStyleFb;
