@@ -63,38 +63,75 @@ const RegisterLifeStyle = (props) => {
     console.log(user);
 
     //api goes here
-    let errorMsg = "";
-
+    let errorMsgLifeStyle = "";
+    let errorMsgInfor = "";
+    let errorMsgPhoneNumber = "";
     try {
       await customerApi.register(user);
     } catch (err) {
       if (err.response.data.errorParams.phoneNumber) {
-        errorMsg = errorMsg.concat(
-          `\n` + err.response.data.errorParams.phoneNumber
+        errorMsgPhoneNumber = errorMsgPhoneNumber.concat(
+          err.response.data.errorParams.phoneNumber
         );
       }
 
       if (err.response.data.errorParams.email) {
-        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.email);
+        errorMsgInfor = errorMsgInfor.concat(
+          `\n` + err.response.data.errorParams.email
+        );
       }
 
       if (err.response.data.errorParams.password) {
-        errorMsg = errorMsg.concat(
+        errorMsgInfor = errorMsgInfor.concat(
           `\n` + err.response.data.errorParams.password
         );
       }
 
       if (err.response.data.errorParams.name) {
-        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.name);
+        errorMsgInfor = errorMsgInfor.concat(
+          `\n` + err.response.data.errorParams.name
+        );
       }
 
       if (err.response.data.errorParams.gender) {
-        errorMsg = errorMsg.concat(`\n` + err.response.data.errorParams.gender);
+        errorMsgLifeStyle = errorMsgLifeStyle.concat(
+          `\n` + err.response.data.errorParams.gender
+        );
       }
     }
 
-    if (errorMsg) {
-      Alert.alert("Failed", errorMsg);
+    if (errorMsgLifeStyle) {
+      Alert.alert("Failed", errorMsgLifeStyle);
+    } else if (errorMsgInfor) {
+      Alert.alert("Failed", errorMsgInfor, [
+        {
+          text: "Go Back",
+          onPress: () => {
+            props.navigation.navigate("Register");
+          },
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            props.navigation.navigate("Register");
+          },
+        },
+      ]);
+    } else if (errorMsgPhoneNumber) {
+      Alert.alert("Failed", errorMsgPhoneNumber, [
+        {
+          text: "Go Back",
+          onPress: () => {
+            props.navigation.navigate("RegisterPhone");
+          },
+        },
+        {
+          text: "OK",
+          onPress: () => {
+            props.navigation.navigate("RegisterPhone");
+          },
+        },
+      ]);
     } else {
       Alert.alert(
         "Register Successfully",

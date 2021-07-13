@@ -39,12 +39,14 @@ const Register = (props) => {
     setAddress(address);
   };
 
-  const onSubmitHanlder = (event) => {
+  const onSubmitHanlder = () => {
     if (password.length === 0 || fullName.length === 0) {
       Alert.alert("Please input full required fields");
     } else {
       //navigation
-      let user = {
+      let user = props.route.params.user;
+      user = {
+        ...user,
         password: password,
         name: fullName,
       };
