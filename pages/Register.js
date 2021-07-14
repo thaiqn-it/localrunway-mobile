@@ -16,6 +16,7 @@ import { customerApi } from "../api/customer";
 import { JWT_TOKEN_KEY } from "../constants";
 import * as SecureStore from "expo-secure-store";
 import { registerForPushNotificationsAsync } from "../components/PushNotification";
+import { FULL_HEIGHT, FULL_WIDTH, PRIMARY_FONT } from "../constants/styles";
 
 const Register = (props) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -184,26 +185,25 @@ const Register = (props) => {
   }, [navigation]);
 
   return (
-    <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={4}>
+    <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={20}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <ScrollView>
+        <ScrollView style={styles.container}>
           <View style={styles.continueContainer}>
             <Button
               onPress={continueWithFacebookHandler}
-              icon={
-                <Icon
-                  name="facebook-square"
-                  size={20}
-                  color="#000000"
-                  style={{ marginRight: 10 }}
-                />
-              }
-              type="outline"
+              icon={{
+                type: "font-awesome-5",
+                name: "facebook",
+                color: "white",
+              }}
               title="Continue with Facebook"
-              titleStyle={{ color: "#000000" }}
               buttonStyle={{
-                borderWidth: 1,
-                borderColor: "#000000",
+                padding: 15,
+                backgroundColor: "#3b5998",
+              }}
+              titleStyle={{
+                fontFamily: PRIMARY_FONT,
+                color: "#fff",
               }}
               containerStyle={{
                 marginVertical: 10,
@@ -211,6 +211,7 @@ const Register = (props) => {
                 justifyContent: "center",
                 textAlign: "center",
                 width: "100%",
+                height: 60,
               }}
             />
 
@@ -281,7 +282,7 @@ const Register = (props) => {
                   borderWidth: 1,
                   borderColor: "#000000",
                   width: 200,
-                  backgroundColor: "#f5f5f5",
+                  backgroundColor: "#000000",
                   height: 45,
                 }}
                 containerStyle={{
@@ -292,7 +293,7 @@ const Register = (props) => {
                   width: "100%",
                 }}
                 titleStyle={{
-                  color: "#000000",
+                  color: "#fff",
                 }}
               />
             </View>
@@ -305,7 +306,9 @@ const Register = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#fff",
+    width: FULL_WIDTH,
+    height: FULL_HEIGHT,
   },
   continueContainer: {
     width: "100%",

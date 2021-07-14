@@ -12,12 +12,27 @@ const Stack = createStackNavigator();
 const RegisterStackNavigator = () => {
   return (
     <Stack.Navigator initialRouteName={"RegisterPhone"}>
-      <Stack.Screen name={"RegisterPhone"} component={RegisterPhone} />
+      <Stack.Screen
+        name={"RegisterPhone"}
+        component={RegisterPhone}
+        options={{
+          headerTitle: false,
+        }}
+      />
       <Stack.Screen name={"Register"} component={Register} />
-      <Stack.Screen name={"RegisterLifeStyle"} component={RegisterLifeStyle} />
+      <Stack.Screen
+        name={"RegisterLifeStyle"}
+        component={RegisterLifeStyle}
+        options={{
+          headerShown: false,
+        }}
+      />
       <Stack.Screen
         name={"RegisterLifeStyleFb"}
         component={RegisterLifeStyleFb}
+        options={{
+          headerShown: false,
+        }}
       />
       <Stack.Screen
         name={"HomeTab"}

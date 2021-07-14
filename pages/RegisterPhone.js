@@ -35,11 +35,11 @@ const RegisterPhone = (props) => {
 
   //setTitle
   const navigation = props.navigation;
-  React.useLayoutEffect(() => {
-    navigation.setOptions({
-      title: "Phone Number",
-    });
-  }, [navigation]);
+  // React.useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     title: "Phone Number",
+  //   });
+  // }, [navigation]);
 
   return (
     <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={9}>
@@ -78,7 +78,7 @@ const RegisterPhone = (props) => {
                     borderWidth: 1,
                     borderColor: "#000000",
                     width: 200,
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: "#000000",
                     height: 45,
                   }}
                   containerStyle={{
@@ -89,7 +89,7 @@ const RegisterPhone = (props) => {
                     width: "100%",
                   }}
                   titleStyle={{
-                    color: "#000000",
+                    color: "#fff",
                   }}
                 />
               </View>
@@ -128,8 +128,8 @@ const styles = StyleSheet.create({
       width: 0,
       height: 8,
     },
-    shadowOpacity: 0.44,
-    shadowRadius: 10.32,
+    shadowOpacity: 0.4,
+    shadowRadius: 5,
     borderRadius: 8,
     opacity: 0.85,
   },
