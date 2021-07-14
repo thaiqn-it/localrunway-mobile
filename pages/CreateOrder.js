@@ -7,6 +7,7 @@ import { paymentApi } from '../api/payment';
 import { CartContext } from "../context/Cart";
 import { orderApi } from '../api/order';
 import { CustomerContext } from '../context/Customer';
+import AppLoading from 'expo-app-loading';
 
 const IMAGE = [
     {
@@ -73,10 +74,12 @@ export default function CreateOrder() {
     const route = useRoute();
     const { state,dispatch,getTotalPrice } = useContext(CartContext);
     const customerContext = useContext(CustomerContext) 
+    const [ isLoading,setLoading ] = useState(false);
     
     const customerInfo = customerContext.state.address.find(item => item.select === true)
 
     const orderHandler = () => {
+        setLoading(!isLoading)
         var brands = [];
         var products = [];
         // find all brand in cart
@@ -172,8 +175,9 @@ export default function CreateOrder() {
           if (errorMsg) {
             Alert.alert("Failed", errorMsg);
           } else {
-            Alert.alert(
-              "Order Successfully",
+            setLoading(isLoading)
+            Alert.alert(            
+                "Order Successfully",
             );
           }
     }
@@ -227,6 +231,7 @@ export default function CreateOrder() {
                 style: { fontSize: 20, color: "black", fontWeight: "bold" },
                 }}
             />
+            <AppLoading isLoading={isLoading}/>
             <Text style={{
                 fontSize : 20,
                 fontWeight : 'bold',

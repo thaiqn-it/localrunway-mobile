@@ -14,6 +14,7 @@ import { CustomerContext } from '../context/Customer';
 import { customerApi } from '../api/customer';
 import * as ImagePicker from 'expo-image-picker';
 import getEnvVars from '../constants/env';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 export default function Customer() {
     const { customer,setCustomer,getCustomerFromDB } = useContext(CustomerContext)
@@ -40,7 +41,8 @@ export default function Customer() {
     //err
     const [ errName,setErrName ] = useState("")
     const [ errEmail,setErrEmail ] = useState("")
-   
+    //loading
+    const [ isLoading,setLoading ] = useState(false);
     const maleChoice = () => {
         setIsMale(true);
         setIsOther(false);
@@ -63,6 +65,7 @@ export default function Customer() {
       };
     
     useEffect(() => {
+      
         setName(customer.name)
         setEmail(customer.email)
         setJob(customer.job)
@@ -166,6 +169,7 @@ export default function Customer() {
             Alert.alert("Failed", 'Something went wrong !!! Check your password');
         } else {
             loadCustomer();
+            setLoading(isLoading)
             Alert.alert("Successfull !!!")
         };
     }
@@ -203,7 +207,8 @@ export default function Customer() {
     }
 
     const save = async () => {
-        let profileUrl = '';
+        setLoading(!isLoading)
+        let profileUrl = customer.profileUrl;
         if (image !== null) {
             profileUrl = await uploadImage()
         }
@@ -221,6 +226,7 @@ export default function Customer() {
                     Alert.alert("Error","Something went wrong !!!")
                 } else {
                     loadCustomer();
+                    setLoading(isLoading)
                     Alert.alert("Successfull !!!")
                 };
             })            
@@ -305,6 +311,7 @@ export default function Customer() {
                         <Text style={{color:'white',alignSelf:'center'}}>Touch to change</Text>
                     </View>
                 </TouchableOpacity>
+                <LoadingSpinner isLoading={isLoading}/>
                 <Input  label={"Name :"}
                         value={name}
                         onChangeText={value => {
