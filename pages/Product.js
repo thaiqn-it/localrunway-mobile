@@ -106,12 +106,6 @@ function BlockDetail({ data }) {
     }
   }, [data]);
 
-  const toggleNumOfLine = () => {
-    if (more == 4) {
-      setMore(0);
-    } else setMore(4);
-  };
-
   return (
     <ScrollView style={styles.blockDetailContainer}>
       <View style={styles.titleDetail}>
@@ -175,54 +169,6 @@ function BlockDetail({ data }) {
         </Text>
       </View>
     </ScrollView>
-  );
-}
-
-function BlockMoreProduct() {
-  const data = [
-    {
-      id: 1,
-      price: 200000,
-      unitSold: 123,
-    },
-    {
-      id: 2,
-      price: 240000,
-      unitSold: 200,
-    },
-    {
-      id: 3,
-      price: 240000,
-      unitSold: 200,
-    },
-    {
-      id: 4,
-      price: 240000,
-      unitSold: 200,
-    },
-  ];
-  data.slice(0, 2);
-  return (
-    <View style={styles.containerMoreProduct}>
-      <View style={styles.titleDetail}>
-        <Text style={{ fontWeight: "bold", fontSize: 15 }}>More Product</Text>
-      </View>
-      <SeparateLine />
-      <FlatList
-        style={{ margin: 5 }}
-        data={data}
-        numColumns={2}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <BlockCard data={item} />}
-      />
-      <SeparateLine />
-      <Pressable>
-        <Text style={{ color: "red", textAlign: "center", padding: 5 }}>
-          View More
-        </Text>
-      </Pressable>
-    </View>
   );
 }
 

@@ -39,7 +39,7 @@ export default function Profile() {
   const optionHadleClick = (item) => {
     item.option === 'Logout' ? logout() : navigation.navigate(item.screen)
   }
-
+ 
   return(
       <View style={{flex:1}}>
           <Header 
@@ -87,11 +87,27 @@ export default function Profile() {
           <View style={{flex:1}}>
               <View style={styles.infoContainer}>
                   <View style={{flexDirection:'row'}}>
-                      <Avatar 
-                          rounded
-                          size={70}
-                          source={{uri : 'https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png'}}
-                      />
+                      {
+                        !customer.profileUrl
+                        ?
+                        (
+                          <Avatar 
+                              rounded
+                              size={70}
+                              source={{uri : 'https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png'}}
+                          />
+                        )
+                        :
+                        (
+                          <Avatar 
+                              containerStyle={[{borderWidth : 1},styles.image]}
+                              rounded
+                              size={70}
+                              source={{uri : customer.profileUrl}}
+                          />
+                        )
+                      }
+                      
                       <View>
                         <Text style={styles.name}>{customer.name}</Text>
                         <Pressable onPress={() => navigation.navigate("Customer")}>
@@ -137,4 +153,15 @@ const styles = StyleSheet.create({
       fontSize:20,
       marginLeft:20,
     },
+    image : {
+      shadowColor: "#000",
+      shadowOffset: {
+        width: 0,
+        height: 8,
+      },
+      shadowOpacity: 0.5,
+      shadowRadius: 10.5,
+
+      elevation: 5,
+    }
 })

@@ -1,15 +1,19 @@
 import React, { useState,useEffect,useContext } from 'react'
-import { StyleSheet, 
+import { 
+        StyleSheet, 
         Text, 
         ScrollView,
         View,
         Alert,
-        TouchableOpacity, } from 'react-native'
-import { Header,Input,CheckBox,Button } from 'react-native-elements'
+        TouchableOpacity, 
+} from 'react-native'
+import { Header,Input,CheckBox,Button,Avatar } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native';
 import {FontAwesome5} from "@expo/vector-icons";
 import { CustomerContext } from '../context/Customer';
 import { customerApi } from '../api/customer';
+import * as ImagePicker from 'expo-image-picker';
+import getEnvVars from '../constants/env';
 
 export default function Customer() {
     const { customer,setCustomer,getCustomerFromDB } = useContext(CustomerContext)
@@ -23,7 +27,7 @@ export default function Customer() {
     const [ oldPasw,setOldPasw ] = useState(null);
     const [ newPasw,setNewPasw ] = useState(null);
     const [ confirmPasw,setConfirmPasw ] = useState(null);
-
+    const [ image, setImage ] = useState(null);
     //gender
     const [ isMale, setIsMale ] = useState(false);
     const [ isFemale, setIsFemale ] = useState(false);
@@ -36,7 +40,7 @@ export default function Customer() {
     //err
     const [ errName,setErrName ] = useState("")
     const [ errEmail,setErrEmail ] = useState("")
-
+   
     const maleChoice = () => {
         setIsMale(true);
         setIsOther(false);
@@ -79,12 +83,67 @@ export default function Customer() {
     const loadCustomer = () => {
         async function load () {
         const data = await getCustomerFromDB()
-        setCustomer({
-            type : 'LOAD',
-            data : data,
-        })
-        }   
+            setCustomer({
+                type : 'LOAD',
+                data : data,
+            })
+            }   
         load()
+    }
+
+    const pickImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Sorry, we need camera roll permissions to make this work!');
+        } else {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+                });
+        
+                if (!result.cancelled) {
+                    setImage(result);
+                }
+        }      
+      };
+
+    const createFormData = () => {
+        const data = new FormData();
+        let localUri = image.uri;
+        let filename = localUri.split('/').pop();
+
+        let match = /\.(\w+)$/.exec(filename);
+        let type = match ? `image/${match[1]}` : `image`;
+        
+        data.append('file', {
+            name: filename,
+            type: type,
+            uri: Platform.OS === 'ios' ? localUri.replace('file://', '') : localUri,
+        });
+        
+        return data;
+    };
+      
+    const uploadImage = async () => {
+        const { API_URI } = getEnvVars();
+        try {
+            const res = await fetch(`${API_URI}/media/upload`, {
+                method : 'POST',
+                body : createFormData(),
+                headers : {
+                    'Content-Type' : 'multipart/form-data',
+                }
+            }).then(res => {
+                return res.json()
+            })
+            
+            return res.publicUrl
+        } catch (err) {
+            console.log(err);
+        }
+    
     }
 
     const updatePassword = async (err) => {
@@ -111,7 +170,7 @@ export default function Customer() {
         };
     }
 
-    const updateInformation = async () => {
+    const updateInformation = async (profileUrl) => {
         let errorMsg = "";
         const customer = {
             email : email,
@@ -119,6 +178,7 @@ export default function Customer() {
             job : job,    
             name : name,
             gender : gender,
+            profileUrl : profileUrl,
         }
         try {
             const response = await customerApi.updateCustomer(customer)
@@ -142,17 +202,21 @@ export default function Customer() {
         return errorMsg;
     }
 
-    const save = () => {
+    const save = async () => {
+        let profileUrl = '';
+        if (image !== null) {
+            profileUrl = await uploadImage()
+        }
         if (isChangePasw === true) {
             if (newPasw === confirmPasw) {
-                updateInformation().then((err) => updatePassword(err))
+                updateInformation(profileUrl).then((err) => updatePassword(err))
             } else {
                 Alert.alert(
                     "Error","New password not match confirm password"
                 );
             }          
         } else {
-            updateInformation().then(err => {
+            updateInformation(profileUrl).then(err => {
                 if (err) {
                     Alert.alert("Error","Something went wrong !!!")
                 } else {
@@ -202,6 +266,45 @@ export default function Customer() {
                 />
 
             <View>
+                <TouchableOpacity onPress={pickImage}>
+                    <View style={{backgroundColor:'red',alignItems:'center',height:150,justifyContent:'center'}}>
+                        {   
+                            !customer.profileUrl
+                            ? 
+                            (
+                                <Avatar 
+                                    containerStyle={styles.image}
+                                    rounded
+                                    size={90}
+                                    source={{uri : 'https://i.pinimg.com/originals/51/f6/fb/51f6fb256629fc755b8870c801092942.png'}}
+                                /> 
+                            )
+                            :
+                                image !== null 
+                                ?
+                                (
+                                    <Avatar 
+                                        containerStyle={styles.image}
+                                        rounded
+                                        size={90}
+                                        source={{uri : image.uri}}
+                                    /> 
+                                ) 
+                                :
+                                (
+                                    <Avatar 
+                                        containerStyle={styles.image}
+                                        rounded
+                                        size={90}
+                                        source={{uri : customer.profileUrl}}
+                                    /> 
+                                )                      
+                        } 
+                    </View>
+                    <View style={{backgroundColor:'brown'}}>
+                        <Text style={{color:'white',alignSelf:'center'}}>Touch to change</Text>
+                    </View>
+                </TouchableOpacity>
                 <Input  label={"Name :"}
                         value={name}
                         onChangeText={value => {
@@ -358,4 +461,15 @@ const styles = StyleSheet.create({
         bottom:0,
         left:0,
     },
+    image : {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 9,
+        },
+        shadowOpacity: 0.50,
+        shadowRadius: 12.35,
+
+        elevation: 19,
+    }
 })

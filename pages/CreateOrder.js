@@ -247,7 +247,11 @@ export default function CreateOrder() {
                 <Text style = {{fontSize:22, fontWeight:'bold'}}>Total : {getTotalPrice()}</Text>
                 <View>
                     <Button
-                        onPress={() => orderHandler()}
+                        onPress={() => {
+                            if (isSelected !== null) {
+                                orderHandler()
+                            } else Alert.alert('Please select your payment method !!!')        
+                        }}
                         icon={{
                         type: "font-awesome-5",
                         name: "shopping-cart",

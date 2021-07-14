@@ -15,6 +15,7 @@ import { CartContext } from "../context/Cart";
 import InputSpinner from "react-native-input-spinner";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { CustomerContext } from "../context/Customer";
+import { Alert } from "react-native";
 
 const ConfirmDialog = ({ visible, changeVisible, selectList }) => {
   const { dispatch, setSelect } = useContext(CartContext);
@@ -287,7 +288,11 @@ export default function Cart() {
             </View>
             <View>
               <Button
-                onPress={() => navigation.navigate("CreateOrder")}
+                onPress={() => {
+                  if(address !== undefined){
+                    navigation.navigate("CreateOrder")
+                  } else Alert.alert('Please select your address !!!')             
+                }}
                 icon={{
                   type: "font-awesome-5",
                   name: "shopping-cart",
