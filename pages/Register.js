@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Keyboard } from "react-native";
 import { Alert } from "react-native";
 import {
@@ -12,23 +12,23 @@ import {
 import { Input, Button, CheckBox } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 import * as Facebook from "expo-facebook";
+import { customerApi } from "../api/customer";
+import { JWT_TOKEN_KEY } from "../constants";
+import * as SecureStore from "expo-secure-store";
+import { registerForPushNotificationsAsync } from "../components/PushNotification";
+import { FULL_HEIGHT, FULL_WIDTH, PRIMARY_FONT } from "../constants/styles";
 
 const Register = (props) => {
   const [showPassword, setShowPassword] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
   const [email, setEmail] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [address, setAddress] = useState("");
-  const [facebookId, setFacebookId] = useState("");
 
   const onChangeEmailHandler = (email) => {
     setEmail(email);
-  };
-  const onChangePhoneNumberHandler = (phoneNumber) => {
-    setPhoneNumber(phoneNumber);
   };
   const onChangePasswordHandler = (password) => {
     setPassword(password);
@@ -40,17 +40,14 @@ const Register = (props) => {
     setAddress(address);
   };
 
-  const onSubmitHanlder = (event) => {
-    if (
-      phoneNumber.length === 0 ||
-      password.length === 0 ||
-      fullName.length === 0
-    ) {
+  const onSubmitHanlder = () => {
+    if (password.length === 0 || fullName.length === 0) {
       Alert.alert("Please input full required fields");
     } else {
       //navigation
-      let user = {
-        phoneNumber: phoneNumber,
+      let user = props.route.params.user;
+      user = {
+        ...user,
         password: password,
         name: fullName,
       };
@@ -69,80 +66,144 @@ const Register = (props) => {
         };
       }
 
-      if (facebookId.length !== 0) {
-        user = {
-          ...user,
-          fb_userId: facebookId,
-        };
-      }
-
-      props.navigation.navigate("RegisterBody", {
+      props.navigation.navigate("RegisterLifeStyle", {
         user: user,
       });
     }
   };
 
   const continueWithFacebookHandler = async () => {
+    const user = props.route.params.user;
+    const { phoneNumber } = user;
+    let facebook_access_token = "";
     try {
       await Facebook.initializeAsync({
         appId: "319135163220953",
       });
 
       const { type, token } = await Facebook.logInWithReadPermissionsAsync({
-        permissions: ["public_profile", "email", "user_location"],
+        permissions: ["public_profile", "email"],
       });
 
       if (type === "success") {
-        fetch(
-          `https://graph.facebook.com/me?access_token=${token}&fields=id,name,email,location`
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            setFacebookId(data.id);
-            setEmail(data.email);
-            setFullName(data.name);
-          })
-          .catch((e) => console.log(e));
+        facebook_access_token = token;
+        const res = await customerApi.registerFacebook(token, phoneNumber);
+        if (res.data.customer) {
+          const access_token = token;
+          const resToken = await customerApi.loginWithFacebook({
+            access_token,
+          });
+          await SecureStore.setItemAsync(JWT_TOKEN_KEY, resToken.data.token);
+
+          Alert.alert(
+            "Message",
+            "Register Successfully, Press Next to provide your hobby",
+            [
+              {
+                text: "Next",
+                onPress: () => {
+                  props.navigation.navigate("RegisterLifeStyleFb", {
+                    user: res.data.customer,
+                    facebook_access_token,
+                  });
+                },
+              },
+            ]
+          );
+        }
       } else {
         Alert.alert(
-          "Message",
+          "Notification",
           "If you have just canceled, please input full required fields"
         );
       }
-    } catch ({ message }) {
-      alert(`Facebook Login Error: ${message}`);
+    } catch (err) {
+      if (err.response.data.errorParams.access_token) {
+        Alert.alert(
+          "Message",
+          "Your account is already exists, you will be automatically navigated to Home!"
+        );
+        await loginByFacebook(facebook_access_token);
+      }
+
+      if (err.response.data.errorParams.phoneNumber) {
+        Alert.alert("Failed", err.response.data.errorParams.phoneNumber, [
+          {
+            text: "Cancel",
+            onPress: () => {
+              props.navigation.navigate("RegisterPhone");
+            },
+          },
+          {
+            text: "Go Back",
+            onPress: () => {
+              props.navigation.navigate("RegisterPhone");
+            },
+          },
+        ]);
+      }
+
+      let serverErrors = "";
+      const { type } = err;
+      if (type === "OAuthException") {
+        serverErrors = serverErrors.concat(
+          "\n" + "Facebook Erorrs, please try again"
+        );
+      }
+
+      if (serverErrors.length !== 0) {
+        Alert.alert("Server Error", serverErrors);
+      }
     }
+  };
+
+  const loginByFacebook = async (token) => {
+    try {
+      const res = await customerApi.loginWithFacebook({
+        access_token: token,
+      });
+      await SecureStore.setItemAsync(JWT_TOKEN_KEY, res.data.token);
+      await pushNotification();
+      props.navigation.navigate("HomeTab");
+    } catch ({ message }) {
+      Alert.alert("Login Status", `Fail to login with Facebook`);
+    }
+  };
+  const pushNotification = async () => {
+    const pushToken = await registerForPushNotificationsAsync();
+    customerApi.setExpoPushToken(pushToken).then(() => {
+      console.log("Push Token successfully");
+    });
   };
 
   //setTitle
   const navigation = props.navigation;
   React.useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Register",
+      title: "Your Information",
     });
   }, [navigation]);
 
   return (
-    <KeyboardAvoidingView behavior="position" keyboardVerticalOffset={4}>
+    <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={20}>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <ScrollView>
+        <ScrollView style={styles.container}>
           <View style={styles.continueContainer}>
             <Button
               onPress={continueWithFacebookHandler}
-              icon={
-                <Icon
-                  name="facebook-square"
-                  size={20}
-                  color="#000000"
-                  style={{ marginRight: 10 }}
-                />
-              }
-              type="outline"
+              icon={{
+                type: "font-awesome-5",
+                name: "facebook",
+                color: "white",
+              }}
               title="Continue with Facebook"
-              titleStyle={{ color: "#000000" }}
               buttonStyle={{
-                borderWidth: 1,
-                borderColor: "#000000",
+                padding: 15,
+                backgroundColor: "#3b5998",
+              }}
+              titleStyle={{
+                fontFamily: PRIMARY_FONT,
+                color: "#fff",
               }}
               containerStyle={{
                 marginVertical: 10,
@@ -150,6 +211,7 @@ const Register = (props) => {
                 justifyContent: "center",
                 textAlign: "center",
                 width: "100%",
+                height: 60,
               }}
             />
 
@@ -172,15 +234,6 @@ const Register = (props) => {
               placeholder={"Email Address"}
               value={email}
               onChangeText={onChangeEmailHandler}
-            />
-
-            <Input
-              multiline={false}
-              inputContainerStyle={styles.input}
-              placeholder="Phone number*"
-              maxLength={12}
-              value={phoneNumber}
-              onChangeText={onChangePhoneNumberHandler}
             />
             <Input
               inputContainerStyle={styles.input}
@@ -208,43 +261,42 @@ const Register = (props) => {
               value={address}
               onChangeText={onChangeAddressHandler}
             />
-          </View>
+            <View style={styles.action}>
+              <View>
+                <CheckBox
+                  title="By signing up, you agree to the Terms of Service and Privacy Policy"
+                  checked={isCheckboxChecked}
+                  onPress={() =>
+                    setIsCheckboxChecked(isCheckboxChecked ? false : true)
+                  }
+                  containerStyle={{ backgroundColor: "none" }}
+                  checkedColor="#000000"
+                />
+              </View>
 
-          <View style={styles.action}>
-            <View style={styles.actionContent}>
-              <CheckBox
-                title="By signing up, you agree to the Terms of Service and Privacy Policy"
-                checked={isCheckboxChecked}
-                onPress={() =>
-                  setIsCheckboxChecked(isCheckboxChecked ? false : true)
-                }
-                containerStyle={{ backgroundColor: "none" }}
-                checkedColor="#000000"
+              <Button
+                disabled={isCheckboxChecked ? false : true}
+                onPress={onSubmitHanlder}
+                title="Next"
+                buttonStyle={{
+                  borderWidth: 1,
+                  borderColor: "#000000",
+                  width: 200,
+                  backgroundColor: "#000000",
+                  height: 45,
+                }}
+                containerStyle={{
+                  marginVertical: 10,
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  textAlign: "center",
+                  width: "100%",
+                }}
+                titleStyle={{
+                  color: "#fff",
+                }}
               />
             </View>
-
-            <Button
-              disabled={isCheckboxChecked ? false : true}
-              onPress={onSubmitHanlder}
-              title="Next"
-              buttonStyle={{
-                borderWidth: 1,
-                borderColor: "#000000",
-                width: 200,
-                backgroundColor: "#f5f5f5",
-                height: 45,
-              }}
-              containerStyle={{
-                marginVertical: 10,
-                flexDirection: "row",
-                justifyContent: "center",
-                textAlign: "center",
-                width: "100%",
-              }}
-              titleStyle={{
-                color: "#000000",
-              }}
-            />
           </View>
         </ScrollView>
       </TouchableWithoutFeedback>
@@ -255,6 +307,8 @@ const Register = (props) => {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
+    width: FULL_WIDTH,
+    height: FULL_HEIGHT,
   },
   continueContainer: {
     width: "100%",
@@ -266,8 +320,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   inputContainer: {
-    marginTop: 4,
-    height: "60%",
+    marginTop: 30,
   },
   action: {
     height: "20%",
