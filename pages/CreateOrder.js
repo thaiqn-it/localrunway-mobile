@@ -175,11 +175,11 @@ export default function CreateOrder() {
           if (errorMsg) {
             Alert.alert("Failed", errorMsg);
           } else {
-            setLoading(isLoading)
             Alert.alert(            
                 "Order Successfully",
             );
           }
+          setLoading(isLoading)
     }
 
 

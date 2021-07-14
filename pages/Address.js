@@ -10,45 +10,82 @@ import {FontAwesome5, Entypo,FontAwesome,MaterialIcons} from "@expo/vector-icons
 import { useNavigation } from "@react-navigation/native";
 import { CustomerContext } from '../context/Customer';
 import * as SecureStore from "expo-secure-store";
+import AwesomeAlert from "react-native-awesome-alerts";
+
+const ConfirmDialog = ({ visible, changeVisible,id }) => {
+    const { dispatch } = useContext(CustomerContext);
+    return (
+      <View style={styles.container}>
+        <AwesomeAlert
+          show={visible}
+          showProgress={false}
+          title="Do you want to delete this address?"
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={true}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="No, cancel"
+          confirmText="Yes, delete it"
+          confirmButtonColor="red"
+          onDismiss={() => {
+            changeVisible(false);
+          }}
+          onCancelPressed={() => {
+            changeVisible(false);
+          }}
+          onConfirmPressed={() => {
+            dispatch({
+                type : "DELETE",
+                id : id
+            })
+          }}
+        />
+      </View>
+    );
+  };
 
 function AddressComponent ({ data,isSelected,changeSelect }) {
-    const { dispatch,state } = useContext(CustomerContext)
+    const [visible, setVisible] = useState(false);
     return(
-        <ListItem
-                onPress={() => changeSelect(data.id)}
-                button
-                bottomDivider
-                containerStyle={{
-                    minHeight: 100,
-                }}
-            >  
-            { isSelected == data.id ? <FontAwesome name="dot-circle-o" size={28} color="#2196F3" /> : <Entypo name="circle" size={24} color="black" /> }  
-            <ListItem.Content
-                style={{
-                alignSelf: "flex-start",
-                alignSelf: 'center',
-                }}
-            >       
-                <View style={{flexDirection : 'row'}}>
-                    <ListItem.Title style={{fontSize:16,fontWeight:'bold'}}>
-                        {data.customer.name}  |  {data.customer.phone}          
-                    </ListItem.Title>
-                    <View style = {{flexDirection :'row', justifyContent :'flex-end',flex:1}}>
-                        <MaterialIcons  name="delete" 
-                                        size={23} 
-                                        color="red" 
-                                        onPress={ async () => {
-                                            dispatch({
-                                                type : "DELETE",
-                                                id : data.id
-                                            })
-                                            await SecureStore.setItemAsync("ADDRESS",JSON.stringify(state.address))
-                                        }}/>
-                    </View>        
-                </View>
-                <ListItem.Subtitle>{data.address}</ListItem.Subtitle>
-            </ListItem.Content>
-        </ListItem>
+        <View>
+            <ConfirmDialog 
+                visible={visible} 
+                isSelected={data.id} 
+                changeVisible={(visible) => setVisible(visible)}
+            />
+            <ListItem
+                    onPress={() => changeSelect(data.id)}
+                    button
+                    bottomDivider
+                    containerStyle={{
+                        minHeight: 100,
+                    }}
+                >  
+                { isSelected == data.id ? <FontAwesome name="dot-circle-o" size={28} color="#2196F3" /> : <Entypo name="circle" size={24} color="black" /> }  
+                <ListItem.Content
+                    style={{
+                    alignSelf: "flex-start",
+                    alignSelf: 'center',
+                    }}
+                >       
+                    <View style={{flexDirection : 'row'}}>
+                        <ListItem.Title style={{fontSize:16,fontWeight:'bold'}}>
+                            {data.customer.name}  |  {data.customer.phone}          
+                        </ListItem.Title>
+                        <View style = {{flexDirection :'row', justifyContent :'flex-end',flex:1}}>
+                            <MaterialIcons  name="delete" 
+                                            size={23} 
+                                            color="red" 
+                                            onPress={ async () => {
+                                                setVisible(!visible)
+                                                await SecureStore.setItemAsync("ADDRESS",JSON.stringify(state.address))
+                                            }}/>
+                        </View>        
+                    </View>
+                    <ListItem.Subtitle>{data.address}</ListItem.Subtitle>
+                </ListItem.Content>
+            </ListItem>
+        </View>    
     )
 }
 

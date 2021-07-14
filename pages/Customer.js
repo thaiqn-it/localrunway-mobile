@@ -169,9 +169,9 @@ export default function Customer() {
             Alert.alert("Failed", 'Something went wrong !!! Check your password');
         } else {
             loadCustomer();
-            setLoading(isLoading)
             Alert.alert("Successfull !!!")
         };
+        setLoading(isLoading)
     }
 
     const updateInformation = async (profileUrl) => {
@@ -225,10 +225,10 @@ export default function Customer() {
                 if (err) {
                     Alert.alert("Error","Something went wrong !!!")
                 } else {
-                    loadCustomer();
-                    setLoading(isLoading)
+                    loadCustomer();                  
                     Alert.alert("Successfull !!!")
                 };
+                setLoading(isLoading)
             })            
         } 
     }

@@ -6,7 +6,8 @@ export default function LoadingSpinner({isLoading}) {
     return (
         <Spinner
             visible={isLoading}
-            textContent={'Loading...'}
+            textContent={'Loading'}
+            textStyle={{color : 'white'}}
         />
     )
 }
