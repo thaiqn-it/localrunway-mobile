@@ -97,7 +97,7 @@ const Register = (props) => {
 
           Alert.alert(
             "Message",
-            "Register Succesfully, Press Next to provide your hobby",
+            "Register Successfully, Press Next to provide your hobby",
             [
               {
                 text: "Next",

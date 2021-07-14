@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import { Input, Button, Text } from "react-native-elements";
 import { FULL_HEIGHT, FULL_WIDTH } from "../constants/styles";
+import bgImg from "../assets/splash-none-text.png";
 
 const RegisterPhone = (props) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -46,52 +47,52 @@ const RegisterPhone = (props) => {
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
         <ScrollView>
           <ImageBackground
-            source={{
-              uri: "https://firebasestorage.googleapis.com/v0/b/local-runway-image.appspot.com/o/registerPhone04.png?alt=media&token=8671f0f8-f516-4ad5-b481-4572160e0e7e",
-            }}
+            source={bgImg}
             style={{ width: FULL_WIDTH, height: FULL_HEIGHT }}
           >
-            <View style={styles.introduction}>
-              <Text h4 style={{ fontWeight: "bold" }}>
-                WELCOME TO LOCALRUNWAY
-              </Text>
-              <Text style={{ textAlign: "center" }}>
-                <Text>Please input your phone number to continue {"\n"}</Text>
-              </Text>
-            </View>
+            <View style={styles.container}>
+              <View style={styles.introduction}>
+                <Text h4 style={{ fontWeight: "bold" }}>
+                  WELCOME TO LOCALRUNWAY
+                </Text>
+                <Text style={{ textAlign: "center" }}>
+                  <Text>Please input your phone number to continue {"\n"}</Text>
+                </Text>
+              </View>
 
-            <View style={styles.inputContainer}>
-              <View style={styles.cardContainer}>
-                <Input
-                  multiline={false}
-                  inputContainerStyle={styles.input}
-                  placeholder="Phone number*"
-                  maxLength={12}
-                  value={phoneNumber}
-                  onChangeText={onChangePhoneNumberHandler}
-                  keyboardType="numeric"
-                />
-                <Button
-                  onPress={onSubmitHanlder}
-                  title="Next"
-                  buttonStyle={{
-                    borderWidth: 1,
-                    borderColor: "#000000",
-                    width: 200,
-                    backgroundColor: "#000000",
-                    height: 45,
-                  }}
-                  containerStyle={{
-                    marginVertical: 10,
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    textAlign: "center",
-                    width: "100%",
-                  }}
-                  titleStyle={{
-                    color: "#fff",
-                  }}
-                />
+              <View style={styles.inputContainer}>
+                <View style={styles.cardContainer}>
+                  <Input
+                    multiline={false}
+                    inputContainerStyle={styles.input}
+                    placeholder="Phone number*"
+                    maxLength={12}
+                    value={phoneNumber}
+                    onChangeText={onChangePhoneNumberHandler}
+                    keyboardType="numeric"
+                  />
+                  <Button
+                    onPress={onSubmitHanlder}
+                    title="Next"
+                    buttonStyle={{
+                      borderWidth: 1,
+                      borderColor: "#000000",
+                      width: 200,
+                      backgroundColor: "#000000",
+                      height: 45,
+                    }}
+                    containerStyle={{
+                      marginVertical: 10,
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      textAlign: "center",
+                      width: "100%",
+                    }}
+                    titleStyle={{
+                      color: "#fff",
+                    }}
+                  />
+                </View>
               </View>
             </View>
           </ImageBackground>
@@ -103,8 +104,8 @@ const RegisterPhone = (props) => {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: "rgba(255,255,255, .28)",
     flex: 1,
-    backgroundColor: "#fff",
   },
   introduction: {
     width: "100%",
