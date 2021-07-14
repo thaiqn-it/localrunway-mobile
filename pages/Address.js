@@ -31,7 +31,7 @@ function AddressComponent ({ data,isSelected,changeSelect }) {
             >       
                 <View style={{flexDirection : 'row'}}>
                     <ListItem.Title style={{fontSize:16,fontWeight:'bold'}}>
-                        {data.customer.name} - {data.customer.phone}          
+                        {data.customer.name}  |  {data.customer.phone}          
                     </ListItem.Title>
                     <View style = {{flexDirection :'row', justifyContent :'flex-end',flex:1}}>
                         <MaterialIcons  name="delete" 

@@ -7,7 +7,7 @@ import { paymentApi } from '../api/payment';
 import { CartContext } from "../context/Cart";
 import { orderApi } from '../api/order';
 import { CustomerContext } from '../context/Customer';
-import AppLoading from 'expo-app-loading';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const IMAGE = [
     {
@@ -231,7 +231,7 @@ export default function CreateOrder() {
                 style: { fontSize: 20, color: "black", fontWeight: "bold" },
                 }}
             />
-            <AppLoading isLoading={isLoading}/>
+            <LoadingSpinner isLoading={isLoading}/>
             <Text style={{
                 fontSize : 20,
                 fontWeight : 'bold',

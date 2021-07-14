@@ -228,7 +228,7 @@ export default function Cart() {
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ marginRight: 10 }}>
                     <Text style={styles.title}>
-                      {address.customer.name}
+                      {address.customer.name}   | 
                     </Text>
                   </View>
                   <View>

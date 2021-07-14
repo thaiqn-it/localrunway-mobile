@@ -123,7 +123,7 @@ export default function Order() {
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ marginRight: 10 }}>
                     <Text style={styles.title}>
-                      {orderDetails.recipientName}
+                      {orderDetails.recipientName}   | 
                     </Text>
                   </View>
                   <View>
