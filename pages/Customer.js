@@ -218,7 +218,8 @@ export default function Customer() {
                 Alert.alert(
                     "Error","New password not match confirm password"
                 );
-            }          
+            }   
+            setLoading(isLoading)       
         } else {
             updateInformation(profileUrl).then(err => {
                 if (err) {
@@ -227,9 +228,9 @@ export default function Customer() {
                     loadCustomer();                  
                     Alert.alert("Successfull !!!")
                 };
-            })            
+            })   
+            setLoading(isLoading)         
         } 
-        setLoading(isLoading)
     }
 
     return (
