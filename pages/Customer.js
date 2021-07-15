@@ -171,7 +171,6 @@ export default function Customer() {
             loadCustomer();
             Alert.alert("Successfull !!!")
         };
-        setLoading(isLoading)
     }
 
     const updateInformation = async (profileUrl) => {
@@ -228,9 +227,9 @@ export default function Customer() {
                     loadCustomer();                  
                     Alert.alert("Successfull !!!")
                 };
-                setLoading(isLoading)
             })            
         } 
+        setLoading(isLoading)
     }
 
     return (
