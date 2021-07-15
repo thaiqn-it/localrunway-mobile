@@ -10,6 +10,7 @@ import {FontAwesome5} from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { vndFormat } from "../utils";
 import { orderApi } from '../api/order';
+import LoadingSpinner from '../components/LoadingSpinner';
 
 function HistoryOrderComponent ({data,navigation}){
     return(
@@ -65,10 +66,12 @@ function HistoryOrderComponent ({data,navigation}){
 export default function HistoryOrders() {
     const navigation = useNavigation();
     const [ orders,setOrders ] = useState([])
-
+    const [ isLoading,setLoading ] = useState(false)
     useEffect(() => {
+        setLoading(!isLoading)
         orderApi.getAll().then(res => {
             setOrders(res.data.orders)
+            setLoading(isLoading)
         })
     }, [])
 
@@ -115,6 +118,7 @@ export default function HistoryOrders() {
                                 color="black" /> 
               }
              />
+             <LoadingSpinner isLoading={isLoading}/>
             { orders.length > 0 && (
                 <FlatList   data={orders}
                             renderItem={item => <HistoryOrderComponent data={item} navigation={navigation}/>}

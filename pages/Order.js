@@ -9,6 +9,7 @@ import { orderApi } from '../api/order';
 import { CustomerContext } from '../context/Customer';
 import { productApi } from '../api/product';
 import { vndFormat } from "../utils";
+import LoadingSpinner from '../components/LoadingSpinner';
 
 const DetailComponent = ({data,navigation}) => {
     const [product,setProduct] = useState('')
@@ -67,12 +68,14 @@ export default function Order() {
     const navigation = useNavigation()
     const route = useRoute();
     const [orderDetails,setOrderDetails] = useState([]);
-    
+    const [ isLoading,setLoading ] = useState(false)
     useEffect(() => {
+        setLoading(!isLoading)
         orderApi
           .getOrderDetail(route.params)
           .then((res) => {
             setOrderDetails(res.data.order);
+            setLoading(isLoading)
           })
           .catch((err) => {
             console.log(err);
@@ -115,7 +118,8 @@ export default function Order() {
                 text: "Order Details",
                 style: { fontSize: 20, color: "black", fontWeight: "bold" },
                 }}
-            />   
+            />  
+            <LoadingSpinner isLoading={isLoading} /> 
             <ListItem 
               bottomDivider>
               <MaterialIcons name="location-pin" size={24} color="#2196F3" />

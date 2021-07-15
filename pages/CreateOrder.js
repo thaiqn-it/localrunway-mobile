@@ -184,10 +184,12 @@ export default function CreateOrder() {
 
 
     useEffect(() => {
+        setLoading(!isLoading)
         paymentApi
             .getAll()
             .then((res) => {
                 setPayments(res.data.payments)
+                setLoading(isLoading)
             })
             .catch((err) => {
                 console.log(err);
