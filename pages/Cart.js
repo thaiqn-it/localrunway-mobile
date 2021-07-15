@@ -129,14 +129,16 @@ export default function Cart() {
   const { state, setSelect, isSelect, getTotalPrice } = useContext(CartContext);
   const [visible, setVisible] = useState(false);
   const [total, setTotal] = useState(0);
-  const customerContext = useContext(CustomerContext)
+  const customerContext = useContext(CustomerContext);
 
-  const address = customerContext.state.address.find(item => item.select == true 
-                                                    && item.customerId == customerContext.customer._id)
+  const address = customerContext.state.address.find(
+    (item) =>
+      item.select == true && item.customerId == customerContext.customer._id
+  );
 
-  const changeAddress = (location => {
+  const changeAddress = (location) => {
     setAddress(location);
-  })
+  };
 
   useEffect(() => {
     setTotal(getTotalPrice());
@@ -220,24 +222,25 @@ export default function Cart() {
       {state.item.length > 0 && (
         <View>
           {address !== undefined && (
-            <ListItem 
+            <ListItem
               onPress={() => navigation.navigate("Address")}
-              bottomDivider>
+              bottomDivider
+            >
               <MaterialIcons name="location-pin" size={24} color="#2196F3" />
               <ListItem.Content>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ marginRight: 10 }}>
-                    <Text style={styles.title}>
-                      {address.customer.name}   | 
-                    </Text>
+                    <Text style={styles.title}>{address.customer.name} |</Text>
                   </View>
                   <View>
-                    <Text style={styles.title}>
-                      {address.customer.phone}
-                    </Text>
+                    <Text style={styles.title}>☎ {address.customer.phone}</Text>
                   </View>
                 </View>
-                <ListItem.Subtitle>
+                <ListItem.Subtitle
+                  style={{
+                    marginTop: 5,
+                  }}
+                >
                   {address.address}
                 </ListItem.Subtitle>
               </ListItem.Content>
@@ -245,16 +248,15 @@ export default function Cart() {
             </ListItem>
           )}
           {address === undefined && (
-            <ListItem 
+            <ListItem
               onPress={() => navigation.navigate("Address")}
-              bottomDivider>
+              bottomDivider
+            >
               <MaterialIcons name="location-pin" size={24} color="#2196F3" />
               <ListItem.Content>
                 <View style={{ flexDirection: "row" }}>
                   <View style={{ marginRight: 10 }}>
-                    <Text style={styles.title}>
-                      Click here to add address
-                    </Text>
+                    <Text style={styles.title}>Click here to add address</Text>
                   </View>
                 </View>
               </ListItem.Content>
@@ -289,9 +291,9 @@ export default function Cart() {
             <View>
               <Button
                 onPress={() => {
-                  if(address !== undefined){
-                    navigation.navigate("CreateOrder")
-                  } else Alert.alert('Please select your address !!!')             
+                  if (address !== undefined) {
+                    navigation.navigate("CreateOrder");
+                  } else Alert.alert("Please select your address !!!");
                 }}
                 icon={{
                   type: "font-awesome-5",
@@ -333,8 +335,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   containerProduct: {
-    padding : 15,
-    marginLeft : 5,
+    padding: 15,
+    marginLeft: 5,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",

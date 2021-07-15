@@ -252,7 +252,7 @@ export default function Feed() {
               flexDirection: "row",
               flexWrap: "wrap",
               justifyContent: "space-around",
-              paddingBottom: 50,
+              paddingBottom: 100,
             }}
           >
             {localBrands.map((item) => (

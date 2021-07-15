@@ -344,8 +344,8 @@ export default function Product() {
             {({ dispatch }) => (
               <Button
                 style={styles.purchaseButton}
-                color={"red"}
-                title={"Add To Cart"}
+                color={"black"}
+                title={"🛒 Add To Cart"}
                 onPress={() => {
                   setVisible(true);
                   dispatch({

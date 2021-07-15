@@ -33,53 +33,58 @@ export default function SearchItem({ item }) {
       />
       <ListItem.Content
         style={{
-          alignSelf: "flex-start",
+          flexDirection: "row",
+          justifyContent: "space-around",
         }}
       >
-        <ListItem.Title>{item.name}</ListItem.Title>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginTop: 5,
-          }}
-        >
-          <Text
+        <View>
+          <ListItem.Title>{item.name}</ListItem.Title>
+          <View
             style={{
-              marginRight: 10,
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: 5,
             }}
           >
-            Size:{" "}
             <Text
               style={{
-                fontWeight: "bold",
+                marginRight: 10,
               }}
             >
-              {item.size}
+              Size:{" "}
+              <Text
+                style={{
+                  fontWeight: "bold",
+                }}
+              >
+                {item.size}
+              </Text>
             </Text>
+            <ColorBox color={item.color} />
+          </View>
+          <Text
+            style={{
+              marginTop: 4,
+            }}
+          >{`Brand: ${item.brandName}`}</Text>
+          <View
+            style={{
+              marginTop: 3,
+            }}
+          >
+            <ProductRating rating={item.rating} />
+          </View>
+        </View>
+        <View>
+          <Text
+            style={{
+              fontSize: 15,
+              fontWeight: "bold",
+            }}
+          >
+            {vndFormat(item.price)}
           </Text>
-          <ColorBox color={item.color} />
         </View>
-        <Text
-          style={{
-            marginTop: 4,
-          }}
-        >{`Brand: ${item.brandName}`}</Text>
-        <View
-          style={{
-            marginTop: 3,
-          }}
-        >
-          <ProductRating rating={item.rating} />
-        </View>
-        <ListItem.Title
-          style={{
-            fontWeight: "bold",
-            marginTop: 20,
-          }}
-        >
-          {vndFormat(item.price)}
-        </ListItem.Title>
       </ListItem.Content>
       <ListItem.Chevron />
     </ListItem>

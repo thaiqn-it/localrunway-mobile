@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -18,7 +18,7 @@ import {
   Text,
 } from "react-native-elements";
 import { productApi } from "../api/product";
-import { vndFormat } from "../utils";
+import { bulkSearch, vndFormat } from "../utils";
 import SearchItem from "../components/SearchItem";
 import SearchFilter from "../components/SearchFilter";
 import MaterialCommunityIcon from "react-native-paper/src/components/MaterialCommunityIcon";
@@ -29,6 +29,7 @@ import {
   DEFAULT_MEASUREMENT,
   loadCachedMeasurements,
 } from "../constants/data";
+import { CustomerContext } from "../context/Customer";
 
 export default function Search({ route }) {
   const searchBarRef = useRef(null);
@@ -47,6 +48,7 @@ export default function Search({ route }) {
   });
   const [measurement, setMeasurement] = useState(DEFAULT_MEASUREMENT);
   const [measurementVisible, setMeasurementVisible] = useState(false);
+  const customerContext = useContext(CustomerContext);
 
   const cleanMeasurement = (measurement) => {
     let ret = {};
