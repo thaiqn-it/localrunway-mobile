@@ -154,14 +154,9 @@ export default function Customer() {
         try {
             const response = await customerApi.changePassword(oldPasw,newPasw)
         } catch (err) {
-            if (err.response.data.errorParams.password) {
+            if (err.response.data) {
                 errorMsg = errorMsg.concat(
-                    `\n` + err.response.data.errorParams.password
-                );
-            }
-            if (err.response.data.errorParams.newPassword) {
-                errorMsg = errorMsg.concat(
-                    `\n` + err.response.data.errorParams.newPassword
+                    `\n` + err.response.data
                 );
             }
         } 
@@ -375,13 +370,13 @@ export default function Customer() {
                         errorStyle={{ color: 'red' }}
                         errorMessage={errEmail}
                 />
-                <Input  label={"Job :"}
+                <Input  label={"Job (optional):"}
                         value={job}
                         onChangeText={value => setJob(value)}
                         leftIcon={{ type: 'antdesign', name: 'paperclip' }}
                         placeholder={"Input your job"}
                 />
-                <Input  label={"Hobby :"}
+                <Input  label={"Hobby (optional):"}
                         value={hobby}
                         onChangeText={value => setHobby(value)}
                         leftIcon={{ type: 'material-icon', name: 'favorite' }}
@@ -395,10 +390,10 @@ export default function Customer() {
                 />
                 {isChangePasw === true && (               
                     <View>
-                        <Input  label={"Old password :"}
+                        <Input  label={"Your password :"}
                         value={oldPasw}
                         onChangeText={value => setOldPasw(value)}
-                        placeholder={"Input your old password"}
+                        placeholder={"Input your your password"}
                         secureTextEntry={!showOldPasw}
                         rightIcon={{
                             type: "font-awesome-5",
@@ -408,7 +403,7 @@ export default function Customer() {
                             },
                         }}
                         />
-                        <Input  label={"New password :"}
+                        <Input  label={"New password (8-characters min) :"}
                         value={newPasw}
                         onChangeText={value => setNewPasw(value)}
                         placeholder={"Input your new password"}
@@ -421,7 +416,7 @@ export default function Customer() {
                             },
                         }}
                         />
-                        <Input  label={"Confirm :"}
+                        <Input  label={"Confirm (8-characters min):"}
                         value={confirmPasw}
                         onChangeText={value => setConfirmPasw(value)}
                         placeholder={"Confirm your password"}
